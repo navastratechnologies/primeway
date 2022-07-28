@@ -1,4 +1,4 @@
-package com.example.primewayskills_app
+package com.example.primeway
 
 import io.flutter.embedding.android.FlutterActivity
 
