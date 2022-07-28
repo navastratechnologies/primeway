@@ -4,6 +4,7 @@ import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/dashboard/home_screen.dart';
 import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
+import 'package:primewayskills_app/view/splash_screen/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Dashboard(),
+      home: SplashScreen(),
     );
   }
 }

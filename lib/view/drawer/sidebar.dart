@@ -113,28 +113,6 @@ class NavigationDrawer extends StatelessWidget {
                             ),
                           ),
                           ListTile(
-                            leading: sidebarIconWidget(Icons.handyman),
-                            title: Text(
-                              "Tools",
-                              style: TextStyle(
-                                color: whiteColor,
-                              ),
-                            ),
-                            onTap: () => {
-                              Navigator.pop(context),
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => ToolsScreen(),
-                                ),
-                              ),
-                            },
-                            trailing: FaIcon(
-                              FontAwesomeIcons.chevronRight,
-                              color: whiteColor.withOpacity(0.6),
-                              size: 16,
-                            ),
-                          ),
-                          ListTile(
                             leading: sidebarIconWidget(Icons.tips_and_updates),
                             title: Text(
                               "Resources",

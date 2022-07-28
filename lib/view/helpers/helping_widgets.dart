@@ -129,3 +129,27 @@ listOrderWidget(text) {
     ],
   );
 }
+
+headingWidgetMethodForResources(heading) {
+  return Text(
+    heading,
+    style: TextStyle(
+      color: whiteColor,
+      fontWeight: FontWeight.bold,
+      fontSize: maxSize - 2,
+    ),
+  );
+}
+
+paragraphWidgetMethodForResources(text, context) {
+  var width = MediaQuery.of(context).size.width;
+  return SizedBox(
+    width: width / 1.15,
+    child: Text(
+      text,
+      style: TextStyle(
+        color: whiteColor,
+      ),
+    ),
+  );
+}

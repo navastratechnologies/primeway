@@ -734,19 +734,39 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                         fontSize: 13,
                                       ),
                                     ),
-                                    SizedBox(height: 10),
+                                    SizedBox(height: 30),
                                     Container(
                                       child: GridView.builder(
                                         itemCount: languageModel.length,
                                         shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
                                         gridDelegate:
                                             SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 2,
-                                                crossAxisSpacing: 4.0,
-                                                mainAxisSpacing: 4.0),
+                                          crossAxisCount: 3,
+                                          mainAxisSpacing: 1,
+                                          crossAxisSpacing: 1,
+                                          childAspectRatio: 2,
+                                        ),
                                         itemBuilder:
                                             (BuildContext context, int index) {
-                                          return Text(languageModel[index]);
+                                          return Center(
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 20, vertical: 10),
+                                              decoration: BoxDecoration(
+                                                color: Colors.blue,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: Text(
+                                                languageModel[index],
+                                                style: TextStyle(
+                                                  color: whiteColor,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          );
                                         },
                                       ),
                                     ),
@@ -759,14 +779,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                             MainAxisAlignment.center,
                                         children: [
                                           InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                pageOne = false;
-                                                pageTwo = true;
-                                                pageThree = false;
-                                                pageOneEditing = true;
-                                              });
-                                            },
+                                            onTap: () => Navigator.of(context).pop(),
                                             child: Container(
                                               height: 50,
                                               width: width / 1.5,
