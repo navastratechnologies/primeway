@@ -5,14 +5,29 @@ import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 
 class CollaborationInternalScreen extends StatefulWidget {
-  final String heading, image, paragraph, followerDetails;
-  const CollaborationInternalScreen({
-    Key? key,
-    required this.heading,
-    required this.image,
-    required this.paragraph,
-    required this.followerDetails,
-  }) : super(key: key);
+  final String heading,
+      image,
+      paragraph,
+      followerDetails,
+      brandlogo,
+      categories,
+      collaborationtype,
+      language,
+      titles,
+      productCategorey;
+  const CollaborationInternalScreen(
+      {Key? key,
+      required this.heading,
+      required this.image,
+      required this.paragraph,
+      required this.followerDetails,
+      required this.brandlogo,
+      required this.categories,
+      required this.language,
+      required this.collaborationtype,
+      required this.titles,
+       required this.productCategorey})
+      : super(key: key);
 
   @override
   State<CollaborationInternalScreen> createState() =>
@@ -29,7 +44,7 @@ class _CollaborationInternalScreenState
       appBar: AppBar(
         backgroundColor: primeColor,
         title: Text(
-          widget.heading,
+          widget.titles,
           style: TextStyle(
             fontSize: maxSize,
             color: whiteColor,
@@ -46,7 +61,7 @@ class _CollaborationInternalScreenState
               width: width,
               decoration: BoxDecoration(
                 color: primeColor,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(15),
                   topRight: Radius.circular(15),
                 ),
@@ -64,7 +79,7 @@ class _CollaborationInternalScreenState
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: Container(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(10),
@@ -81,7 +96,7 @@ class _CollaborationInternalScreenState
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -96,10 +111,10 @@ class _CollaborationInternalScreenState
                             FontAwesomeIcons.instagram,
                             color: primeColor,
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Text(
                             widget.followerDetails,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -114,14 +129,22 @@ class _CollaborationInternalScreenState
                       ),
                     ],
                   ),
+                  const SizedBox(height: 20),
                   Text(
-                    widget.heading,
+                    widget.titles,
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: maxSize,
+                      color: Colors.black.withOpacity(0.4),
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  // SizedBox(
+                  //     height: 50,
+                  //     width: 100,
+                  //     child: Image.network(
+                  //       widget.heading,
+                  //       fit: BoxFit.cover,
+                  //     )),
+                  const SizedBox(height: 20),
                   Text(
                     widget.paragraph,
                     style: TextStyle(
@@ -129,12 +152,12 @@ class _CollaborationInternalScreenState
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   headingWidgetMethod('Application Criteria'),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Container(
                     width: width,
-                    padding: EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.black.withOpacity(0.2),
@@ -151,10 +174,10 @@ class _CollaborationInternalScreenState
                               color: Colors.black.withOpacity(0.4),
                               size: 17,
                             ),
-                            SizedBox(width: 20),
+                            const SizedBox(width: 20),
                             Text(
                               widget.followerDetails,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -162,8 +185,8 @@ class _CollaborationInternalScreenState
                           ],
                         ),
                         Container(
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
+                          padding: const EdgeInsets.all(3),
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.green,
                           ),
@@ -176,10 +199,10 @@ class _CollaborationInternalScreenState
                       ],
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Container(
                     width: width,
-                    padding: EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.black.withOpacity(0.2),
@@ -200,8 +223,8 @@ class _CollaborationInternalScreenState
                               ),
                             ),
                             Text(
-                              'Health, Food, Travel',
-                              style: TextStyle(
+                              widget.categories,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -209,7 +232,7 @@ class _CollaborationInternalScreenState
                           ],
                         ),
                         Container(
-                          padding: EdgeInsets.all(3),
+                          padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: primeColor,
@@ -223,10 +246,10 @@ class _CollaborationInternalScreenState
                       ],
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Container(
                     width: width,
-                    padding: EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.black.withOpacity(0.2),
@@ -247,8 +270,8 @@ class _CollaborationInternalScreenState
                               ),
                             ),
                             Text(
-                              'English, Hindi',
-                              style: TextStyle(
+                              widget.language,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -256,7 +279,7 @@ class _CollaborationInternalScreenState
                           ],
                         ),
                         Container(
-                          padding: EdgeInsets.all(3),
+                          padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: primeColor,
@@ -270,27 +293,27 @@ class _CollaborationInternalScreenState
                       ],
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   headingWidgetMethod('Additional Requirements'),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   listOrderWidget('Foodie'),
-                  SizedBox(height: 14),
+                  const SizedBox(height: 14),
                   listOrderWidget('Overseas Students'),
-                  SizedBox(height: 14),
+                  const SizedBox(height: 14),
                   listOrderWidget('Travel'),
-                  SizedBox(height: 14),
+                  const SizedBox(height: 14),
                   listOrderWidget('Food Bloggers'),
-                  SizedBox(height: 14),
+                  const SizedBox(height: 14),
                   listOrderWidget("Recipe's"),
-                  SizedBox(height: 14),
+                  const SizedBox(height: 14),
                   listOrderWidget('Ready to eat food reviews'),
-                  SizedBox(height: 14),
+                  const SizedBox(height: 14),
                   listOrderWidget('Food Reviews'),
-                  SizedBox(height: 14),
+                  const SizedBox(height: 14),
                   listOrderWidget('Should have followers between 1and 307.5M'),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   headingWidgetMethod('Help & Support'),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     'In case of any queries, checkout the FAQs or contact us',
                     style: TextStyle(
@@ -299,7 +322,7 @@ class _CollaborationInternalScreenState
                       fontSize: 13,
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -311,7 +334,7 @@ class _CollaborationInternalScreenState
                             color: primeColor,
                             size: maxSize,
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Text(
                             'Email',
                             style: TextStyle(
@@ -322,13 +345,13 @@ class _CollaborationInternalScreenState
                           ),
                         ],
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       Container(
                         height: 20,
                         width: 2,
                         color: primeColor,
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       Row(
                         children: [
                           Icon(
@@ -336,7 +359,7 @@ class _CollaborationInternalScreenState
                             color: primeColor,
                             size: maxSize,
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Text(
                             'FAQs',
                             style: TextStyle(
@@ -352,7 +375,7 @@ class _CollaborationInternalScreenState
                 ],
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
           ],
         ),
       ),
@@ -367,7 +390,7 @@ class _CollaborationInternalScreenState
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CompleteProfileScreen(),
+                    builder: (context) => const CompleteProfileScreen(),
                   ),
                 );
               },

@@ -1,10 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
-import 'package:primewayskills_app/view/dashboard/collaboration_screen.dart';
 import 'package:primewayskills_app/view/dashboard/homePage_screens/collaboration_internal_screen.dart';
-import 'package:primewayskills_app/view/drawer/sidebar.dart';
+import 'package:primewayskills_app/view/dashboard/homePage_screens/creater_program_scrren.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 
@@ -25,6 +25,18 @@ class Homescreen extends StatefulWidget {
 }
 
 class _HomescreenState extends State<Homescreen> {
+  final CollectionReference collaboration =
+      FirebaseFirestore.instance.collection('collaboration');
+
+  final CollectionReference banner =
+      FirebaseFirestore.instance.collection('Banner');
+
+  final CollectionReference createrBanner =
+      FirebaseFirestore.instance.collection('Creater_banner');
+
+  final CollectionReference creatorProgramCategory =
+      FirebaseFirestore.instance.collection('creator_program_category');
+
   int _current = 0;
   final CarouselController _controller = CarouselController();
   @override
@@ -39,34 +51,48 @@ class _HomescreenState extends State<Homescreen> {
           children: [
             Column(
               children: [
-                SizedBox(height: 10),
-                CarouselSlider(
-                  items: imgList
-                      .map((item) => Container(
-                            width: MediaQuery.of(context).size.width / 1.1,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: NetworkImage(item), fit: BoxFit.cover),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ))
-                      .toList(),
-                  carouselController: _controller,
-                  options: CarouselOptions(
-                    autoPlayInterval: Duration(seconds: 5),
-                    autoPlay: true,
-                    enlargeCenterPage: true,
-                    aspectRatio: 2.0,
-                    viewportFraction: 2.0,
-                    onPageChanged: (index, reason) {
-                      setState(
-                        () {
-                          _current = index;
-                        },
+                const SizedBox(height: 10),
+                StreamBuilder(
+                    stream: banner.snapshots(),
+                    builder:
+                        (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                      if (streamSnapshot.hasData) {
+                        return CarouselSlider.builder(
+                          itemCount: streamSnapshot.data!.docs.length,
+                          itemBuilder: (context, index, realIndex) {
+                            final DocumentSnapshot documentSnapshot =
+                                streamSnapshot.data!.docs[index];
+                            return Container(
+                              width: MediaQuery.of(context).size.width / 1.1,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                        documentSnapshot['Banner_image']),
+                                    fit: BoxFit.cover),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            );
+                          },
+                          options: CarouselOptions(
+                            autoPlayInterval: const Duration(seconds: 5),
+                            autoPlay: true,
+                            enlargeCenterPage: true,
+                            aspectRatio: 2.0,
+                            viewportFraction: 2.0,
+                            onPageChanged: (index, reason) {
+                              setState(
+                                () {
+                                  _current = index;
+                                },
+                              );
+                            },
+                          ),
+                        );
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(),
                       );
-                    },
-                  ),
-                ),
+                    }),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: imgList.asMap().entries.map(
@@ -76,7 +102,7 @@ class _HomescreenState extends State<Homescreen> {
                         child: Container(
                           width: 10.0,
                           height: 10.0,
-                          margin: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 4.0),
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -103,7 +129,7 @@ class _HomescreenState extends State<Homescreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (contex) => ProfileEditScreen(),
+                          builder: (contex) => const ProfileEditScreen(),
                         ),
                       );
                     },
@@ -111,7 +137,7 @@ class _HomescreenState extends State<Homescreen> {
                       height: height / 4,
                       width: width,
                       decoration: BoxDecoration(
-                        image: DecorationImage(
+                        image: const DecorationImage(
                           image: NetworkImage(
                               'https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8&w=1000&q=80'),
                           fit: BoxFit.fill,
@@ -120,7 +146,7 @@ class _HomescreenState extends State<Homescreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Column(
                     children: [
                       InkWell(
@@ -128,7 +154,7 @@ class _HomescreenState extends State<Homescreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (contex) => ProfileEditScreen(),
+                              builder: (contex) => const ProfileEditScreen(),
                             ),
                           );
                         },
@@ -162,7 +188,7 @@ class _HomescreenState extends State<Homescreen> {
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
-                                    SizedBox(height: 5),
+                                    const SizedBox(height: 5),
                                     Row(
                                       children: [
                                         Stack(
@@ -188,7 +214,7 @@ class _HomescreenState extends State<Homescreen> {
                                             ),
                                           ],
                                         ),
-                                        SizedBox(width: 10),
+                                        const SizedBox(width: 10),
                                         Text(
                                           "20%",
                                           style: TextStyle(
@@ -208,171 +234,242 @@ class _HomescreenState extends State<Homescreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   headingWidgetMethod('Creator Programs'),
-                  SizedBox(height: 10),
-                  GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: 1.5),
-                    itemCount: 4,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: primeColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 30),
-                  headingWidgetMethod('Collaborations'),
-                  SizedBox(height: 10),
-                  Container(
-                    width: width,
-                    height: 350,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 4,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CollaborationInternalScreen(
-                                    heading:
-                                        'Brand Name to be shown here......',
-                                    image:
-                                        'https://images.unsplash.com/photo-1533750349088-cd871a92f312?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-                                    paragraph:
-                                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
-                                  followerDetails: "Paid | 1000 to 5K followers",
+                  const SizedBox(height: 10),
+                  StreamBuilder(
+                      stream: creatorProgramCategory.snapshots(),
+                      builder: (context,
+                          AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                        if (streamSnapshot.hasData) {
+                          return GridView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    childAspectRatio: 1.5),
+                            itemCount: streamSnapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              final DocumentSnapshot documentSnapshot =
+                                  streamSnapshot.data!.docs[index];
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          CreaterProgramScreen(
+                                            categorey:documentSnapshot['category'],
+                                            titles: "Creator Programs",
+                                          ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: primeColor,
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          documentSnapshot['image']),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               );
                             },
-                            child: Container(
-                              width: width / 1.11,
-                              decoration: BoxDecoration(
-                                color: whiteColor,
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                  color: Colors.black.withOpacity(0.2),
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 175,
+                          );
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }),
+                  const SizedBox(height: 30),
+                  headingWidgetMethod('Collaborations'),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: width,
+                    height: 350,
+                    child: StreamBuilder(
+                      stream: collaboration.snapshots(),
+                      builder: (context,
+                          AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                        if (streamSnapshot.hasData) {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: streamSnapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              final DocumentSnapshot documentSnapshot =
+                                  streamSnapshot.data!.docs[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CollaborationInternalScreen(
+                                          heading:
+                                              documentSnapshot['brand_logo'],
+                                          image: documentSnapshot['image'],
+                                          paragraph:
+                                              documentSnapshot['descreption'],
+                                          followerDetails: documentSnapshot[
+                                              'required_followers'],
+                                          brandlogo:
+                                              documentSnapshot['brand_logo'],
+                                          categories:
+                                              documentSnapshot['categories'],
+                                          collaborationtype: documentSnapshot[
+                                              'collaboration_type'],
+                                          language:
+                                              documentSnapshot['language'],
+                                          titles: documentSnapshot['titles'],
+                                          productCategorey: documentSnapshot['product_categorey'],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
                                     width: width / 1.11,
                                     decoration: BoxDecoration(
-                                      color: primeColor,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15),
-                                      ),
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          'https://images.unsplash.com/photo-1533750349088-cd871a92f312?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-                                        ),
-                                        fit: BoxFit.cover,
+                                      color: whiteColor,
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: Colors.black.withOpacity(0.2),
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(14),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            FaIcon(FontAwesomeIcons.instagram),
-                                            Text("Paid | 1000 to 5K followers"),
-                                            Container(
-                                              padding: EdgeInsets.all(5),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(),
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
+                                        Container(
+                                          height: 175,
+                                          width: width / 1.11,
+                                          decoration: BoxDecoration(
+                                            color: primeColor,
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                              topLeft: Radius.circular(15),
+                                              topRight: Radius.circular(15),
+                                            ),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                documentSnapshot['image'],
                                               ),
-                                              child: Text(
-                                                "Brand Logo",
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(14),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      const FaIcon(
+                                                          FontAwesomeIcons
+                                                              .instagram),
+                                                      const SizedBox(width: 5),
+                                                      Text(documentSnapshot[
+                                                          'required_followers']),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                      height: 50,
+                                                      width: 100,
+                                                      child: Image.network(
+                                                        documentSnapshot[
+                                                            'brand_logo'],
+                                                        fit: BoxFit.cover,
+                                                      )),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 10),
+                                              headingWidgetMethod(
+                                                documentSnapshot['titles'],
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Text(
+                                                documentSnapshot['descreption'],
                                                 style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black
+                                                      .withOpacity(0.4),
+                                                  fontWeight: FontWeight.w500,
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 10),
-                                        headingWidgetMethod(
-                                          'Brand Name to be shown here......',
-                                        ),
-                                        SizedBox(height: 10),
-                                        Text(
-                                          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
-                                          style: TextStyle(
-                                            color:
-                                                Colors.black.withOpacity(0.4),
-                                            fontWeight: FontWeight.w500,
+                                            ],
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
                       },
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Column(
                     children: [
-                      SizedBox(height: 10),
-                      CarouselSlider(
-                        items: imgList
-                            .map((item) => Container(
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.1,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: NetworkImage(item),
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ))
-                            .toList(),
-                        carouselController: _controller,
-                        options: CarouselOptions(
-                          autoPlayInterval: Duration(seconds: 5),
-                          autoPlay: true,
-                          enlargeCenterPage: true,
-                          aspectRatio: 2.0,
-                          viewportFraction: 2.0,
-                          onPageChanged: (index, reason) {
-                            setState(
-                              () {
-                                _current = index;
-                              },
+                      const SizedBox(height: 10),
+                      StreamBuilder(
+                          stream: createrBanner.snapshots(),
+                          builder: (context,
+                              AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                            if (streamSnapshot.hasData) {
+                              return CarouselSlider.builder(
+                                itemCount: streamSnapshot.data!.docs.length,
+                                itemBuilder: (context, index, realIndex) {
+                                  final DocumentSnapshot documentSnapshot =
+                                      streamSnapshot.data!.docs[index];
+                                  return Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.1,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                              documentSnapshot['image']),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  );
+                                },
+                                options: CarouselOptions(
+                                  autoPlayInterval: const Duration(seconds: 5),
+                                  autoPlay: true,
+                                  enlargeCenterPage: true,
+                                  aspectRatio: 2.0,
+                                  viewportFraction: 2.0,
+                                  onPageChanged: (index, reason) {
+                                    setState(
+                                      () {
+                                        _current = index;
+                                      },
+                                    );
+                                  },
+                                ),
+                              );
+                            }
+                            return const Center(
+                              child: CircularProgressIndicator(),
                             );
-                          },
-                        ),
-                      ),
+                          }),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: imgList.asMap().entries.map(
@@ -382,7 +479,7 @@ class _HomescreenState extends State<Homescreen> {
                               child: Container(
                                 width: 10.0,
                                 height: 10.0,
-                                margin: EdgeInsets.symmetric(
+                                margin: const EdgeInsets.symmetric(
                                     vertical: 8.0, horizontal: 4.0),
                                 decoration: BoxDecoration(
                                     shape: BoxShape.circle,

@@ -1,13 +1,12 @@
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:primewayskills_app/view/dashboard/dashboard.dart';
-import 'package:primewayskills_app/view/dashboard/home_screen.dart';
-import 'package:primewayskills_app/view/drawer/sidebar.dart';
-import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/splash_screen/splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+   await Firebase.initializeApp();
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatefulWidget {
