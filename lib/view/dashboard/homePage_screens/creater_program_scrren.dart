@@ -197,7 +197,8 @@ class _CreaterProgramScreenState extends State<CreaterProgramScreen> {
                                             'collaboration_type'],
                                         language: documentSnapshot['language'],
                                         titles: documentSnapshot['titles'],
-                                         productCategorey: documentSnapshot['product_categorey'],
+                                        productCategorey: documentSnapshot[
+                                            'product_categorey'],
                                       ),
                                     ),
                                   );

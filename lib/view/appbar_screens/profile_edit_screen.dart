@@ -1,5 +1,7 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 
@@ -11,6 +13,38 @@ class ProfileEditScreen extends StatefulWidget {
 }
 
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
+  final firebaseInstance = FirebaseFirestore.instance;
+
+  String name = '';
+  String address = '';
+  String profileImage = '';
+  String payment = '';
+  String number = '';
+  String email = '';
+
+  Future<void> getUserProfileData() async {
+    FirebaseFirestore.instance
+        .collection('users').doc('1234567890')
+        .get()
+        .then((value) {
+          log('name is ${value.get('name')}');
+          setState(() {
+            name = value.get('name');
+            address = value.get('address');
+            profileImage = value.get('profile_pic');
+            payment = value.get('payments');
+            number = value.get('phone_number');
+            email = value.get('email');
+          });
+      });
+    }
+
+    @override
+  void initState() {
+    getUserProfileData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -30,7 +64,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       body: Stack(
         children: [
           Container(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               left: 20,
               right: 20,
               top: 30,
@@ -49,14 +83,14 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       shape: BoxShape.circle,
                       image: DecorationImage(
                         image: NetworkImage(
-                          'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1706&q=80',
+                          profileImage,
                         ),
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -67,15 +101,15 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
-                      "Username",
+                      name,
                       style: TextStyle(
                         fontSize: maxSize,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     Text(
                       "Your profile completion process",
                       style: TextStyle(
@@ -83,7 +117,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Row(
                       children: [
                         Container(
@@ -106,7 +140,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                             ],
                           ),
                         ),
-                        SizedBox(width: 5),
+                        const SizedBox(width: 5),
                         Text(
                           "28%",
                           style: TextStyle(
@@ -123,13 +157,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Container(
+            child: SizedBox(
               height: height / 1.45,
               width: width / 1.2,
               child: ListView(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       color: whiteColor,
                       boxShadow: [
@@ -170,29 +204,31 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           ],
                         ),
                         headingWidgetMethod('About you'),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            profileEditInternalWidget('Name', 'username'),
+                            profileEditInternalWidget('Name', name),
                             profileEditInternalWidget(
-                                'Email', 'useremail@gmail.com'),
+                                'Email', email),
                           ],
                         ),
-                        SizedBox(height: 20),
-                        profileEditInternalWidget('Phone', '9876543210'),
+                        const SizedBox(height: 20),
+                        profileEditInternalWidget('Phone', number),
                       ],
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   editProfileCardWidget('Social Accounts'),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   editProfileCardWidget('Commercials'),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   editProfileCardWidget('Payments'),
-                  SizedBox(height: 16),
+                  Text(payment),
+                  const SizedBox(height: 16),
                   editProfileCardWidget('Address'),
-                  SizedBox(height: 16),
+                  Text(address),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
@@ -217,7 +253,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         ),
         Text(
           subhead,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 12,
             letterSpacing: 1,
             fontWeight: FontWeight.bold,
@@ -226,4 +262,5 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       ],
     );
   }
+
 }
