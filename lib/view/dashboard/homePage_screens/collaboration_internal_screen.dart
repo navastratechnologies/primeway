@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:developer';
+
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -45,26 +47,28 @@ class _CollaborationInternalScreenState
   String docId = '1234567890';
   String url = 'https://prime.page.link';
 
-  buildDynamicLinks(String title, String url, String docId) async {
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: url,
-      link: Uri.parse('https://prime.page.link/NLtk/$docId'),
-      androidParameters: const AndroidParameters(
-        packageName: 'com.example.primeway',
-        minimumVersion: 1,
-      ),
+  buildDynamicLinks(String url, String titles, String docId) async {
+    final dynamicLinkParams = DynamicLinkParameters(
+      link: Uri.parse("https://prime.page.link/NLtk/$docId"),
+      uriPrefix: "https://prime.page.link",
+      androidParameters:
+          const AndroidParameters(packageName: "com.example.primeway"),
     );
-    final ShortDynamicLink dynamicUrl =
-        await dynamicLinks.buildShortLink(parameters);
+    final dynamicLink =
+        await FirebaseDynamicLinks.instance.buildLink(dynamicLinkParams);
 
-    String? desc = dynamicUrl.shortUrl.toString();
+    log('url is $dynamicLink');
 
     Share.share(
-      url,
-      // title,
-      subject: desc,
+      dynamicLink.toString(),
     );
   }
+
+  // @override
+  // void initState() {
+  //   buildDynamicLinks(url, widget.titles, docId);
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +156,7 @@ class _CollaborationInternalScreenState
                       ),
                       InkWell(
                         onTap: () {
-                          buildDynamicLinks(widget.titles, url, docId);
+                          buildDynamicLinks(url, widget.titles, docId);
                         },
                         child: SizedBox(
                           width: 35,
