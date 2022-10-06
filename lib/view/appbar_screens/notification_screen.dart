@@ -26,20 +26,20 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
         ),
       ),
-      body: Container(
+      body: SizedBox(
         height: height,
         width: width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
               height: height / 3,
               child: Image.asset(
                 'assets/icons/bell_icon.png',
                 fit: BoxFit.contain,
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             headingWidgetMethod("You don't have any notifications yet!"),
           ],
         ),

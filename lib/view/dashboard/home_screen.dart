@@ -2,14 +2,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
 import 'package:primewayskills_app/view/dashboard/homePage_screens/collaboration_internal_screen.dart';
 import 'package:primewayskills_app/view/dashboard/homePage_screens/creater_program_scrren.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
-
-import '../../controllers/dataController.dart';
 
 final List<String> imgList = [
   'https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8&w=1000&q=80',
@@ -39,7 +36,6 @@ class _HomescreenState extends State<Homescreen> {
 
   final CollectionReference creatorProgramCategory =
       FirebaseFirestore.instance.collection('creator_program_category');
-
 
   int _current = 0;
   final CarouselController _controller = CarouselController();
@@ -266,9 +262,9 @@ class _HomescreenState extends State<Homescreen> {
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           CreaterProgramScreen(
-                                            categorey:documentSnapshot['category'],
-                                            titles: "Creator Programs",
-                                          ),
+                                        categorey: documentSnapshot['category'],
+                                        titles: "Creator Programs",
+                                      ),
                                     ),
                                   );
                                 },
@@ -333,7 +329,8 @@ class _HomescreenState extends State<Homescreen> {
                                           language:
                                               documentSnapshot['language'],
                                           titles: documentSnapshot['titles'],
-                                          productCategorey: documentSnapshot['product_categorey'],
+                                          productCategorey: documentSnapshot[
+                                              'product_categorey'],
                                         ),
                                       ),
                                     );

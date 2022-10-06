@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
-import 'package:primewayskills_app/view/dashboard/home_screen.dart';
 import 'package:primewayskills_app/view/drawer/resources/resources.dart';
 import 'package:primewayskills_app/view/drawer/setting/setting.dart';
-import 'package:primewayskills_app/view/drawer/tools/tools.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 
@@ -15,7 +13,7 @@ class NavigationDrawer extends StatelessWidget {
   Widget build(BuildContext context) => Drawer(
         backgroundColor: primeColor,
         child: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -34,7 +32,7 @@ class NavigationDrawer extends StatelessWidget {
                             ),
                           ),
                         ),
-                        padding: EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -47,7 +45,7 @@ class NavigationDrawer extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       color: whiteColor,
                                       shape: BoxShape.circle,
-                                      image: DecorationImage(
+                                      image: const DecorationImage(
                                         image: NetworkImage(
                                           'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1706&q=80',
                                         ),
@@ -56,7 +54,7 @@ class NavigationDrawer extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 12),
+                                const SizedBox(width: 12),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -86,7 +84,7 @@ class NavigationDrawer extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Wrap(
                         runSpacing: 10,
                         children: [
@@ -102,7 +100,7 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.pop(context),
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => Dashboard(),
+                                  builder: (context) => const Dashboard(),
                                 ),
                               ),
                             },
@@ -146,7 +144,7 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.pop(context),
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => SettingScreen(),
+                                  builder: (context) => const SettingScreen(),
                                 ),
                               ),
                             },
@@ -175,7 +173,7 @@ class NavigationDrawer extends StatelessWidget {
                         Navigator.pop(context),
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => Dashboard(),
+                            builder: (context) => const Dashboard(),
                           ),
                         ),
                       },

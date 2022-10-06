@@ -1,8 +1,16 @@
+// ignore_for_file: avoid_print
+
+import 'dart:developer';
+
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:primewayskills_app/view/complete_profile_screens/complete_profile_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:share/share.dart';
 
 class CollaborationInternalScreen extends StatefulWidget {
   final String heading,
@@ -26,7 +34,7 @@ class CollaborationInternalScreen extends StatefulWidget {
       required this.language,
       required this.collaborationtype,
       required this.titles,
-       required this.productCategorey})
+      required this.productCategorey})
       : super(key: key);
 
   @override
@@ -36,6 +44,8 @@ class CollaborationInternalScreen extends StatefulWidget {
 
 class _CollaborationInternalScreenState
     extends State<CollaborationInternalScreen> {
+  
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -120,11 +130,15 @@ class _CollaborationInternalScreenState
                           ),
                         ],
                       ),
-                      SizedBox(
-                        width: 35,
-                        child: FaIcon(
-                          FontAwesomeIcons.shareNodes,
-                          color: primeColor,
+                      InkWell(
+                        onTap: () {},
+                        
+                        child: SizedBox(
+                          width: 35,
+                          child: FaIcon(
+                            FontAwesomeIcons.shareNodes,
+                            color: primeColor,
+                          ),
                         ),
                       ),
                     ],

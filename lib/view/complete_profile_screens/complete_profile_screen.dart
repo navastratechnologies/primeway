@@ -34,7 +34,6 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -89,7 +88,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                               ),
                             ),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Expanded(
                       child: Container(
                         height: 2,
@@ -100,7 +99,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Container(
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
@@ -121,7 +120,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                               ),
                             ),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Expanded(
                       child: Container(
                         height: 2,
@@ -132,7 +131,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Container(
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
@@ -170,9 +169,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                                 Center(
-                                  child: Container(
+                                  child: SizedBox(
                                     width: 100,
                                     child: InkWell(
                                       child: Stack(
@@ -183,7 +182,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                             decoration: BoxDecoration(
                                               color: whiteColor,
                                               shape: BoxShape.circle,
-                                              image: DecorationImage(
+                                              image: const DecorationImage(
                                                 image: NetworkImage(
                                                   'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1706&q=80',
                                                 ),
@@ -197,7 +196,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                             child: Align(
                                               alignment: Alignment.topRight,
                                               child: Container(
-                                                padding: EdgeInsets.all(5),
+                                                padding:
+                                                    const EdgeInsets.all(5),
                                                 decoration: BoxDecoration(
                                                   shape: BoxShape.circle,
                                                   color: primeColor,
@@ -215,14 +215,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 20),
-                                Text(
+                                const SizedBox(height: 20),
+                                const Text(
                                   'Name',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 TextField(
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(
@@ -238,14 +238,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 30),
-                                Text(
+                                const SizedBox(height: 30),
+                                const Text(
                                   'Describe your work',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 TextField(
                                   maxLines: 4,
                                   decoration: InputDecoration(
@@ -271,7 +271,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                     LengthLimitingTextInputFormatter(128),
                                   ],
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Align(
                                   alignment: Alignment.topRight,
                                   child: Text(
@@ -282,14 +282,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 30),
-                                Text(
+                                const SizedBox(height: 30),
+                                const Text(
                                   'Gender',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   height: 50,
                                   width: width,
                                   child: Row(
@@ -305,7 +305,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                           log('log is $male $female $otherGender');
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                             vertical: 6,
                                             horizontal: 16,
                                           ),
@@ -330,7 +330,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(width: 10),
+                                      const SizedBox(width: 10),
                                       InkWell(
                                         onTap: () {
                                           setState(() {
@@ -341,7 +341,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                           log('log is $male $female $otherGender');
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                             vertical: 6,
                                             horizontal: 16,
                                           ),
@@ -367,7 +367,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(width: 10),
+                                      const SizedBox(width: 10),
                                       InkWell(
                                         onTap: () {
                                           setState(() {
@@ -378,7 +378,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                           log('log is $male $female $otherGender');
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                             vertical: 6,
                                             horizontal: 16,
                                           ),
@@ -407,17 +407,17 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 30),
-                                Text(
+                                const SizedBox(height: 30),
+                                const Text(
                                   'Date of Birth',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 InkWell(
                                   onTap: () async {
-                                    DateTime? _dobDate = await showDatePicker(
+                                    DateTime? dobDate = await showDatePicker(
                                       context: context,
                                       initialDate: _indobDate,
                                       firstDate: DateTime(1990),
@@ -437,13 +437,13 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                         );
                                       },
                                     );
-                                    if (_dobDate != null) {
+                                    if (dobDate != null) {
                                       setState(() {
-                                        _indobDate = _dobDate;
+                                        _indobDate = dobDate;
                                         dob =
                                             "${_indobDate.day}/${_indobDate.month}/${_indobDate.year}";
                                       });
-                                      log("last index${_indobDate}");
+                                      log("last index$_indobDate");
                                     }
                                   },
                                   child: Container(
@@ -451,7 +451,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                       color: primeColor,
                                     ),
-                                    padding: EdgeInsets.all(10),
+                                    padding: const EdgeInsets.all(10),
                                     child: Text(
                                       dob,
                                       style: TextStyle(
@@ -462,7 +462,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                                 SizedBox(
                                   height: 70,
                                   width: width,
@@ -531,14 +531,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SizedBox(height: 20),
-                                    Text(
+                                    const SizedBox(height: 20),
+                                    const Text(
                                       'Location',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     TextField(
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -556,14 +556,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 30),
-                                    Text(
+                                    const SizedBox(height: 30),
+                                    const Text(
                                       'Primary Contact',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     Text(
                                       'This number is used for login and cannot be edited',
                                       style: TextStyle(
@@ -572,21 +572,21 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                         color: Colors.black.withOpacity(0.4),
                                       ),
                                     ),
-                                    SizedBox(height: 10),
-                                    Text(
+                                    const SizedBox(height: 10),
+                                    const Text(
                                       '9876543210',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    SizedBox(height: 30),
-                                    Text(
+                                    const SizedBox(height: 30),
+                                    const Text(
                                       'Secondary Contact',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     TextField(
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -613,7 +613,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                         LengthLimitingTextInputFormatter(10),
                                       ],
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     Align(
                                       alignment: Alignment.topRight,
                                       child: Text(
@@ -624,14 +624,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 20),
-                                    Text(
+                                    const SizedBox(height: 20),
+                                    const Text(
                                       'Email',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     TextField(
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -649,7 +649,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 30),
+                                    const SizedBox(height: 30),
                                     SizedBox(
                                       height: 70,
                                       width: width,
@@ -718,14 +718,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SizedBox(height: 20),
-                                    Text(
+                                    const SizedBox(height: 20),
+                                    const Text(
                                       'Content Language',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     Text(
                                       'Select upto 3 languages in which you create content',
                                       style: TextStyle(
@@ -734,43 +734,44 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                         fontSize: 13,
                                       ),
                                     ),
-                                    SizedBox(height: 30),
-                                    Container(
-                                      child: GridView.builder(
-                                        itemCount: languageModel.length,
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 3,
-                                          mainAxisSpacing: 1,
-                                          crossAxisSpacing: 1,
-                                          childAspectRatio: 2,
-                                        ),
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return Center(
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 20, vertical: 10),
-                                              decoration: BoxDecoration(
-                                                color: Colors.blue,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Text(
-                                                languageModel[index],
-                                                style: TextStyle(
-                                                  color: whiteColor,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
+                                    const SizedBox(height: 30),
+                                    GridView.builder(
+                                      itemCount: languageModel.length,
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                        mainAxisSpacing: 1,
+                                        crossAxisSpacing: 1,
+                                        childAspectRatio: 2,
+                                      ),
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Center(
+                                          child: Container(
+                                            padding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 10),
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Text(
+                                              languageModel[index],
+                                              style: TextStyle(
+                                                color: whiteColor,
+                                                fontWeight: FontWeight.w500,
                                               ),
                                             ),
-                                          );
-                                        },
-                                      ),
+                                          ),
+                                        );
+                                      },
                                     ),
-                                    SizedBox(height: 30),
+                                    const SizedBox(height: 30),
                                     SizedBox(
                                       height: 70,
                                       width: width,
@@ -779,7 +780,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                             MainAxisAlignment.center,
                                         children: [
                                           InkWell(
-                                            onTap: () => Navigator.of(context).pop(),
+                                            onTap: () =>
+                                                Navigator.of(context).pop(),
                                             child: Container(
                                               height: 50,
                                               width: width / 1.5,

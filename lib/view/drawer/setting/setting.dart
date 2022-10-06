@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
@@ -15,10 +17,10 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavigationDrawer(),
+      drawer: const NavigationDrawer(),
       appBar: AppBar(
         backgroundColor: primeColor,
-        title: Text("Settings"),
+        title: const Text("Settings"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -28,44 +30,44 @@ class _SettingScreenState extends State<SettingScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 headingWidgetMethod('Terms Of Service'),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 paragraphWidgetMethod('Read Terms Of Service', context),
-                SizedBox(height: 14),
-                Divider(),
+                const SizedBox(height: 14),
+                const Divider(),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 headingWidgetMethod('Privacy Policy'),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 paragraphWidgetMethod('Read Privacy Policy', context),
-                SizedBox(height: 20),
-                Divider(),
+                const SizedBox(height: 20),
+                const Divider(),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 headingWidgetMethod('Contact Us'),
-                SizedBox(height: 20),
-                Divider(),
+                const SizedBox(height: 20),
+                const Divider(),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 headingWidgetMethod('App Version'),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 paragraphWidgetMethod('1.0.0', context),
-                SizedBox(height: 20),
-                Divider(),
+                const SizedBox(height: 20),
+                const Divider(),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -88,8 +90,8 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
-                Divider(),
+                const SizedBox(height: 20),
+                const Divider(),
               ],
             ),
           ],

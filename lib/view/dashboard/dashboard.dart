@@ -33,7 +33,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavigationDrawer(),
+      drawer: const NavigationDrawer(),
       appBar: AppBar(
         iconTheme: IconThemeData(color: whiteColor),
         backgroundColor: primeColor,
@@ -69,7 +69,7 @@ class _DashboardState extends State<Dashboard> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfileEditScreen(),
+                  builder: (context) => const ProfileEditScreen(),
                 ),
               );
             },
@@ -83,7 +83,7 @@ class _DashboardState extends State<Dashboard> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NotificationScreen(),
+                  builder: (context) => const NotificationScreen(),
                 ),
               );
             },
@@ -98,7 +98,7 @@ class _DashboardState extends State<Dashboard> {
               _currentIndex = index;
             });
           },
-          children: [
+          children: const [
             Homescreen(),
             CollaborationScreen(),
             ProfileScreen(),

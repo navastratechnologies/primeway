@@ -10,11 +10,13 @@ final List<String> imgList = [
   'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
 ];
 
-void main() => runApp(CarouselDemo());
+void main() => runApp(const CarouselDemo());
 
 final themeMode = ValueNotifier(2);
 
 class CarouselDemo extends StatelessWidget {
+  const CarouselDemo({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -25,8 +27,8 @@ class CarouselDemo extends StatelessWidget {
           themeMode: ThemeMode.values.toList()[value as int],
           debugShowCheckedModeBanner: false,
           routes: {
-            '/': (ctx) => CarouselDemoHome(),
-            '/indicator': (ctx) => CarouselWithIndicatorDemo(),
+            '/': (ctx) => const CarouselDemoHome(),
+            '/indicator': (ctx) => const CarouselWithIndicatorDemo(),
           },
         );
       },
@@ -38,7 +40,7 @@ class CarouselDemo extends StatelessWidget {
 class DemoItem extends StatelessWidget {
   final String title;
   final String route;
-  DemoItem(this.title, this.route);
+  const DemoItem(this.title, this.route, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,21 +54,23 @@ class DemoItem extends StatelessWidget {
 }
 
 class CarouselDemoHome extends StatelessWidget {
+  const CarouselDemoHome({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Carousel demo'),
+        title: const Text('Carousel demo'),
         actions: [
           IconButton(
-              icon: Icon(Icons.nightlight_round),
+              icon: const Icon(Icons.nightlight_round),
               onPressed: () {
                 themeMode.value = themeMode.value == 1 ? 2 : 1;
               })
         ],
       ),
       body: ListView(
-        children: <Widget>[
+        children: const <Widget>[
           DemoItem('Carousel with indicator controller demo', '/indicator'),
         ],
       ),
@@ -75,68 +79,67 @@ class CarouselDemoHome extends StatelessWidget {
 }
 
 class ImageSliderDemo extends StatelessWidget {
+  const ImageSliderDemo({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Image slider demo')),
-      body: Container(
-          child: CarouselSlider(
+      appBar: AppBar(title: const Text('Image slider demo')),
+      body: CarouselSlider(
         options: CarouselOptions(),
         items: imgList
-            .map((item) => Container(
-                  child: Center(
-                      child:
-                          Image.network(item, fit: BoxFit.cover, width: 1000)),
-                ))
-            .toList(),
-      )),
+        .map((item) => Center(
+            child:
+                Image.network(item, fit: BoxFit.cover, width: 1000)))
+        .toList(),
+      ),
     );
   }
 }
 
 final List<Widget> imageSliders = imgList
     .map((item) => Container(
-          child: Container(
-            margin: EdgeInsets.all(5.0),
-            child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                child: Stack(
-                  children: <Widget>[
-                    Image.network(item, fit: BoxFit.cover, width: 1000.0),
-                    Positioned(
-                      bottom: 0.0,
-                      left: 0.0,
-                      right: 0.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color.fromARGB(200, 0, 0, 0),
-                              Color.fromARGB(0, 0, 0, 0)
-                            ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                          ),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 20.0),
-                        child: Text(
-                          'No. ${imgList.indexOf(item)} image',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+      margin: const EdgeInsets.all(5.0),
+      child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+          child: Stack(
+            children: <Widget>[
+              Image.network(item, fit: BoxFit.cover, width: 1000.0),
+              Positioned(
+                bottom: 0.0,
+                left: 0.0,
+                right: 0.0,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromARGB(200, 0, 0, 0),
+                        Color.fromARGB(0, 0, 0, 0)
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
                     ),
-                  ],
-                )),
-          ),
-        ))
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 20.0),
+                  child: Text(
+                    'No. ${imgList.indexOf(item)} image',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )),
+    ))
     .toList();
 
 class CarouselWithIndicatorDemo extends StatefulWidget {
+  const CarouselWithIndicatorDemo({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _CarouselWithIndicatorState();
@@ -150,7 +153,8 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicatorDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Carousel with indicator controller demo')),
+      appBar:
+          AppBar(title: const Text('Carousel with indicator controller demo')),
       body: Column(
         children: [
           Expanded(
@@ -180,8 +184,8 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicatorDemo> {
                   child: Container(
                     width: 12.0,
                     height: 12.0,
-                    margin:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 4.0),
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: (Theme.of(context).brightness == Brightness.dark

@@ -38,6 +38,8 @@ dependencies:
   firebase_auth: ^3.10.0
   firebase_core: ^1.23.0
   firebase_database: ^9.1.5
+  firebase_dynamic_links: ^4.3.9
+  share:
   firebase_storage: ^10.3.9
   flutter:
     sdk: flutter

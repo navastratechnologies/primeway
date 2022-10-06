@@ -27,7 +27,7 @@ paragraphWidgetMethod(text, context) {
 
 buttonWidget(text) {
   return Container(
-    padding: EdgeInsets.symmetric(vertical: 10),
+    padding: const EdgeInsets.symmetric(vertical: 10),
     width: 80,
     decoration: BoxDecoration(
       color: primeColor,
@@ -36,7 +36,7 @@ buttonWidget(text) {
         BoxShadow(
           color: Colors.black.withOpacity(0.4),
           blurRadius: 5,
-          offset: Offset(0.5, 0.5),
+          offset: const Offset(0.5, 0.5),
         ),
       ],
     ),
@@ -61,7 +61,7 @@ sidebarIconWidget(icon) {
 
 editProfileCardWidget(text) {
   return Container(
-    padding: EdgeInsets.all(14),
+    padding: const EdgeInsets.all(14),
     decoration: BoxDecoration(
       color: whiteColor,
       boxShadow: [
@@ -112,13 +112,13 @@ listOrderWidget(text) {
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
       Container(
-        padding: EdgeInsets.all(4),
-        decoration: BoxDecoration(
+        padding: const EdgeInsets.all(4),
+        decoration: const BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.black,
         ),
       ),
-      SizedBox(width: 10),
+      const SizedBox(width: 10),
       Text(
         text,
         style: TextStyle(
