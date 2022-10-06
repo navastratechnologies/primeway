@@ -1,12 +1,8 @@
 // ignore_for_file: avoid_print
 
-import 'dart:developer';
-
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:primewayskills_app/view/complete_profile_screens/complete_profile_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
@@ -44,7 +40,31 @@ class CollaborationInternalScreen extends StatefulWidget {
 
 class _CollaborationInternalScreenState
     extends State<CollaborationInternalScreen> {
-  
+  FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
+
+  String docId = '1234567890';
+  String url = 'https://prime.page.link';
+
+  buildDynamicLinks(String title, String url, String docId) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: url,
+      link: Uri.parse('https://prime.page.link/NLtk/$docId'),
+      androidParameters: const AndroidParameters(
+        packageName: 'com.example.primeway',
+        minimumVersion: 1,
+      ),
+    );
+    final ShortDynamicLink dynamicUrl =
+        await dynamicLinks.buildShortLink(parameters);
+
+    String? desc = dynamicUrl.shortUrl.toString();
+
+    Share.share(
+      url,
+      // title,
+      subject: desc,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,8 +151,9 @@ class _CollaborationInternalScreenState
                         ],
                       ),
                       InkWell(
-                        onTap: () {},
-                        
+                        onTap: () {
+                          buildDynamicLinks(widget.titles, url, docId);
+                        },
                         child: SizedBox(
                           width: 35,
                           child: FaIcon(

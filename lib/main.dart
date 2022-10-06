@@ -5,6 +5,9 @@ import 'package:primewayskills_app/view/splash_screen/splash_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
    await Firebase.initializeApp();
+
+  // DeepLinkService.instance?.handleDynamicLinks();
+
   runApp(const MyApp());
 
 }
