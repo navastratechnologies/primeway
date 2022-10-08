@@ -36,7 +36,7 @@ class _DashboardState extends State<Dashboard> {
       drawer: const NavigationDrawer(),
       appBar: AppBar(
         iconTheme: IconThemeData(color: whiteColor),
-        backgroundColor: primeColor,
+        backgroundColor: whiteColor,
         title: RichText(
           text: TextSpan(
             children: [

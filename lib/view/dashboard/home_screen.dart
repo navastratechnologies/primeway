@@ -66,9 +66,11 @@ class _HomescreenState extends State<Homescreen> {
                               width: MediaQuery.of(context).size.width / 1.1,
                               decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage(
-                                        documentSnapshot['Banner_image']),
-                                    fit: BoxFit.cover),
+                                  image: NetworkImage(
+                                    documentSnapshot['Banner_image'],
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             );
