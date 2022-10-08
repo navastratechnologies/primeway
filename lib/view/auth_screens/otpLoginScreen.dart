@@ -1,16 +1,32 @@
+// ignore_for_file: unnecessary_null_comparison
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
+import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
+import '../complete_profile_screens/complete_profile_screen.dart';
+
 class OtpLoginScreen extends StatefulWidget {
-  const OtpLoginScreen({super.key});
+  final String? phone, verId;
+  const OtpLoginScreen({super.key, this.phone, this.verId});
 
   @override
   State<OtpLoginScreen> createState() => _OtpLoginScreenState();
 }
 
 class _OtpLoginScreenState extends State<OtpLoginScreen> {
+  TextEditingController otpController = TextEditingController();
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  User? user;
+  String verificationID = "";
+  String verificationIdFinal = "";
+  AuthClass authClass = AuthClass();
+
   _listenSmsCode() async {
     await SmsAutoFill().listenForCode();
   }
@@ -97,6 +113,7 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                     ),
                     const SizedBox(height: 40),
                     PinFieldAutoFill(
+                      controller: otpController,
                       codeLength: 6,
                       autoFocus: true,
                       decoration: UnderlineDecoration(
@@ -127,12 +144,13 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(40),
                     ),
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Dashboard(),
-                      ),
-                    ),
+                    onPressed: () {
+                      if (otpController != null) {
+                        // authClass.signInwithPhoneNumber(widget.phone!,
+                        //     widget.verId!, otpController.text, context);
+                        verifyOTP();
+                      } else {}
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -164,5 +182,62 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
         ],
       ),
     );
+  }
+
+  void verifyOTP() async {
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+      verificationId: widget.verId.toString(),
+      smsCode: otpController.text,
+    );
+
+    await auth.signInWithCredential(credential).then(
+      (value) {
+        setState(() {
+          user = FirebaseAuth.instance.currentUser;
+        });
+      },
+    ).whenComplete(
+      () {
+        if (user != null) {
+          Fluttertoast.showToast(
+            msg: "You are logged in successfully",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 100,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Dashboard(),
+            ),
+          );
+        } else {
+          Fluttertoast.showToast(
+            msg: "your are new user",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 100,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CompleteProfileScreen(),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  void setData(String verificationId) {
+    setState(() {
+      verificationIdFinal = verificationId;
+    });
   }
 }

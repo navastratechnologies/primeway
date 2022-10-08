@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/auth_screens/phoneLoginScreen.dart';
+import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 
 class LoginHomeScreen extends StatefulWidget {
   const LoginHomeScreen({super.key});
@@ -10,6 +12,8 @@ class LoginHomeScreen extends StatefulWidget {
 }
 
 class _HomePageState extends State<LoginHomeScreen> {
+  AuthClass authClass = AuthClass();
+
   ScrollController controller = ScrollController();
   ScrollController controller1 = ScrollController();
 
@@ -190,7 +194,17 @@ class _HomePageState extends State<LoginHomeScreen> {
                             color: Colors.blue[900],
                             padding: const EdgeInsets.all(5),
                             shape: const CircleBorder(),
-                            onPressed: () {},
+                            onPressed: () {
+                              authClass.signInWithFacebook().then(
+                                    (value) => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return const Dashboard();
+                                        },
+                                      ),
+                                    ),
+                                  );
+                            },
                             child: const FaIcon(
                               FontAwesomeIcons.facebookF,
                               color: Colors.white,
@@ -200,7 +214,17 @@ class _HomePageState extends State<LoginHomeScreen> {
                             color: Colors.white,
                             padding: const EdgeInsets.all(2),
                             shape: const CircleBorder(),
-                            onPressed: () {},
+                            onPressed: () {
+                              authClass.signInWithGoogle().then(
+                                    (value) => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return const Dashboard();
+                                        },
+                                      ),
+                                    ),
+                                  );
+                            },
                             child: Image.asset(
                               'assets/google.png',
                               height: 26,

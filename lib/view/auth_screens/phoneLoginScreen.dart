@@ -1,7 +1,11 @@
+// ignore_for_file: avoid_print
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:lottie/lottie.dart';
-import 'package:primewayskills_app/view/auth_screens/otpLoginScreen.dart';
+import 'package:primewayskills_app/controllers/phone_controller.dart';
 
 class PhoneLoginScreen extends StatefulWidget {
   const PhoneLoginScreen({super.key});
@@ -11,6 +15,15 @@ class PhoneLoginScreen extends StatefulWidget {
 }
 
 class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
+  TextEditingController phoneController = TextEditingController();
+   final storage = const FlutterSecureStorage();
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  AuthClass authClass = AuthClass();
+  String verificationIdFinal = "";
+  String phonenumber = '';
+
+  String verificationID = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,6 +132,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                           SizedBox(
                             width: MediaQuery.of(context).size.width / 1.67,
                             child: TextFormField(
+                              controller: phoneController,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -150,12 +164,11 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(40),
                     ),
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const OtpLoginScreen(),
-                      ),
-                    ),
+                    onPressed: () {
+                      String countryCode = '+91';
+                      phonenumber = '$countryCode${phoneController.text}';
+                      authClass.verifyPhoneNumber(phonenumber, phoneController.text, context, setData);
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -187,5 +200,11 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
         ],
       ),
     );
+  }
+
+  void setData(String verificationId) {
+    setState(() {
+      verificationIdFinal = verificationId;
+    });
   }
 }
