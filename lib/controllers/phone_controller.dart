@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable, avoid_print
+// ignore_for_file: unused_local_variable, avoid_print, use_build_context_synchronously
 
 import 'dart:developer';
 
@@ -6,8 +6,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:primewayskills_app/view/auth_screens/otpLoginScreen.dart';
+import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 
 class AuthClass {
   final storage = const FlutterSecureStorage();
@@ -64,6 +66,28 @@ class AuthClass {
       UserCredential userCredential =
           await auth.signInWithCredential(credential);
       // showSnackBar(context, "logged In");
+      User? user = userCredential.user;
+      if (userCredential.additionalUserInfo!.isNewUser) {
+        Fluttertoast.showToast(
+          msg: "your are new user",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 100,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Dashboard(
+              userId: '',
+              userName: '',
+            ),
+          ),
+        );
+      }
       log('user is $userCredential');
     } catch (e) {
       showSnackBar(context, e.toString());
@@ -92,8 +116,9 @@ class AuthClass {
     await storage.write(key: "gender", value: gender.toString());
   }
 
-  Future<UserCredential> signInWithGoogle() async {
+  Future<UserCredential> signInWithGoogle(context) async {
     // Trigger the authentication flow
+
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     // Obtain the auth details from the request
@@ -110,13 +135,38 @@ class AuthClass {
     UserCredential userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-    log('user is $userCredential');
+    User? user = userCredential.user;
+    if (userCredential.additionalUserInfo!.isNewUser) {
+      Fluttertoast.showToast(
+        msg: "your are new user",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 100,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      log('if is new');
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Dashboard(
+            userId: '',
+            userName: '',
+          ),
+        ),
+      );
+      log('else is old');
+    }
 
+    log('user is $userCredential');
     return FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  Future<UserCredential> signInWithFacebook() async {
+  Future<UserCredential> signInWithFacebook(context) async {
     // Trigger the sign-in flow
+
     final LoginResult loginResult = await FacebookAuth.instance.login();
 
     // Create a credential from the access token
@@ -126,6 +176,29 @@ class AuthClass {
     // Once signed in, return the UserCredential
     UserCredential userCredential = await FirebaseAuth.instance
         .signInWithCredential(facebookAuthCredential);
+
+    User? user = userCredential.user;
+    if (userCredential.additionalUserInfo!.isNewUser) {
+      Fluttertoast.showToast(
+        msg: "your are new user",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 100,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Dashboard(
+            userId: '',
+            userName: '',
+          ),
+        ),
+      );
+    }
 
     log('user is $userCredential');
 

@@ -197,15 +197,7 @@ class _HomePageState extends State<LoginHomeScreen> {
                             padding: const EdgeInsets.all(5),
                             shape: const CircleBorder(),
                             onPressed: () {
-                              authClass.signInWithFacebook().then(
-                                    (value) => Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return const Dashboard(userId: '', userName: '',);
-                                        },
-                                      ),
-                                    ),
-                                  );
+                              authClass.signInWithFacebook(context);
                             },
                             child: const FaIcon(
                               FontAwesomeIcons.facebookF,
@@ -217,15 +209,7 @@ class _HomePageState extends State<LoginHomeScreen> {
                             padding: const EdgeInsets.all(2),
                             shape: const CircleBorder(),
                             onPressed: () {
-                              authClass.signInWithGoogle().then(
-                                    (value) => Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return const Dashboard(userId: '', userName: '',);
-                                        },
-                                      ),
-                                    ),
-                                  );
+                              authClass.signInWithGoogle(context);
                             },
                             child: Image.asset(
                               'assets/google.png',
