@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/auth_screens/phoneLoginScreen.dart';
-import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 
 class LoginHomeScreen extends StatefulWidget {
   const LoginHomeScreen({super.key});
