@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: unnecessary_null_comparison, file_names
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +21,8 @@ class OtpLoginScreen extends StatefulWidget {
 class _OtpLoginScreenState extends State<OtpLoginScreen> {
   TextEditingController otpController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
-
   User? user;
+
   String verificationID = "";
   String verificationIdFinal = "";
   AuthClass authClass = AuthClass();
@@ -146,9 +146,9 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                     ),
                     onPressed: () {
                       if (otpController != null) {
-                        // authClass.signInwithPhoneNumber(widget.phone!,
-                        //     widget.verId!, otpController.text, context);
-                        verifyOTP();
+                        authClass.signInwithPhoneNumber(widget.phone!,
+                            widget.verId!, otpController.text, context);
+                        // verifyOTP();
                       } else {}
                     },
                     child: Row(
@@ -199,19 +199,13 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
     ).whenComplete(
       () {
         if (user != null) {
-          Fluttertoast.showToast(
-            msg: "You are logged in successfully",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 100,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const Dashboard(),
+              builder: (context) => const Dashboard(
+                userId: '',
+                userName: '',
+              ),
             ),
           );
         } else {

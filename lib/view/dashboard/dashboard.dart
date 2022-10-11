@@ -9,7 +9,9 @@ import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+  final String userName;
+  final String userId;
+  const Dashboard({Key? key,  required this.userName, required this.userId}) : super(key: key);
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -49,7 +51,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
               TextSpan(
-                text: 'UserName',
+                text: widget.userName,
                 style: TextStyle(
                   fontSize: maxSize,
                   color: whiteColor,
@@ -69,7 +71,7 @@ class _DashboardState extends State<Dashboard> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ProfileEditScreen(),
+                  builder: (context) => const ProfileEditScreen(userId: '', userName: '',),
                 ),
               );
             },

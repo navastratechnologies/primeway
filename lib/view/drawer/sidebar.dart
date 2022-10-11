@@ -100,7 +100,7 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.pop(context),
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const Dashboard(),
+                                  builder: (context) => const Dashboard(userId: '', userName: '',),
                                 ),
                               ),
                             },
@@ -173,7 +173,7 @@ class NavigationDrawer extends StatelessWidget {
                         Navigator.pop(context),
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const Dashboard(),
+                            builder: (context) => const Dashboard(userName: '', userId: '',),
                           ),
                         ),
                       },

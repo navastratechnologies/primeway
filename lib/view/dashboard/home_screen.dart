@@ -131,7 +131,7 @@ class _HomescreenState extends State<Homescreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (contex) => const ProfileEditScreen(),
+                          builder: (contex) => const ProfileEditScreen(userId: '', userName: '',),
                         ),
                       );
                     },
@@ -156,7 +156,7 @@ class _HomescreenState extends State<Homescreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (contex) => const ProfileEditScreen(),
+                              builder: (contex) => const ProfileEditScreen(userId: '', userName: '',),
                             ),
                           );
                         },

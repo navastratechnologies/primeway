@@ -1,12 +1,18 @@
+import 'dart:core';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileEditScreen extends StatefulWidget {
-  const ProfileEditScreen({Key? key}) : super(key: key);
+  final String userId;
+  final String userName;
+  const ProfileEditScreen(
+      {Key? key, required this.userId, required this.userName})
+      : super(key: key);
 
   @override
   State<ProfileEditScreen> createState() => _ProfileEditScreenState();
@@ -22,24 +28,26 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   String number = '';
   String email = '';
 
+ 
   Future<void> getUserProfileData() async {
     FirebaseFirestore.instance
-        .collection('users').doc('1234567890')
+        .collection('users')
+        .doc(widget.userId)
         .get()
         .then((value) {
-          log('name is ${value.get('name')}');
-          setState(() {
-            name = value.get('name');
-            address = value.get('address');
-            profileImage = value.get('profile_pic');
-            payment = value.get('payments');
-            number = value.get('phone_number');
-            email = value.get('email');
-          });
+      log('name is ${value.get('name')}');
+      setState(() {
+        name = value.get('name');
+        address = value.get('address');
+        profileImage = value.get('profile_pic');
+        payment = value.get('payments');
+        number = value.get('phone_number');
+        email = value.get('email');
       });
-    }
+    });
+  }
 
-    @override
+  @override
   void initState() {
     getUserProfileData();
     super.initState();
@@ -208,9 +216,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            profileEditInternalWidget('Name', name),
-                            profileEditInternalWidget(
-                                'Email', email),
+                            profileEditInternalWidget('Name', widget.userName),
+                            profileEditInternalWidget('Email', email),
                           ],
                         ),
                         const SizedBox(height: 20),
@@ -220,6 +227,15 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   ),
                   const SizedBox(height: 16),
                   editProfileCardWidget('Social Accounts'),
+                  Container(
+                    color: Colors.red,
+                    child: GestureDetector(
+                      onTap: () {
+                        canLaunchUrl(Uri.parse('www.google.com'));
+                      },
+                      child: const Text('Click'),
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   editProfileCardWidget('Commercials'),
                   const SizedBox(height: 16),
@@ -262,5 +278,4 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       ],
     );
   }
-
 }

@@ -64,6 +64,7 @@ class AuthClass {
       UserCredential userCredential =
           await auth.signInWithCredential(credential);
       // showSnackBar(context, "logged In");
+      log('user is $userCredential');
     } catch (e) {
       showSnackBar(context, e.toString());
     }
@@ -109,9 +110,9 @@ class AuthClass {
     UserCredential userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-    log('log data is ${userCredential.user?.displayName}');
+    log('user is $userCredential');
 
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    return FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   Future<UserCredential> signInWithFacebook() async {
@@ -123,6 +124,11 @@ class AuthClass {
         FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
     // Once signed in, return the UserCredential
+    UserCredential userCredential = await FirebaseAuth.instance
+        .signInWithCredential(facebookAuthCredential);
+
+    log('user is $userCredential');
+
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 }

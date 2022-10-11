@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
@@ -199,7 +201,7 @@ class _HomePageState extends State<LoginHomeScreen> {
                                     (value) => Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) {
-                                          return const Dashboard();
+                                          return const Dashboard(userId: '', userName: '',);
                                         },
                                       ),
                                     ),
@@ -219,7 +221,7 @@ class _HomePageState extends State<LoginHomeScreen> {
                                     (value) => Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) {
-                                          return const Dashboard();
+                                          return const Dashboard(userId: '', userName: '',);
                                         },
                                       ),
                                     ),
