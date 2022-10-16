@@ -107,13 +107,15 @@ class _HomescreenState extends State<Homescreen> {
                           margin: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 4.0),
                           decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black)
-                                  .withOpacity(
-                                      _current == entry.key ? 1.0 : 0.4)),
+                            shape: BoxShape.circle,
+                            color:
+                                (Theme.of(context).brightness == Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black)
+                                    .withOpacity(
+                              _current == entry.key ? 1.0 : 0.4,
+                            ),
+                          ),
                         ),
                       );
                     },
@@ -131,7 +133,10 @@ class _HomescreenState extends State<Homescreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (contex) => const ProfileEditScreen(userId: '', userName: '',),
+                          builder: (contex) => const ProfileEditScreen(
+                            userId: '',
+                            userName: '',
+                          ),
                         ),
                       );
                     },
@@ -156,7 +161,10 @@ class _HomescreenState extends State<Homescreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (contex) => const ProfileEditScreen(userId: '', userName: '',),
+                              builder: (contex) => const ProfileEditScreen(
+                                userId: '',
+                                userName: '',
+                              ),
                             ),
                           );
                         },
@@ -294,7 +302,7 @@ class _HomescreenState extends State<Homescreen> {
                   const SizedBox(height: 10),
                   SizedBox(
                     width: width,
-                    height: 350,
+                    height: 360,
                     child: StreamBuilder(
                       stream: collaboration.snapshots(),
                       builder: (context,

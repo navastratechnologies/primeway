@@ -100,7 +100,10 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.pop(context),
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const Dashboard(userId: '', userName: '',),
+                                  builder: (context) => const Dashboard(
+                                    userId: '',
+                                    userName: '',
+                                  ),
                                 ),
                               ),
                             },
@@ -154,6 +157,94 @@ class NavigationDrawer extends StatelessWidget {
                               size: 18,
                             ),
                           ),
+                          ListTile(
+                            leading: sidebarIconWidget(Icons.handshake_rounded),
+                            title: Text(
+                              "Become Partner",
+                              style: TextStyle(
+                                color: whiteColor,
+                              ),
+                            ),
+                            onTap: () => {
+                              Navigator.pop(context),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const SettingScreen(),
+                                ),
+                              ),
+                            },
+                            trailing: FaIcon(
+                              FontAwesomeIcons.chevronRight,
+                              color: whiteColor.withOpacity(0.6),
+                              size: 18,
+                            ),
+                          ),
+                          ListTile(
+                            leading: sidebarIconWidget(Icons.whatsapp),
+                            title: Text(
+                              "Chat With Us",
+                              style: TextStyle(
+                                color: whiteColor,
+                              ),
+                            ),
+                            onTap: () => {
+                              Navigator.pop(context),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const SettingScreen(),
+                                ),
+                              ),
+                            },
+                            trailing: FaIcon(
+                              FontAwesomeIcons.chevronRight,
+                              color: whiteColor.withOpacity(0.6),
+                              size: 18,
+                            ),
+                          ),
+                          ListTile(
+                            leading: sidebarIconWidget(Icons.business_rounded),
+                            title: Text(
+                              "About Us",
+                              style: TextStyle(
+                                color: whiteColor,
+                              ),
+                            ),
+                            onTap: () => {
+                              Navigator.pop(context),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const SettingScreen(),
+                                ),
+                              ),
+                            },
+                            trailing: FaIcon(
+                              FontAwesomeIcons.chevronRight,
+                              color: whiteColor.withOpacity(0.6),
+                              size: 18,
+                            ),
+                          ),
+                          ListTile(
+                            leading: sidebarIconWidget(Icons.quiz_rounded),
+                            title: Text(
+                              "FAQs",
+                              style: TextStyle(
+                                color: whiteColor,
+                              ),
+                            ),
+                            onTap: () => {
+                              Navigator.pop(context),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const SettingScreen(),
+                                ),
+                              ),
+                            },
+                            trailing: FaIcon(
+                              FontAwesomeIcons.chevronRight,
+                              color: whiteColor.withOpacity(0.6),
+                              size: 18,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -173,7 +264,10 @@ class NavigationDrawer extends StatelessWidget {
                         Navigator.pop(context),
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const Dashboard(userName: '', userId: '',),
+                            builder: (context) => const Dashboard(
+                              userName: '',
+                              userId: '',
+                            ),
                           ),
                         ),
                       },

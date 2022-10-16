@@ -16,7 +16,7 @@ class PhoneLoginScreen extends StatefulWidget {
 
 class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
   TextEditingController phoneController = TextEditingController();
-   final storage = const FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   final FirebaseAuth auth = FirebaseAuth.instance;
   AuthClass authClass = AuthClass();
   String verificationIdFinal = "";
@@ -165,9 +165,23 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                       borderRadius: BorderRadius.circular(40),
                     ),
                     onPressed: () {
-                      String countryCode = '+91';
-                      phonenumber = '$countryCode${phoneController.text}';
-                      authClass.verifyPhoneNumber(phonenumber, phoneController.text, context, setData);
+                      if (phoneController.text.isNotEmpty) {
+                        String countryCode = '+91';
+                        phonenumber = '$countryCode${phoneController.text}';
+                        authClass.verifyPhoneNumber(
+                          phonenumber,
+                          phoneController.text,
+                          context,
+                          setData,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content:
+                                Text('Please Enter Phone Number to continue'),
+                          ),
+                        );
+                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
