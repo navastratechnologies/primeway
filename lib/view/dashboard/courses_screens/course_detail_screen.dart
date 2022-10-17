@@ -5,13 +5,19 @@ import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class CourseDetailScreen extends StatefulWidget {
-  const CourseDetailScreen({super.key});
+  final String name;
+  final String courseId;
+  const CourseDetailScreen(
+      {super.key, required this.name, required this.courseId});
 
   @override
   State<CourseDetailScreen> createState() => _CourseDetailScreenState();
 }
 
 class _CourseDetailScreenState extends State<CourseDetailScreen> {
+  // final CollectionReference course =
+  //     FirebaseFirestore.instance.collection('courses');
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -27,7 +33,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
           ),
           backgroundColor: whiteColor,
           title: Text(
-            'Course Name',
+            widget.name,
             style: TextStyle(
               fontSize: maxSize,
               color: Colors.black.withOpacity(0.6),
@@ -52,10 +58,12 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             ],
           ),
         ),
-        body: const TabBarView(
+        body:  TabBarView(
           children: [
-            CourseChapterScreen(),
-            CourseDiscussionScreen(),
+            CourseChapterScreen(
+              courseId: widget.courseId,
+            ),
+            const CourseDiscussionScreen(),
           ],
         ),
       ),

@@ -28,7 +28,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   String number = '';
   String email = '';
 
- 
   Future<void> getUserProfileData() async {
     FirebaseFirestore.instance
         .collection('users')
@@ -111,7 +110,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      name,
+                      widget.userName,
                       style: TextStyle(
                         fontSize: maxSize,
                         fontWeight: FontWeight.bold,
