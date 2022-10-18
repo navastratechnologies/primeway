@@ -96,67 +96,84 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                         ),
                       ),
                       children: [
-                        ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: documentSnapshot.id.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(14),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(3),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
+                        StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection('courses')
+                                .doc(widget.courseId)
+                                .collection('chapters')
+                                .doc(documentSnapshot.id)
+                                .collection('videos')
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> streamSnapshot1) {
+                              return ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: streamSnapshot1.data!.docs.length,
+                                  itemBuilder: (context, index) {
+                                    final DocumentSnapshot documentSnapshot1 =
+                                        streamSnapshot1.data!.docs[index];
+                                    return Padding(
+                                      padding: const EdgeInsets.all(14),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(3),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.black
+                                                      .withOpacity(0.2),
+                                                ),
+                                                child: const Icon(
+                                                  Icons.play_arrow,
+                                                  size: 16,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    documentSnapshot1.id,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14,
+                                                      color: Colors.black
+                                                          .withOpacity(0.5),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 3),
+                                                  Text(
+                                                    documentSnapshot1[
+                                                        'duration'],
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 12,
+                                                      color: Colors.black
+                                                          .withOpacity(0.3),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Icon(
+                                            Icons.downloading_rounded,
                                             color:
                                                 Colors.black.withOpacity(0.2),
                                           ),
-                                          child: const Icon(
-                                            Icons.play_arrow,
-                                            size: 16,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              (documentSnapshot['Introduction'])
-                                                  .toString(),
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14,
-                                                color: Colors.black
-                                                    .withOpacity(0.5),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 3),
-                                            Text(
-                                              '01:16 min',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 12,
-                                                color: Colors.black
-                                                    .withOpacity(0.3),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Icon(
-                                      Icons.downloading_rounded,
-                                      color: Colors.black.withOpacity(0.2),
-                                    ),
-                                  ],
-                                ),
-                              );
+                                        ],
+                                      ),
+                                    );
+                                  });
                             }),
                       ],
                     ),
