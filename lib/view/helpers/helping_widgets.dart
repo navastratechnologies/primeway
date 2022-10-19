@@ -134,9 +134,9 @@ headingWidgetMethodForResources(heading) {
   return Text(
     heading,
     style: TextStyle(
-      color: whiteColor,
       fontWeight: FontWeight.bold,
-      fontSize: maxSize - 2,
+      fontSize: 12,
+      color: Colors.black.withOpacity(0.2),
     ),
   );
 }
@@ -150,6 +150,26 @@ paragraphWidgetMethodForResources(text, context) {
       style: TextStyle(
         color: whiteColor,
       ),
+    ),
+  );
+}
+
+paragraphWidgetMethodForResourcesBold(heading) {
+  return Text(
+    heading,
+    style: TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: maxSize - 1,
+    ),
+  );
+}
+
+paragraphWidgetMethodForResourcesBoldTitle(heading) {
+  return Text(
+    heading,
+    style: TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: maxSize - 3,
     ),
   );
 }

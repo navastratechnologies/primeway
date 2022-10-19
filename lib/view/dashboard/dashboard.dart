@@ -32,100 +32,105 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const NavigationDrawer(),
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(
-          color: Colors.black.withOpacity(0.6),
-        ),
-        backgroundColor: whiteColor,
-        title: RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: 'Hi, ',
-                style: TextStyle(
-                  fontSize: maxSize,
-                  color: Colors.black.withOpacity(0.6),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              TextSpan(
-                text: widget.userName,
-                style: TextStyle(
-                  fontSize: maxSize,
-                  color: Colors.black.withOpacity(0.6),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          InkWell(
-            child: Container(
-              padding: const EdgeInsets.all(7),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: whiteColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: primeColor.withOpacity(0.4),
-                    blurRadius: 10,
-                    spreadRadius: 1,
-                  ),
-                ],
-              ),
-              child: Icon(
-                Icons.person,
+      appBar: showProfile
+          ? null
+          : AppBar(
+              elevation: 0,
+              iconTheme: IconThemeData(
                 color: Colors.black.withOpacity(0.6),
               ),
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfileEditScreen(
-                    userId: '',
-                    userName: '',
-                  ),
+              backgroundColor: whiteColor,
+              title: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Hi, ',
+                      style: TextStyle(
+                        fontSize: maxSize,
+                        color: Colors.black.withOpacity(0.6),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    TextSpan(
+                      text: widget.userName,
+                      style: TextStyle(
+                        fontSize: maxSize,
+                        color: Colors.black.withOpacity(0.6),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            },
-          ),
-          const SizedBox(width: 10),
-          InkWell(
-            child: Container(
-              padding: const EdgeInsets.all(7),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: whiteColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: primeColor.withOpacity(0.4),
-                    blurRadius: 10,
-                    spreadRadius: 1,
+              ),
+              actions: <Widget>[
+                InkWell(
+                  child: Container(
+                    padding: const EdgeInsets.all(7),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: whiteColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: primeColor.withOpacity(0.4),
+                          blurRadius: 10,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.black.withOpacity(0.6),
+                    ),
                   ),
-                ],
-              ),
-              child: Icon(
-                Icons.notifications,
-                color: Colors.black.withOpacity(0.6),
-              ),
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const NotificationScreen(),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProfileEditScreen(
+                          userId: '',
+                          userName: '',
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-          const SizedBox(width: 10),
-        ],
-      ),
+                const SizedBox(width: 10),
+                InkWell(
+                  child: Container(
+                    padding: const EdgeInsets.all(7),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: whiteColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: primeColor.withOpacity(0.4),
+                          blurRadius: 10,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.notifications,
+                      color: Colors.black.withOpacity(0.6),
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NotificationScreen(),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(width: 10),
+              ],
+            ),
       body: showHome
-          ? const Homescreen()
+          ? Homescreen(
+              userId: widget.userId,
+              username: widget.userName,
+            )
           : showCollab
               ? const CollaborationScreen()
               : showCourses

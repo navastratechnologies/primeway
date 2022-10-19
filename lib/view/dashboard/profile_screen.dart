@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:primewayskills_app/view/profile_screen/profile_tile_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -16,171 +19,407 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       backgroundColor: whiteColor,
+      drawer: const NavigationDrawer(),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 14, right: 14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: Center(
+        child: Stack(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height / 5,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    primeColor,
+                    primeColor.withOpacity(0.1),
+                    primeColor.withOpacity(0.3),
+                  ],
+                ),
+              ),
+              child: AppBar(
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                iconTheme: IconThemeData(
+                  color: Colors.black.withOpacity(0.6),
+                ),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 7,
+                ),
+                Center(
                   child: Container(
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
-                      color: primeColor,
-                      shape: BoxShape.circle,
-                      image: const DecorationImage(
-                        image: NetworkImage(
-                          'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1706&q=80',
-                        ),
-                        fit: BoxFit.cover,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          primeColor.withOpacity(0.1),
+                          primeColor,
+                          primeColor.withOpacity(0.3),
+                        ],
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(40),
+                        bottomLeft: Radius.circular(40),
                       ),
                     ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: primeColor,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.4),
-                        blurRadius: 5,
-                        offset: const Offset(0.5, 0.5),
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    "Download Media Kit",
-                    style: TextStyle(
-                      color: whiteColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  headingWidgetMethod('About my work'),
-                  buttonWidget('Edit'),
-                ],
-              ),
-              const SizedBox(height: 10),
-              paragraphWidgetMethod(
-                'Update this section with more information about the kind of work you do and the content you create',
-                context,
-              ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  headingWidgetMethod('Brands Collaborated With'),
-                  buttonWidget('Manage'),
-                ],
-              ),
-              const SizedBox(height: 10),
-              paragraphWidgetMethod(
-                'Update this section if you have worked on brand collaborations.',
-                context,
-              ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  headingWidgetMethod('Recommendations'),
-                  buttonWidget('Manage'),
-                ],
-              ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  headingWidgetMethod('Best Work & Achievements'),
-                  buttonWidget('Add'),
-                ],
-              ),
-              const SizedBox(height: 30),
-              SizedBox(
-                width: width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 2,
-                        decoration: BoxDecoration(
-                          color: primeColor,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Row(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.lock,
-                          color: primeColor,
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: primeColor,
+                            shape: BoxShape.circle,
+                            image: const DecorationImage(
+                              image: NetworkImage(
+                                'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1706&q=80',
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                        const SizedBox(width: 5),
                       ],
                     ),
-                    Text(
-                      'VISIBLE TO YOU & BRANDS',
-                      style: TextStyle(
-                        color: primeColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Center(
+                  child: Text(
+                    'Name of User',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.black.withOpacity(0.6),
                     ),
-                    const SizedBox(width: 5),
-                    Expanded(
-                      child: Container(
-                        height: 2,
-                        decoration: BoxDecoration(
-                          color: primeColor,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Center(
+                  child: Text(
+                    'Location',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Colors.black.withOpacity(0.3),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Stack(
+                  children: [
+                    Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 10,
+                            right: 10,
+                            top: 20,
+                            bottom: 10,
+                          ),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: whiteColor,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.06),
+                                  blurRadius: 10,
+                                  spreadRadius: 1,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                headingWidgetMethod('Activities'),
+                                const SizedBox(height: 5),
+                                Text(
+                                  "${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day} ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    color: Colors.black.withOpacity(0.3),
+                                  ),
+                                ),
+                                const SizedBox(height: 30),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        const Icon(Icons.bar_chart_rounded),
+                                        Container(
+                                          height: 2,
+                                          width: 20,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            paragraphWidgetMethodForResourcesBold(
+                                              '10',
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3,
+                                              child:
+                                                  headingWidgetMethodForResources(
+                                                'Collabs Participated',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            paragraphWidgetMethodForResourcesBold(
+                                              '10',
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3,
+                                              child:
+                                                  headingWidgetMethodForResources(
+                                                'Collabs Completed',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 40),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        const Icon(
+                                            Icons.directions_run_rounded),
+                                        Container(
+                                          height: 2,
+                                          width: 20,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            paragraphWidgetMethodForResourcesBold(
+                                              '100',
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3,
+                                              child:
+                                                  headingWidgetMethodForResources(
+                                                'Reffered to Users',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            paragraphWidgetMethodForResourcesBold(
+                                              '05',
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3,
+                                              child:
+                                                  headingWidgetMethodForResources(
+                                                'Users by Refferels',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 40),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        const Icon(Icons.wallet_rounded),
+                                        Container(
+                                          height: 2,
+                                          width: 20,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            paragraphWidgetMethodForResourcesBold(
+                                              '100k',
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3,
+                                              child:
+                                                  headingWidgetMethodForResources(
+                                                'P Coins Earned',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            paragraphWidgetMethodForResourcesBold(
+                                              '10k',
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3,
+                                              child:
+                                                  headingWidgetMethodForResources(
+                                                'Withdrawals',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const ProfileTileWidget(
+                          heading: 'Wallet',
+                          icons: FontAwesomeIcons.wallet,
+                        ),
+                        const ProfileTileWidget(
+                          heading: 'Affiliate Dashboard',
+                          icons: FontAwesomeIcons.affiliatetheme,
+                        ),
+                        const ProfileTileWidget(
+                          heading: 'My Courses',
+                          icons: FontAwesomeIcons.book,
+                        ),
+                        const ProfileTileWidget(
+                          heading: 'Refer & Earn',
+                          icons: FontAwesomeIcons.bullhorn,
+                        ),
+                        const ProfileTileWidget(
+                          heading: 'Purchase History',
+                          icons: FontAwesomeIcons.clockRotateLeft,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          height: 90,
+                          width: 90,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                primeColor,
+                                whiteColor,
+                              ],
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '10K',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22,
+                                  color: whiteColor,
+                                ),
+                              ),
+                              Text(
+                                "Followers On Instagram",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 10,
+                                  color: whiteColor,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  headingWidgetMethod('My Terms & Conditions'),
-                  buttonWidget('Edit'),
-                ],
-              ),
-              const SizedBox(height: 10),
-              paragraphWidgetMethod(
-                'Please add your T&C if any when working with a brand.',
-                context,
-              ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  headingWidgetMethod('Services'),
-                  buttonWidget('Edit'),
-                ],
-              ),
-              const SizedBox(height: 10),
-              paragraphWidgetMethod(
-                'Add pricing for services you may want to provide a brand with. This information is private and only visible to you and the brands you share with.',
-                context,
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ),
     );

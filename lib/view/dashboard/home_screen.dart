@@ -18,7 +18,12 @@ final List<String> imgList = [
 ];
 
 class Homescreen extends StatefulWidget {
-  const Homescreen({Key? key}) : super(key: key);
+  final String username, userId;
+  const Homescreen({
+    Key? key,
+    required this.username,
+    required this.userId,
+  }) : super(key: key);
 
   @override
   State<Homescreen> createState() => _HomescreenState();
@@ -133,9 +138,9 @@ class _HomescreenState extends State<Homescreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (contex) => const ProfileEditScreen(
-                            userId: '',
-                            userName: '',
+                          builder: (contex) => ProfileEditScreen(
+                            userId: widget.userId,
+                            userName: widget.username,
                           ),
                         ),
                       );
@@ -161,9 +166,9 @@ class _HomescreenState extends State<Homescreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (contex) => const ProfileEditScreen(
-                                userId: '',
-                                userName: '',
+                              builder: (contex) => ProfileEditScreen(
+                                userId: widget.userId,
+                                userName: widget.username,
                               ),
                             ),
                           );

@@ -119,10 +119,14 @@ class _CoursesScreenState extends State<CoursesScreen> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      documentSnapshot['name'],
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width /
+                                          1.8,
+                                      child: Text(
+                                        documentSnapshot['name'],
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(height: 5),
