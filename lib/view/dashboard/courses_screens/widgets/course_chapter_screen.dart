@@ -1,7 +1,10 @@
 // ignore_for_file: avoid_print, avoid_function_literals_in_foreach_calls
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_video_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class CourseChapterScreen extends StatefulWidget {
@@ -13,6 +16,11 @@ class CourseChapterScreen extends StatefulWidget {
 }
 
 class _CourseChapterScreenState extends State<CourseChapterScreen> {
+  String totalVideo = '';
+  String videoCount = '';
+  List data = [];
+  String id = 'chapter1';
+
   // final firestoreInstance = FirebaseFirestore.instance;
 
   // void retrieveSubCol() {
@@ -55,8 +63,27 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
   //   });
   // }
 
+  Future<void> getTransCount() async {
+    FirebaseFirestore.instance
+        .collection('courses')
+        .doc(widget.courseId)
+        .collection('chapters')
+        .doc(id)
+        .collection('videos')
+        // .doc()
+        // .collection('video')
+        .get()
+        .then((QuerySnapshot snapshot) {
+      log('total is ${snapshot.docs.length}');
+      setState(() {
+        videoCount = '${snapshot.docs.length}';
+      });
+    });
+  }
+
   @override
   void initState() {
+    getTransCount();
     super.initState();
   }
 
@@ -88,7 +115,7 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                         ),
                       ),
                       subtitle: Text(
-                        '2 Videos',
+                        '$videoCount Videos',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 12,
@@ -115,62 +142,82 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                                         streamSnapshot1.data!.docs[index];
                                     return Padding(
                                       padding: const EdgeInsets.all(14),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.all(3),
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.black
-                                                      .withOpacity(0.2),
-                                                ),
-                                                child: const Icon(
-                                                  Icons.play_arrow,
-                                                  size: 16,
-                                                ),
-                                              ),
-                                              const SizedBox(width: 10),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    documentSnapshot1.id,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 14,
-                                                      color: Colors.black
-                                                          .withOpacity(0.5),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 3),
-                                                  Text(
-                                                    documentSnapshot1[
-                                                        'duration'],
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 12,
-                                                      color: Colors.black
-                                                          .withOpacity(0.3),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                      child: InkWell(
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CourseVideoScreen(
+                                                    videoId:
+                                                        documentSnapshot1.id,
+                                                    videoUrl: documentSnapshot1[
+                                                        'url'],
+                                                    videoTitle:
+                                                        documentSnapshot1[
+                                                            'title'],
+                                                    videoDescription:
+                                                        documentSnapshot1[
+                                                            'description'],
+                                                    courseId: widget.courseId),
                                           ),
-                                          Icon(
-                                            Icons.downloading_rounded,
-                                            color:
-                                                Colors.black.withOpacity(0.2),
-                                          ),
-                                        ],
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.all(3),
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.black
+                                                        .withOpacity(0.2),
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.play_arrow,
+                                                    size: 16,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 10),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      documentSnapshot1.id,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 14,
+                                                        color: Colors.black
+                                                            .withOpacity(0.5),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 3),
+                                                    Text(
+                                                      documentSnapshot1[
+                                                          'duration'],
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 12,
+                                                        color: Colors.black
+                                                            .withOpacity(0.3),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Icon(
+                                              Icons.downloading_rounded,
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     );
                                   });

@@ -63,7 +63,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             CourseChapterScreen(
               courseId: widget.courseId,
             ),
-            const CourseDiscussionScreen(),
+             CourseDiscussionScreen(courseId: widget.courseId),
           ],
         ),
       ),

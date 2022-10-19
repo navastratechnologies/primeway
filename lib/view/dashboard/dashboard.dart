@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/appbar_screens/notification_screen.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
