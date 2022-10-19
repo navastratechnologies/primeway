@@ -11,6 +11,15 @@ class CourseDiscussionScreen extends StatefulWidget {
 }
 
 class _CourseDiscussionScreenState extends State<CourseDiscussionScreen> {
+  TextEditingController massegeController = TextEditingController();
+
+  final CollectionReference discussion =
+      FirebaseFirestore.instance.collection('discussion');
+  String userName = 'Shindhu';
+  String userImage =
+      'https://images.unsplash.com/photo-1666017685005-64e7d56aa4f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80';
+  String userId = '123456780';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,10 +42,33 @@ class _CourseDiscussionScreenState extends State<CourseDiscussionScreen> {
                   ],
                 ),
                 child: TextFormField(
-                  decoration: const InputDecoration(
+                  controller: massegeController,
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection('courses')
+                            .doc(widget.courseId)
+                            .collection('discussion')
+                            .add({
+                          'user_massege': massegeController.text,
+                          'user_name': userName,
+                          'user_image': userImage,
+                          'user_time':
+                              '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}',
+                          'user_id': userId,
+                        }).whenComplete(() {
+                          setState(() {
+                            massegeController.clear();
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          });
+                        });
+                      },
+                      icon: const Icon(Icons.send_sharp),
+                    ),
                     border: InputBorder.none,
                     hintText: 'Ask your Queries',
-                    prefixIcon: Icon(Icons.person_rounded),
+                    prefixIcon: const Icon(Icons.person_rounded),
                   ),
                 ),
               ),
@@ -46,6 +78,7 @@ class _CourseDiscussionScreenState extends State<CourseDiscussionScreen> {
                   .collection('courses')
                   .doc(widget.courseId)
                   .collection('discussion')
+                  .orderBy('user_time', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                 if (streamSnapshot.hasData) {
@@ -56,8 +89,7 @@ class _CourseDiscussionScreenState extends State<CourseDiscussionScreen> {
                     itemBuilder: (context, index) {
                       final DocumentSnapshot documentSnapshot =
                           streamSnapshot.data!.docs[index];
-                      Timestamp timestamp =
-                          documentSnapshot['user_time'] as Timestamp;
+                      // Timestamp timestamp = documentSnapshot['user_time'];
                       return Padding(
                         padding: const EdgeInsets.all(10),
                         child: Container(
@@ -117,7 +149,8 @@ class _CourseDiscussionScreenState extends State<CourseDiscussionScreen> {
                                             ),
                                           ),
                                           Text(
-                                            timestamp.toDate().toString(),
+                                            documentSnapshot['user_time'],
+                                            // timestamp.toDate().toString(),
                                             style: TextStyle(
                                               fontWeight: FontWeight.w500,
                                               fontSize: 12,
