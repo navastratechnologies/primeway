@@ -4,6 +4,7 @@ import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 import 'package:primewayskills_app/view/profile_screen/profile_tile_widget.dart';
+import 'package:primewayskills_app/view/profile_screen/wallet_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -346,9 +347,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ),
-                        const ProfileTileWidget(
-                          heading: 'Wallet',
-                          icons: FontAwesomeIcons.wallet,
+                        InkWell(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const WalletScreen(),
+                            ),
+                          ),
+                          child: const ProfileTileWidget(
+                            heading: 'Wallet',
+                            icons: FontAwesomeIcons.wallet,
+                          ),
                         ),
                         const ProfileTileWidget(
                           heading: 'Affiliate Dashboard',
