@@ -7,7 +7,23 @@ import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 
 class NavigationDrawer extends StatelessWidget {
-  const NavigationDrawer({Key? key}) : super(key: key);
+  final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
+  const NavigationDrawer(
+      {Key? key,
+      required this.userNumber,
+      required this.userName,
+      required this.userAddress,
+      required this.userProfileImage,
+      required this.userPayment,
+      required this.userEmail,
+      required this.userWalletId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) => Drawer(
@@ -45,10 +61,8 @@ class NavigationDrawer extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       color: whiteColor,
                                       shape: BoxShape.circle,
-                                      image: const DecorationImage(
-                                        image: NetworkImage(
-                                          'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1706&q=80',
-                                        ),
+                                      image: DecorationImage(
+                                        image: NetworkImage(userProfileImage),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -59,7 +73,7 @@ class NavigationDrawer extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Username",
+                                      userName,
                                       style: TextStyle(
                                         color: whiteColor,
                                         fontSize: maxSize,
@@ -67,7 +81,7 @@ class NavigationDrawer extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "useremail@gmail.com",
+                                      userEmail,
                                       style: TextStyle(
                                         color: whiteColor.withOpacity(0.6),
                                         fontWeight: FontWeight.w500,
@@ -100,10 +114,7 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.pop(context),
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const Dashboard(
-                                    userId: '',
-                                    userName: '',
-                                  ),
+                                  builder: (context) => const Dashboard(),
                                 ),
                               ),
                             },
@@ -125,7 +136,15 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.pop(context),
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => ResourcesScreen(),
+                                  builder: (context) => ResourcesScreen(
+                                    userAddress: userAddress,
+                                    userEmail: userEmail,
+                                    userName: userName,
+                                    userNumber: userNumber,
+                                    userPayment: userPayment,
+                                    userProfileImage: userProfileImage,
+                                    userWalletId: userWalletId,
+                                  ),
                                 ),
                               ),
                             },
@@ -147,7 +166,15 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.pop(context),
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const SettingScreen(),
+                                  builder: (context) => SettingScreen(
+                                    userAddress: userAddress,
+                                    userEmail: userEmail,
+                                    userName: userName,
+                                    userNumber: userNumber,
+                                    userPayment: userPayment,
+                                    userProfileImage: userProfileImage,
+                                    userWalletId: userWalletId,
+                                  ),
                                 ),
                               ),
                             },
@@ -169,7 +196,15 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.pop(context),
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const SettingScreen(),
+                                  builder: (context) => SettingScreen(
+                                    userAddress: userAddress,
+                                    userEmail: userEmail,
+                                    userName: userName,
+                                    userNumber: userNumber,
+                                    userPayment: userPayment,
+                                    userProfileImage: userProfileImage,
+                                    userWalletId: userWalletId,
+                                  ),
                                 ),
                               ),
                             },
@@ -191,7 +226,15 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.pop(context),
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const SettingScreen(),
+                                  builder: (context) => SettingScreen(
+                                    userAddress: userAddress,
+                                    userEmail: userEmail,
+                                    userName: userName,
+                                    userNumber: userNumber,
+                                    userPayment: userPayment,
+                                    userProfileImage: userProfileImage,
+                                    userWalletId: userWalletId,
+                                  ),
                                 ),
                               ),
                             },
@@ -213,7 +256,15 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.pop(context),
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const SettingScreen(),
+                                  builder: (context) => SettingScreen(
+                                    userAddress: userAddress,
+                                    userEmail: userEmail,
+                                    userName: userName,
+                                    userNumber: userNumber,
+                                    userPayment: userPayment,
+                                    userProfileImage: userProfileImage,
+                                    userWalletId: userWalletId,
+                                  ),
                                 ),
                               ),
                             },
@@ -235,7 +286,15 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.pop(context),
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const SettingScreen(),
+                                  builder: (context) => SettingScreen(
+                                    userAddress: userAddress,
+                                    userEmail: userEmail,
+                                    userName: userName,
+                                    userNumber: userNumber,
+                                    userPayment: userPayment,
+                                    userProfileImage: userProfileImage,
+                                    userWalletId: userWalletId,
+                                  ),
                                 ),
                               ),
                             },
@@ -264,10 +323,7 @@ class NavigationDrawer extends StatelessWidget {
                         Navigator.pop(context),
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const Dashboard(
-                              userName: '',
-                              userId: '',
-                            ),
+                            builder: (context) => const Dashboard(),
                           ),
                         ),
                       },

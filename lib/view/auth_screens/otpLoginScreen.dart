@@ -202,10 +202,7 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const Dashboard(
-                userId: '',
-                userName: '',
-              ),
+              builder: (context) => const Dashboard(),
             ),
           );
         } else {

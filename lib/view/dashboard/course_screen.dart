@@ -4,7 +4,14 @@ import 'package:primewayskills_app/view/dashboard/courses_screens/course_detail_
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class CoursesScreen extends StatefulWidget {
-  const CoursesScreen({super.key});
+  final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
+  const CoursesScreen({super.key, required this.userNumber, required this.userName, required this.userAddress, required this.userProfileImage, required this.userPayment, required this.userEmail, required this.userWalletId});
 
   @override
   State<CoursesScreen> createState() => _CoursesScreenState();
@@ -47,8 +54,14 @@ class _CoursesScreenState extends State<CoursesScreen> {
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CourseDetailScreen(
-                              name: documentSnapshot['name'],
+                          builder: (context) => CourseDetailScreen(userAddress: widget.userAddress,
+                            userEmail: widget.userEmail,
+                            userName: widget.userName,
+                            userNumber: widget.userNumber,
+                            userPayment: widget.userPayment,
+                            userProfileImage: widget.userProfileImage,
+                            userWalletId: widget.userWalletId,
+                              courseName: documentSnapshot['name'],
                               courseId: documentSnapshot.id),
                         ),
                       ),

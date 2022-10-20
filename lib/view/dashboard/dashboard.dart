@@ -1,6 +1,10 @@
-// ignore_for_file: unused_field
+// ignore_for_file: unused_field, avoid_print
 
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/appbar_screens/notification_screen.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
 import 'package:primewayskills_app/view/dashboard/collaboration_screen.dart';
@@ -11,16 +15,21 @@ import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class Dashboard extends StatefulWidget {
-  final String userName;
-  final String userId;
-  const Dashboard({Key? key, required this.userName, required this.userId})
-      : super(key: key);
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
   State<Dashboard> createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
+  String userNumber = "";
+  String userName = '';
+  String userAddress = '';
+  String userProfileImage = '';
+  String userPayment = '';
+  String userEmail = '';
+  String userWalletId = '';
+
   final int _currentIndex = 0;
 
   bool showHome = true;
@@ -28,10 +37,42 @@ class _DashboardState extends State<Dashboard> {
   bool showProfile = false;
   bool showCourses = false;
 
+  Future<void> getUserProfileData() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userNumber)
+        .get()
+        .then((value) {
+      log('number is ${value.get('phone_number')}');
+      setState(() {
+        userName = value.get('name');
+        userAddress = value.get('address');
+        userProfileImage = value.get('profile_pic');
+        userPayment = value.get('payments');
+        userEmail = value.get('email');
+        userWalletId = value.get('wallet_id');
+        userNumber = value.get('phone_number');
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    checkLogin();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const NavigationDrawer(),
+      drawer: NavigationDrawer(
+          userAddress: userAddress,
+          userEmail: userEmail,
+          userName: userName,
+          userNumber: userNumber,
+          userPayment: userPayment,
+          userProfileImage: userProfileImage,
+          userWalletId: userWalletId),
       appBar: showProfile
           ? null
           : AppBar(
@@ -52,7 +93,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                     TextSpan(
-                      text: widget.userName,
+                      text: userName,
                       style: TextStyle(
                         fontSize: maxSize,
                         color: Colors.black.withOpacity(0.6),
@@ -86,10 +127,14 @@ class _DashboardState extends State<Dashboard> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ProfileEditScreen(
-                          userId: '',
-                          userName: '',
-                        ),
+                        builder: (context) => ProfileEditScreen(
+                            userAddress: userAddress,
+                            userEmail: userEmail,
+                            userName: userName,
+                            userNumber: userNumber,
+                            userPayment: userPayment,
+                            userProfileImage: userProfileImage,
+                            userWalletId: userWalletId),
                       ),
                     );
                   },
@@ -128,14 +173,32 @@ class _DashboardState extends State<Dashboard> {
             ),
       body: showHome
           ? Homescreen(
-              userId: widget.userId,
-              username: widget.userName,
-            )
+              userAddress: userAddress,
+              userEmail: userEmail,
+              userName: userName,
+              userNumber: userNumber,
+              userPayment: userPayment,
+              userProfileImage: userProfileImage,
+              userWalletId: userWalletId)
           : showCollab
               ? const CollaborationScreen()
               : showCourses
-                  ? const CoursesScreen()
-                  : const ProfileScreen(),
+                  ? CoursesScreen(
+                      userAddress: userAddress,
+                      userEmail: userEmail,
+                      userName: userName,
+                      userNumber: userNumber,
+                      userPayment: userPayment,
+                      userProfileImage: userProfileImage,
+                      userWalletId: userWalletId)
+                  : ProfileScreen(
+                      userAddress: userAddress,
+                      userEmail: userEmail,
+                      userName: userName,
+                      userNumber: userNumber,
+                      userPayment: userPayment,
+                      userProfileImage: userProfileImage,
+                      userWalletId: userWalletId),
       bottomNavigationBar: SizedBox(
         height: 80,
         child: Padding(
@@ -299,5 +362,15 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
     );
+  }
+
+  checkLogin() async {
+    String? token = await getToken();
+    if (token != null) {
+      setState(() {
+        userNumber = token;
+        getUserProfileData();
+      });
+    }
   }
 }
