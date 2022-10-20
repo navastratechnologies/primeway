@@ -1,3 +1,8 @@
+// ignore_for_file: avoid_print, avoid_function_literals_in_foreach_calls
+
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/drawer/sidebar.dart';
@@ -30,19 +35,59 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String walletAccountName = '';
+  String withdrawalReq = '';
+  String accountNumber = '';
+  String earnedPcoins = '';
+  String bankName = '';
+  String walletBalance = '';
+  String totalWithdrawal = '';
+
+  Future<void> getWallet() async {
+    FirebaseFirestore.instance
+        .collection('wallet')
+        .doc(widget.userWalletId)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        setState(() {
+          walletAccountName = documentSnapshot.get('account_holder_name');
+          withdrawalReq = documentSnapshot.get('withdrawal_req');
+          accountNumber = documentSnapshot.get('account_number');
+          earnedPcoins = documentSnapshot.get('earned_pcoins');
+          bankName = documentSnapshot.get('bank_name');
+          walletBalance = documentSnapshot.get('wallet_balance');
+          totalWithdrawal = documentSnapshot.get('total_withdrawal');
+        });
+
+        log('Document data: ${documentSnapshot.data()}');
+      } else {
+        log('Document does not exist on the database ${widget.userWalletId}');
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    getWallet();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
+    // var width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: whiteColor,
-      drawer:  NavigationDrawer(userAddress: widget.userAddress,
-                            userEmail: widget.userEmail,
-                            userName: widget.userName,
-                            userNumber: widget.userNumber,
-                            userPayment: widget.userPayment,
-                            userProfileImage: widget.userProfileImage,
-                            userWalletId: widget.userWalletId,),
+      drawer: NavigationDrawer(
+        userAddress: widget.userAddress,
+        userEmail: widget.userEmail,
+        userName: widget.userName,
+        userNumber: widget.userNumber,
+        userPayment: widget.userPayment,
+        userProfileImage: widget.userProfileImage,
+        userWalletId: widget.userWalletId,
+      ),
       body: SingleChildScrollView(
         child: Stack(
           children: [
@@ -325,7 +370,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             paragraphWidgetMethodForResourcesBold(
-                                              '100k',
+                                              earnedPcoins,
                                             ),
                                             SizedBox(
                                               width: MediaQuery.of(context)
@@ -345,7 +390,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             paragraphWidgetMethodForResourcesBold(
-                                              '10k',
+                                              totalWithdrawal,
                                             ),
                                             SizedBox(
                                               width: MediaQuery.of(context)
@@ -371,7 +416,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const WalletScreen(),
+                              builder: (context) => WalletScreen(
+                                accountNumber: accountNumber,
+                                bankName: bankName,
+                                earnedPcoins: earnedPcoins,
+                                totalWithdrawal: totalWithdrawal,
+                                walletAccountName: walletAccountName,
+                                walletBalance: walletBalance,
+                                withdrawalReq: withdrawalReq,
+                              ),
                             ),
                           ),
                           child: const ProfileTileWidget(
