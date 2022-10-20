@@ -8,7 +8,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:primewayskills_app/view/profile_screen/my_courses_screen.dart';
 import 'package:primewayskills_app/view/profile_screen/profile_tile_widget.dart';
+import 'package:primewayskills_app/view/profile_screen/purchase_history_screen.dart';
 import 'package:primewayskills_app/view/profile_screen/wallet_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -436,17 +438,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           heading: 'Affiliate Dashboard',
                           icons: FontAwesomeIcons.affiliatetheme,
                         ),
-                        const ProfileTileWidget(
-                          heading: 'My Courses',
-                          icons: FontAwesomeIcons.book,
+                        InkWell(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyCoursesScreen(
+                                userNumber: widget.userNumber,
+                                userName: widget.userName,
+                                userAddress: widget.userAddress,
+                                userProfileImage: widget.userProfileImage,
+                                userPayment: widget.userPayment,
+                                userEmail: widget.userEmail,
+                                userWalletId: widget.userWalletId,
+                              ),
+                            ),
+                          ),
+                          child: const ProfileTileWidget(
+                            heading: 'My Courses',
+                            icons: FontAwesomeIcons.book,
+                          ),
                         ),
                         const ProfileTileWidget(
                           heading: 'Refer & Earn',
                           icons: FontAwesomeIcons.bullhorn,
                         ),
-                        const ProfileTileWidget(
-                          heading: 'Purchase History',
-                          icons: FontAwesomeIcons.clockRotateLeft,
+                        InkWell(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PurchaseHistoryScreen(
+                                userNumber: widget.userNumber,
+                                userName: widget.userName,
+                                userAddress: widget.userAddress,
+                                userProfileImage: widget.userProfileImage,
+                                userPayment: widget.userPayment,
+                                userEmail: widget.userEmail,
+                                userWalletId: widget.userWalletId,
+                              ),
+                            ),
+                          ),
+                          child: const ProfileTileWidget(
+                            heading: 'Purchase History',
+                            icons: FontAwesomeIcons.clockRotateLeft,
+                          ),
                         ),
                       ],
                     ),
