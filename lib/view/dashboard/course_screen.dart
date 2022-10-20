@@ -11,7 +11,15 @@ class CoursesScreen extends StatefulWidget {
   final String userPayment;
   final String userEmail;
   final String userWalletId;
-  const CoursesScreen({super.key, required this.userNumber, required this.userName, required this.userAddress, required this.userProfileImage, required this.userPayment, required this.userEmail, required this.userWalletId});
+  const CoursesScreen(
+      {super.key,
+      required this.userNumber,
+      required this.userName,
+      required this.userAddress,
+      required this.userProfileImage,
+      required this.userPayment,
+      required this.userEmail,
+      required this.userWalletId});
 
   @override
   State<CoursesScreen> createState() => _CoursesScreenState();
@@ -20,20 +28,6 @@ class CoursesScreen extends StatefulWidget {
 class _CoursesScreenState extends State<CoursesScreen> {
   final CollectionReference course =
       FirebaseFirestore.instance.collection('courses');
-
-  // Future<void> getCoursesData() async {
-  //   FirebaseFirestore.instance.collection('courses');
-  //   {
-  //     setState(() {
-  //       name = value.get('name');
-  //       address = value.get('address');
-  //       profileImage = value.get('profile_pic');
-  //       payment = value.get('payments');
-  //       number = value.get('phone_number');
-  //       email = value.get('email');
-  //     });
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +48,14 @@ class _CoursesScreenState extends State<CoursesScreen> {
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CourseDetailScreen(userAddress: widget.userAddress,
-                            userEmail: widget.userEmail,
-                            userName: widget.userName,
-                            userNumber: widget.userNumber,
-                            userPayment: widget.userPayment,
-                            userProfileImage: widget.userProfileImage,
-                            userWalletId: widget.userWalletId,
+                          builder: (context) => CourseDetailScreen(
+                              userAddress: widget.userAddress,
+                              userEmail: widget.userEmail,
+                              userName: widget.userName,
+                              userNumber: widget.userNumber,
+                              userPayment: widget.userPayment,
+                              userProfileImage: widget.userProfileImage,
+                              userWalletId: widget.userWalletId,
                               courseName: documentSnapshot['name'],
                               courseId: documentSnapshot.id),
                         ),
