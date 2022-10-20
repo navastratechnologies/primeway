@@ -62,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         log('Document data: ${documentSnapshot.data()}');
       } else {
-        log('Document does not exist on the database');
+        log('Document does not exist on the database ${widget.userWalletId}');
       }
     });
   }
