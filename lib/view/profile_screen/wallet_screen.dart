@@ -286,7 +286,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   '200',
                                   style: TextStyle(
                                     color:
-                                        index.isEven ? primeColor : primeColor2,
+                                        index.isEven ? primeColor2 : primeColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
                                   ),
