@@ -4,7 +4,23 @@ import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 
 class WalletScreen extends StatefulWidget {
-  const WalletScreen({super.key});
+  final String walletAccountName;
+  final String withdrawalReq;
+  final String accountNumber;
+  final String earnedPcoins;
+  final String bankName;
+  final String walletBalance;
+  final String totalWithdrawal;
+
+  const WalletScreen(
+      {super.key,
+      required this.walletAccountName,
+      required this.withdrawalReq,
+      required this.accountNumber,
+      required this.earnedPcoins,
+      required this.bankName,
+      required this.walletBalance,
+      required this.totalWithdrawal});
 
   @override
   State<WalletScreen> createState() => _WalletScreenState();
@@ -74,15 +90,15 @@ class _WalletScreenState extends State<WalletScreen> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(
+                        children: [
+                          const Icon(
                             Icons.currency_bitcoin_rounded,
                             // color: whiteColor,
                             size: 40,
                           ),
                           Text(
-                            '2,390',
-                            style: TextStyle(
+                            widget.walletBalance,
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               // color: whiteColor,
                               fontSize: 28,
@@ -132,7 +148,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              headingWidgetMethod('100k'),
+                              headingWidgetMethod(widget.earnedPcoins),
                               headingWidgetMethodForResources(
                                 'P Coins Earned',
                               ),
@@ -172,7 +188,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              headingWidgetMethod('10k'),
+                              headingWidgetMethod(widget.totalWithdrawal),
                               headingWidgetMethodForResources(
                                 'Withdrawals',
                               ),
