@@ -5,10 +5,17 @@ import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class CourseDetailScreen extends StatefulWidget {
-  final String name;
+  final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
+  final String courseName;
   final String courseId;
   const CourseDetailScreen(
-      {super.key, required this.name, required this.courseId});
+      {super.key, required this.courseName, required this.courseId, required this.userNumber, required this.userName, required this.userAddress, required this.userProfileImage, required this.userPayment, required this.userEmail, required this.userWalletId});
 
   @override
   State<CourseDetailScreen> createState() => _CourseDetailScreenState();
@@ -25,7 +32,14 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
       initialIndex: 0,
       child: Scaffold(
         backgroundColor: whiteColor,
-        drawer: const NavigationDrawer(),
+        drawer:  NavigationDrawer(userAddress: widget.userAddress,
+                            userEmail: widget.userEmail,
+                            userName: widget.userName,
+                            userNumber: widget.userNumber,
+                            userPayment: widget.userPayment,
+                            userProfileImage: widget.userProfileImage,
+                            userWalletId: widget.userWalletId,),
+        
         appBar: AppBar(
           elevation: 0,
           iconTheme: IconThemeData(
@@ -33,7 +47,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
           ),
           backgroundColor: whiteColor,
           title: Text(
-            widget.name,
+            widget.courseName,
             style: TextStyle(
               fontSize: maxSize,
               color: Colors.black.withOpacity(0.6),

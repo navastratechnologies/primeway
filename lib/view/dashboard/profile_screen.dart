@@ -7,7 +7,23 @@ import 'package:primewayskills_app/view/profile_screen/profile_tile_widget.dart'
 import 'package:primewayskills_app/view/profile_screen/wallet_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
+  const ProfileScreen(
+      {Key? key,
+      required this.userNumber,
+      required this.userName,
+      required this.userAddress,
+      required this.userProfileImage,
+      required this.userPayment,
+      required this.userEmail,
+      required this.userWalletId})
+      : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -20,7 +36,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       backgroundColor: whiteColor,
-      drawer: const NavigationDrawer(),
+      drawer:  NavigationDrawer(userAddress: widget.userAddress,
+                            userEmail: widget.userEmail,
+                            userName: widget.userName,
+                            userNumber: widget.userNumber,
+                            userPayment: widget.userPayment,
+                            userProfileImage: widget.userProfileImage,
+                            userWalletId: widget.userWalletId,),
       body: SingleChildScrollView(
         child: Stack(
           children: [
@@ -82,10 +104,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: BoxDecoration(
                             color: primeColor,
                             shape: BoxShape.circle,
-                            image: const DecorationImage(
-                              image: NetworkImage(
-                                'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1706&q=80',
-                              ),
+                            image: DecorationImage(
+                              image: NetworkImage(widget.userProfileImage),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -97,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 15),
                 Center(
                   child: Text(
-                    'Name of User',
+                    widget.userName,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -108,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 5),
                 Center(
                   child: Text(
-                    'Location',
+                    widget.userAddress,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 12,

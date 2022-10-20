@@ -7,7 +7,14 @@ import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 
 class ResourcesScreen extends StatelessWidget {
-  ResourcesScreen({Key? key}) : super(key: key);
+  final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
+  ResourcesScreen({Key? key, required this.userNumber, required this.userName, required this.userAddress, required this.userProfileImage, required this.userPayment, required this.userEmail, required this.userWalletId}) : super(key: key);
 
   final CollectionReference resources =
       FirebaseFirestore.instance.collection('Resources');
@@ -15,7 +22,13 @@ class ResourcesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const NavigationDrawer(),
+      drawer:  NavigationDrawer(userAddress: userAddress,
+                            userEmail: userEmail,
+                            userName: userName,
+                            userNumber: userNumber,
+                            userPayment: userPayment,
+                            userProfileImage: userProfileImage,
+                            userWalletId: userWalletId,),
       appBar: AppBar(
         backgroundColor: primeColor,
         title: const Text("Resources"),

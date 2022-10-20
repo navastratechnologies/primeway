@@ -18,11 +18,23 @@ final List<String> imgList = [
 ];
 
 class Homescreen extends StatefulWidget {
-  final String username, userId;
+  final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
+
   const Homescreen({
     Key? key,
-    required this.username,
-    required this.userId,
+    required this.userNumber,
+    required this.userName,
+    required this.userAddress,
+    required this.userProfileImage,
+    required this.userPayment,
+    required this.userEmail,
+    required this.userWalletId,
   }) : super(key: key);
 
   @override
@@ -139,8 +151,13 @@ class _HomescreenState extends State<Homescreen> {
                         context,
                         MaterialPageRoute(
                           builder: (contex) => ProfileEditScreen(
-                            userId: widget.userId,
-                            userName: widget.username,
+                            userAddress: widget.userAddress,
+                            userEmail: widget.userEmail,
+                            userName: widget.userName,
+                            userNumber: widget.userNumber,
+                            userPayment: widget.userPayment,
+                            userProfileImage: widget.userProfileImage,
+                            userWalletId: widget.userWalletId,
                           ),
                         ),
                       );
@@ -167,8 +184,13 @@ class _HomescreenState extends State<Homescreen> {
                             context,
                             MaterialPageRoute(
                               builder: (contex) => ProfileEditScreen(
-                                userId: widget.userId,
-                                userName: widget.username,
+                                userAddress: widget.userAddress,
+                                userEmail: widget.userEmail,
+                                userName: widget.userName,
+                                userNumber: widget.userNumber,
+                                userPayment: widget.userPayment,
+                                userProfileImage: widget.userProfileImage,
+                                userWalletId: widget.userWalletId,
                               ),
                             ),
                           );

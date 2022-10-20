@@ -11,8 +11,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:primewayskills_app/view/auth_screens/otpLoginScreen.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 
+const storage = FlutterSecureStorage();
+
 class AuthClass {
-  final storage = const FlutterSecureStorage();
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<void> verifyPhoneNumber(String phoneNumber, String onlyPhone,
@@ -78,13 +79,11 @@ class AuthClass {
           fontSize: 16.0,
         );
       } else {
+        storeTokenAndData(phoneNumber);
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const Dashboard(
-              userId: '',
-              userName: '',
-            ),
+            builder: (context) => const Dashboard(),
           ),
         );
       }
@@ -107,13 +106,6 @@ class AuthClass {
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context!).showSnackBar(snackBar);
     }
-  }
-
-  void storeTokenAndData(username, email, gender) async {
-    print("storing token and data");
-    await storage.write(key: "token", value: username.toString());
-    await storage.write(key: "email", value: email.toString());
-    await storage.write(key: "gender", value: gender.toString());
   }
 
   Future<UserCredential> signInWithGoogle(context) async {
@@ -152,8 +144,7 @@ class AuthClass {
         context,
         MaterialPageRoute(
           builder: (context) => const Dashboard(
-            userId: '',
-            userName: '',
+           
           ),
         ),
       );
@@ -192,10 +183,7 @@ class AuthClass {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const Dashboard(
-            userId: '',
-            userName: '',
-          ),
+          builder: (context) => const Dashboard(),
         ),
       );
     }
@@ -204,4 +192,13 @@ class AuthClass {
 
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
+}
+
+void storeTokenAndData(username) async {
+  print("storing token and data");
+  await storage.write(key: "token", value: username.toString());
+}
+
+Future<String?> getToken() async {
+  return await storage.read(key: "token");
 }

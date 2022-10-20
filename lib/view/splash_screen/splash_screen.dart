@@ -6,6 +6,7 @@ import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class SplashScreen extends StatelessWidget {
+  
   const SplashScreen({Key? key}) : super(key: key);
 
   @override

@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +7,23 @@ import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileEditScreen extends StatefulWidget {
-  final String userId;
+  final String userNumber;
   final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
+
   const ProfileEditScreen(
-      {Key? key, required this.userId, required this.userName})
+      {Key? key,
+      required this.userNumber,
+      required this.userName,
+      required this.userAddress,
+      required this.userProfileImage,
+      required this.userPayment,
+      required this.userEmail,
+      required this.userWalletId})
       : super(key: key);
 
   @override
@@ -20,37 +32,6 @@ class ProfileEditScreen extends StatefulWidget {
 
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final firebaseInstance = FirebaseFirestore.instance;
-
-  String name = '';
-  String address = '';
-  String profileImage = '';
-  String payment = '';
-  String number = '';
-  String email = '';
-
-  Future<void> getUserProfileData() async {
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.userId)
-        .get()
-        .then((value) {
-      log('name is ${value.get('name')}');
-      setState(() {
-        name = value.get('name');
-        address = value.get('address');
-        profileImage = value.get('profile_pic');
-        payment = value.get('payments');
-        number = value.get('phone_number');
-        email = value.get('email');
-      });
-    });
-  }
-
-  @override
-  void initState() {
-    getUserProfileData();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +71,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       shape: BoxShape.circle,
                       image: DecorationImage(
                         image: NetworkImage(
-                          profileImage,
+                          widget.userProfileImage,
                         ),
                         fit: BoxFit.cover,
                       ),
@@ -216,11 +197,12 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             profileEditInternalWidget('Name', widget.userName),
-                            profileEditInternalWidget('Email', email),
+                            profileEditInternalWidget(
+                                'Email', widget.userEmail),
                           ],
                         ),
                         const SizedBox(height: 20),
-                        profileEditInternalWidget('Phone', number),
+                        profileEditInternalWidget('Phone', widget.userNumber),
                       ],
                     ),
                   ),
@@ -239,10 +221,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   editProfileCardWidget('Commercials'),
                   const SizedBox(height: 16),
                   editProfileCardWidget('Payments'),
-                  Text(payment),
+                  Text(widget.userPayment),
                   const SizedBox(height: 16),
                   editProfileCardWidget('Address'),
-                  Text(address),
+                  Text(widget.userAddress),
                   const SizedBox(height: 16),
                 ],
               ),
