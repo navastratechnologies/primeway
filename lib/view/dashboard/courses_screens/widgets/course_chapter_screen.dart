@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_print, avoid_function_literals_in_foreach_calls
 
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_video_screen.dart';
@@ -17,8 +15,18 @@ class CourseChapterScreen extends StatefulWidget {
   final String userEmail;
   final String userWalletId;
   final String courseName;
-  
-  const CourseChapterScreen({super.key, required this.courseId, required this.userNumber, required this.userName, required this.userAddress, required this.userProfileImage, required this.userPayment, required this.userEmail, required this.userWalletId, required this.courseName});
+
+  const CourseChapterScreen(
+      {super.key,
+      required this.courseId,
+      required this.userNumber,
+      required this.userName,
+      required this.userAddress,
+      required this.userProfileImage,
+      required this.userPayment,
+      required this.userEmail,
+      required this.userWalletId,
+      required this.courseName});
 
   @override
   State<CourseChapterScreen> createState() => _CourseChapterScreenState();
@@ -28,7 +36,7 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
   String totalVideo = '';
   String videoCount = '';
   List data = [];
-  String id = 'chapter1';
+  // String id = 'chapter1';
 
   // final firestoreInstance = FirebaseFirestore.instance;
 
@@ -72,29 +80,29 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
   //   });
   // }
 
-  Future<void> getTransCount() async {
-    FirebaseFirestore.instance
-        .collection('courses')
-        .doc(widget().courseId)
-        .collection('chapters')
-        .doc(id)
-        .collection('videos')
-        // .doc()
-        // .collection('video')
-        .get()
-        .then((QuerySnapshot snapshot) {
-      log('total is ${snapshot.docs.length}');
-      setState(() {
-        videoCount = '${snapshot.docs.length}';
-      });
-    });
-  }
+  // Future<void> getTransCount() async {
+  //   FirebaseFirestore.instance
+  //       .collection('courses')
+  //       .doc(widget().courseId)
+  //       .collection('chapters')
+  //       .doc(id)
+  //       .collection('videos')
+  //       // .doc()
+  //       // .collection('video')
+  //       .get()
+  //       .then((QuerySnapshot snapshot) {
+  //     log('total is ${snapshot.docs.length}');
+  //     setState(() {
+  //       videoCount = '${snapshot.docs.length}';
+  //     });
+  //   });
+  // }
 
-  @override
-  void initState() {
-    getTransCount();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   getTransCount();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +132,7 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                         ),
                       ),
                       subtitle: Text(
-                        '$videoCount Videos',
+                        "${documentSnapshot['video_count']} Videos",
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 12,
@@ -157,18 +165,26 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 CourseVideoScreen(
-                                                    videoId:
-                                                        documentSnapshot1.id,
-                                                    videoUrl: documentSnapshot1[
-                                                        'url'],
-                                                    videoTitle:
-                                                        documentSnapshot1[
-                                                            'title'],
-                                                    videoDescription:
-                                                        documentSnapshot1[
-                                                            'description'],
-                                                    courseId:
-                                                        widget().courseId, courseName: widget().courseName, userAddress: widget().userAddress, userEmail: widget().userEmail, userName: widget().userName, userNumber: widget().userNumber, userPayment: widget().userPayment, userProfileImage: widget().userProfileImage, userWalletId: widget().userWalletId,),
+                                              videoId: documentSnapshot1.id,
+                                              videoUrl:
+                                                  documentSnapshot1['url'],
+                                              videoTitle:
+                                                  documentSnapshot1['title'],
+                                              videoDescription:
+                                                  documentSnapshot1[
+                                                      'description'],
+                                              courseId: widget().courseId,
+                                              courseName: widget().courseName,
+                                              userAddress: widget().userAddress,
+                                              userEmail: widget().userEmail,
+                                              userName: widget().userName,
+                                              userNumber: widget().userNumber,
+                                              userPayment: widget().userPayment,
+                                              userProfileImage:
+                                                  widget().userProfileImage,
+                                              userWalletId:
+                                                  widget().userWalletId,
+                                            ),
                                           ),
                                         ),
                                         child: Row(
