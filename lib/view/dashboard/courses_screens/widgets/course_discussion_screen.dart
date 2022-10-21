@@ -52,15 +52,15 @@ class _CourseDiscussionScreenState extends State<CourseDiscussionScreen> {
                       onPressed: () {
                         FirebaseFirestore.instance
                             .collection('courses')
-                            .doc(widget().courseId)
+                            .doc(widget.courseId)
                             .collection('discussion')
                             .add({
                           'user_massege': massegeController.text,
-                          'user_name': widget().userName,
-                          'user_image': widget().userProfileImage,
+                          'user_name': widget.userName,
+                          'user_image': widget.userProfileImage,
                           'user_time':
                               '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}',
-                          'user_id': widget().userNumber,
+                          'user_id': widget.userNumber,
                         }).whenComplete(() {
                           setState(() {
                             massegeController.clear();
@@ -80,7 +80,7 @@ class _CourseDiscussionScreenState extends State<CourseDiscussionScreen> {
             StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('courses')
-                  .doc(widget().courseId)
+                  .doc(widget.courseId)
                   .collection('discussion')
                   .orderBy('user_time', descending: true)
                   .snapshots(),
