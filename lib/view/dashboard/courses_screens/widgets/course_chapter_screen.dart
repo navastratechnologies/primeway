@@ -9,7 +9,16 @@ import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class CourseChapterScreen extends StatefulWidget {
   final String courseId;
-  const CourseChapterScreen({super.key, required this.courseId});
+  final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
+  final String courseName;
+  
+  const CourseChapterScreen({super.key, required this.courseId, required this.userNumber, required this.userName, required this.userAddress, required this.userProfileImage, required this.userPayment, required this.userEmail, required this.userWalletId, required this.courseName});
 
   @override
   State<CourseChapterScreen> createState() => _CourseChapterScreenState();
@@ -66,7 +75,7 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
   Future<void> getTransCount() async {
     FirebaseFirestore.instance
         .collection('courses')
-        .doc(widget.courseId)
+        .doc(widget().courseId)
         .collection('chapters')
         .doc(id)
         .collection('videos')
@@ -94,7 +103,7 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('courses')
-              .doc(widget.courseId)
+              .doc(widget().courseId)
               .collection('chapters')
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -126,7 +135,7 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                         StreamBuilder(
                             stream: FirebaseFirestore.instance
                                 .collection('courses')
-                                .doc(widget.courseId)
+                                .doc(widget().courseId)
                                 .collection('chapters')
                                 .doc(documentSnapshot.id)
                                 .collection('videos')
@@ -158,7 +167,8 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                                                     videoDescription:
                                                         documentSnapshot1[
                                                             'description'],
-                                                    courseId: widget.courseId),
+                                                    courseId:
+                                                        widget().courseId, courseName: widget().courseName, userAddress: widget().userAddress, userEmail: widget().userEmail, userName: widget().userName, userNumber: widget().userNumber, userPayment: widget().userPayment, userProfileImage: widget().userProfileImage, userWalletId: widget().userWalletId,),
                                           ),
                                         ),
                                         child: Row(

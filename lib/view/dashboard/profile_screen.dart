@@ -48,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> getWallet() async {
     FirebaseFirestore.instance
         .collection('wallet')
-        .doc(widget.userWalletId)
+        .doc(widget().userWalletId)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
@@ -64,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         log('Document data: ${documentSnapshot.data()}');
       } else {
-        log('Document does not exist on the database ${widget.userWalletId}');
+        log('Document does not exist on the database ${widget().userWalletId}');
       }
     });
   }
@@ -82,13 +82,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: whiteColor,
       drawer: NavigationDrawer(
-        userAddress: widget.userAddress,
-        userEmail: widget.userEmail,
-        userName: widget.userName,
-        userNumber: widget.userNumber,
-        userPayment: widget.userPayment,
-        userProfileImage: widget.userProfileImage,
-        userWalletId: widget.userWalletId,
+        userAddress: widget().userAddress,
+        userEmail: widget().userEmail,
+        userName: widget().userName,
+        userNumber: widget().userNumber,
+        userPayment: widget().userPayment,
+        userProfileImage: widget().userProfileImage,
+        userWalletId: widget().userWalletId,
       ),
       body: SingleChildScrollView(
         child: Stack(
@@ -152,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: primeColor,
                             shape: BoxShape.circle,
                             image: DecorationImage(
-                              image: NetworkImage(widget.userProfileImage),
+                              image: NetworkImage(widget().userProfileImage),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -164,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 15),
                 Center(
                   child: Text(
-                    widget.userName,
+                    widget().userName,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -175,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 5),
                 Center(
                   child: Text(
-                    widget.userAddress,
+                    widget().userAddress,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
@@ -443,13 +443,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => MyCoursesScreen(
-                                userNumber: widget.userNumber,
-                                userName: widget.userName,
-                                userAddress: widget.userAddress,
-                                userProfileImage: widget.userProfileImage,
-                                userPayment: widget.userPayment,
-                                userEmail: widget.userEmail,
-                                userWalletId: widget.userWalletId,
+                                userNumber: widget().userNumber,
+                                userName: widget().userName,
+                                userAddress: widget().userAddress,
+                                userProfileImage: widget().userProfileImage,
+                                userPayment: widget().userPayment,
+                                userEmail: widget().userEmail,
+                                userWalletId: widget().userWalletId,
                               ),
                             ),
                           ),
@@ -467,13 +467,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => PurchaseHistoryScreen(
-                                userNumber: widget.userNumber,
-                                userName: widget.userName,
-                                userAddress: widget.userAddress,
-                                userProfileImage: widget.userProfileImage,
-                                userPayment: widget.userPayment,
-                                userEmail: widget.userEmail,
-                                userWalletId: widget.userWalletId,
+                                userNumber: widget().userNumber,
+                                userName: widget().userName,
+                                userAddress: widget().userAddress,
+                                userProfileImage: widget().userProfileImage,
+                                userPayment: widget().userPayment,
+                                userEmail: widget().userEmail,
+                                userWalletId: widget().userWalletId,
                               ),
                             ),
                           ),

@@ -3,8 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class CourseDiscussionScreen extends StatefulWidget {
+  final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
+  final String courseName;
   final String courseId;
-  const CourseDiscussionScreen({super.key, required this.courseId});
+  const CourseDiscussionScreen({super.key, required this.courseId, required this.userNumber, required this.userName, required this.userAddress, required this.userProfileImage, required this.userPayment, required this.userEmail, required this.userWalletId, required this.courseName});
 
   @override
   State<CourseDiscussionScreen> createState() => _CourseDiscussionScreenState();
@@ -15,11 +23,7 @@ class _CourseDiscussionScreenState extends State<CourseDiscussionScreen> {
 
   final CollectionReference discussion =
       FirebaseFirestore.instance.collection('discussion');
-  String userName = 'Shindhu';
-  String userImage =
-      'https://images.unsplash.com/photo-1666017685005-64e7d56aa4f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80';
-  String userId = '123456780';
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,15 +52,15 @@ class _CourseDiscussionScreenState extends State<CourseDiscussionScreen> {
                       onPressed: () {
                         FirebaseFirestore.instance
                             .collection('courses')
-                            .doc(widget.courseId)
+                            .doc(widget().courseId)
                             .collection('discussion')
                             .add({
                           'user_massege': massegeController.text,
-                          'user_name': userName,
-                          'user_image': userImage,
+                          'user_name': widget().userName,
+                          'user_image': widget().userProfileImage,
                           'user_time':
                               '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}',
-                          'user_id': userId,
+                          'user_id': widget().userNumber,
                         }).whenComplete(() {
                           setState(() {
                             massegeController.clear();
@@ -76,7 +80,7 @@ class _CourseDiscussionScreenState extends State<CourseDiscussionScreen> {
             StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('courses')
-                  .doc(widget.courseId)
+                  .doc(widget().courseId)
                   .collection('discussion')
                   .orderBy('user_time', descending: true)
                   .snapshots(),

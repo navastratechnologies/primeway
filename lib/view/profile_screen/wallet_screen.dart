@@ -97,7 +97,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             size: 40,
                           ),
                           Text(
-                            widget.walletBalance,
+                            widget().walletBalance,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               // color: whiteColor,
@@ -148,7 +148,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              headingWidgetMethod(widget.earnedPcoins),
+                              headingWidgetMethod(widget().earnedPcoins),
                               headingWidgetMethodForResources(
                                 'P Coins Earned',
                               ),
@@ -188,7 +188,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              headingWidgetMethod(widget.totalWithdrawal),
+                              headingWidgetMethod(widget().totalWithdrawal),
                               headingWidgetMethodForResources(
                                 'Withdrawals',
                               ),

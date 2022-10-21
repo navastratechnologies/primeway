@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:primewayskills_app/view/dashboard/dashboard.dart';
+import 'package:primewayskills_app/view/splash_screen/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,8 +23,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: SplashScreen(),
-      home: Dashboard(),
+      home: SplashScreen(),
+      // home: Dashboard(),
     );
   }
 }

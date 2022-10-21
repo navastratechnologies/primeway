@@ -71,7 +71,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       shape: BoxShape.circle,
                       image: DecorationImage(
                         image: NetworkImage(
-                          widget.userProfileImage,
+                          widget().userProfileImage,
                         ),
                         fit: BoxFit.cover,
                       ),
@@ -91,7 +91,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      widget.userName,
+                      widget().userName,
                       style: TextStyle(
                         fontSize: maxSize,
                         fontWeight: FontWeight.bold,
@@ -196,13 +196,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            profileEditInternalWidget('Name', widget.userName),
+                            profileEditInternalWidget('Name', widget().userName),
                             profileEditInternalWidget(
-                                'Email', widget.userEmail),
+                                'Email', widget().userEmail),
                           ],
                         ),
                         const SizedBox(height: 20),
-                        profileEditInternalWidget('Phone', widget.userNumber),
+                        profileEditInternalWidget('Phone', widget().userNumber),
                       ],
                     ),
                   ),
@@ -221,10 +221,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   editProfileCardWidget('Commercials'),
                   const SizedBox(height: 16),
                   editProfileCardWidget('Payments'),
-                  Text(widget.userPayment),
+                  Text(widget().userPayment),
                   const SizedBox(height: 16),
                   editProfileCardWidget('Address'),
-                  Text(widget.userAddress),
+                  Text(widget().userAddress),
                   const SizedBox(height: 16),
                 ],
               ),

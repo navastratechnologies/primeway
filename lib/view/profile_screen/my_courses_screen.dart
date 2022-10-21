@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:primewayskills_app/view/dashboard/courses_screens/course_detail_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
+
+import '../dashboard/courses_screens/course_detail_screen.dart';
 
 class MyCoursesScreen extends StatefulWidget {
   final String userNumber;
@@ -27,8 +30,32 @@ class MyCoursesScreen extends StatefulWidget {
 }
 
 class _MyCoursesScreenState extends State<MyCoursesScreen> {
-  final CollectionReference course =
-      FirebaseFirestore.instance.collection('courses');
+  // Future<void> getWallet() async {
+
+  //     .then((DocumentSnapshot documentSnapshot) {
+  //   if (documentSnapshot.exists) {
+  //     setState(() {
+  //       // walletAccountName = documentSnapshot.get('account_holder_name');
+  //       // withdrawalReq = documentSnapshot.get('withdrawal_req');
+  //       // accountNumber = documentSnapshot.get('account_number');
+  //       // earnedPcoins = documentSnapshot.get('earned_pcoins');
+  //       // bankName = documentSnapshot.get('bank_name');
+  //       // walletBalance = documentSnapshot.get('wallet_balance');
+  //       // totalWithdrawal = documentSnapshot.get('total_withdrawal');
+  //     });
+
+  //     log('Document data: ${documentSnapshot.data()}');
+  //   } else {
+  //     log('Document does not exist on the database ${widget().userWalletId}');
+  //   }
+  // });
+  // }
+
+  // @override
+  // void initState() {
+  //   getWallet();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +77,13 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
         ),
       ),
       body: StreamBuilder(
-          stream: course.snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .doc(widget().userNumber)
+              .collection('courses')
+              // .doc()
+              // .collection('chapters')
+              .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
             if (streamSnapshot.hasData) {
               return ListView.builder(
@@ -61,21 +94,24 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                   return Padding(
                     padding: const EdgeInsets.all(10),
                     child: InkWell(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CourseDetailScreen(
-                              userAddress: widget.userAddress,
-                              userEmail: widget.userEmail,
-                              userName: widget.userName,
-                              userNumber: widget.userNumber,
-                              userPayment: widget.userPayment,
-                              userProfileImage: widget.userProfileImage,
-                              userWalletId: widget.userWalletId,
-                              courseName: documentSnapshot['name'],
-                              courseId: documentSnapshot.id),
-                        ),
-                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CourseDetailScreen(
+                                userAddress: widget().userAddress,
+                                userEmail: widget().userEmail,
+                                userName: widget().userName,
+                                userNumber: widget().userNumber,
+                                userPayment: widget().userPayment,
+                                userProfileImage: widget().userProfileImage,
+                                userWalletId: widget().userWalletId,
+                                courseName: documentSnapshot['name'],
+                                courseId: documentSnapshot['courses_id']),
+                          ),
+                        );
+                        log('userAddress: ${documentSnapshot['courses_id']}');
+                      },
                       child: Container(
                         padding: const EdgeInsets.all(10),
                         width: MediaQuery.of(context).size.width,

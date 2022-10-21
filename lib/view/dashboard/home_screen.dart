@@ -151,13 +151,13 @@ class _HomescreenState extends State<Homescreen> {
                         context,
                         MaterialPageRoute(
                           builder: (contex) => ProfileEditScreen(
-                            userAddress: widget.userAddress,
-                            userEmail: widget.userEmail,
-                            userName: widget.userName,
-                            userNumber: widget.userNumber,
-                            userPayment: widget.userPayment,
-                            userProfileImage: widget.userProfileImage,
-                            userWalletId: widget.userWalletId,
+                            userAddress: widget().userAddress,
+                            userEmail: widget().userEmail,
+                            userName: widget().userName,
+                            userNumber: widget().userNumber,
+                            userPayment: widget().userPayment,
+                            userProfileImage: widget().userProfileImage,
+                            userWalletId: widget().userWalletId,
                           ),
                         ),
                       );
@@ -184,13 +184,13 @@ class _HomescreenState extends State<Homescreen> {
                             context,
                             MaterialPageRoute(
                               builder: (contex) => ProfileEditScreen(
-                                userAddress: widget.userAddress,
-                                userEmail: widget.userEmail,
-                                userName: widget.userName,
-                                userNumber: widget.userNumber,
-                                userPayment: widget.userPayment,
-                                userProfileImage: widget.userProfileImage,
-                                userWalletId: widget.userWalletId,
+                                userAddress: widget().userAddress,
+                                userEmail: widget().userEmail,
+                                userName: widget().userName,
+                                userNumber: widget().userNumber,
+                                userPayment: widget().userPayment,
+                                userProfileImage: widget().userProfileImage,
+                                userWalletId: widget().userWalletId,
                               ),
                             ),
                           );
