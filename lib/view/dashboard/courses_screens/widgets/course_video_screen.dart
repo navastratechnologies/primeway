@@ -24,7 +24,15 @@ class CourseVideoScreen extends StatefulWidget {
       required this.videoId,
       required this.videoTitle,
       required this.videoUrl,
-      required this.videoDescription, required this.userNumber, required this.userName, required this.userAddress, required this.userProfileImage, required this.userPayment, required this.userEmail, required this.userWalletId, required this.courseName});
+      required this.videoDescription,
+      required this.userNumber,
+      required this.userName,
+      required this.userAddress,
+      required this.userProfileImage,
+      required this.userPayment,
+      required this.userEmail,
+      required this.userWalletId,
+      required this.courseName});
 
   @override
   State<CourseVideoScreen> createState() => _CourseVideoScreenState();
@@ -80,7 +88,7 @@ class _CourseVideoScreenState extends State<CourseVideoScreen> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 18, horizontal: 10),
                 child: Text(
-                  widget().videoTitle,
+                  widget.videoTitle,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -110,10 +118,20 @@ class _CourseVideoScreenState extends State<CourseVideoScreen> {
                       Expanded(
                         child: TabBarView(
                           children: [
-                            CourseDiscussionScreen(courseId: widget().courseId, courseName: widget().courseName, userAddress: widget().userAddress, userEmail: widget().userEmail, userName: widget().userName, userNumber: widget().userNumber, userPayment: widget().userPayment, userProfileImage: widget().userProfileImage, userWalletId: widget().userWalletId,),
+                            CourseDiscussionScreen(
+                              courseId: widget.courseId,
+                              courseName: widget.courseName,
+                              userAddress: widget.userAddress,
+                              userEmail: widget.userEmail,
+                              userName: widget.userName,
+                              userNumber: widget.userNumber,
+                              userPayment: widget.userPayment,
+                              userProfileImage: widget.userProfileImage,
+                              userWalletId: widget.userWalletId,
+                            ),
                             Padding(
                               padding: const EdgeInsets.all(20),
-                              child: Text(widget().videoDescription),
+                              child: Text(widget.videoDescription),
                             ),
                           ],
                         ),

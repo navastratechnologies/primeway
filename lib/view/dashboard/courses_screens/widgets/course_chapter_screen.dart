@@ -111,7 +111,7 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('courses')
-              .doc(widget().courseId)
+              .doc(widget.courseId)
               .collection('chapters')
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -143,7 +143,7 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                         StreamBuilder(
                             stream: FirebaseFirestore.instance
                                 .collection('courses')
-                                .doc(widget().courseId)
+                                .doc(widget.courseId)
                                 .collection('chapters')
                                 .doc(documentSnapshot.id)
                                 .collection('videos')
@@ -173,17 +173,16 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                                               videoDescription:
                                                   documentSnapshot1[
                                                       'description'],
-                                              courseId: widget().courseId,
-                                              courseName: widget().courseName,
-                                              userAddress: widget().userAddress,
-                                              userEmail: widget().userEmail,
-                                              userName: widget().userName,
-                                              userNumber: widget().userNumber,
-                                              userPayment: widget().userPayment,
+                                              courseId: widget.courseId,
+                                              courseName: widget.courseName,
+                                              userAddress: widget.userAddress,
+                                              userEmail: widget.userEmail,
+                                              userName: widget.userName,
+                                              userNumber: widget.userNumber,
+                                              userPayment: widget.userPayment,
                                               userProfileImage:
-                                                  widget().userProfileImage,
-                                              userWalletId:
-                                                  widget().userWalletId,
+                                                  widget.userProfileImage,
+                                              userWalletId: widget.userWalletId,
                                             ),
                                           ),
                                         ),
