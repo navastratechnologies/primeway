@@ -46,7 +46,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
 
   //     log('Document data: ${documentSnapshot.data()}');
   //   } else {
-  //     log('Document does not exist on the database ${widget().userWalletId}');
+  //     log('Document does not exist on the database ${widget.userWalletId}');
   //   }
   // });
   // }
