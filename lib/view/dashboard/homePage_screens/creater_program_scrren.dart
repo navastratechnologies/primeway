@@ -28,8 +28,8 @@ class _CreaterProgramScreenState extends State<CreaterProgramScreen> {
   @override
   void initState() {
     setState(() {
-      collaboration.where('categorey', isEqualTo: widget.categorey);
-      log('log is ${widget.categorey}');
+      collaboration.where('categorey', isEqualTo: widget().categorey);
+      log('log is ${widget().categorey}');
     });
     super.initState();
   }
@@ -44,7 +44,7 @@ class _CreaterProgramScreenState extends State<CreaterProgramScreen> {
         iconTheme: IconThemeData(color: whiteColor),
         backgroundColor: primeColor,
         title: Text(
-          widget.titles,
+          widget().titles,
           style: TextStyle(
             fontSize: maxSize,
             color: whiteColor,

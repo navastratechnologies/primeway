@@ -1,16 +1,71 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 
 class AffiliateSalesScreen extends StatefulWidget {
-  const AffiliateSalesScreen({super.key});
+  final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
+  const AffiliateSalesScreen(
+      {super.key,
+      required this.userNumber,
+      required this.userName,
+      required this.userAddress,
+      required this.userProfileImage,
+      required this.userPayment,
+      required this.userEmail,
+      required this.userWalletId});
 
   @override
   State<AffiliateSalesScreen> createState() => _AffiliateSalesScreenState();
 }
 
 class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
+  String approvedAffiliate = '';
+  String completeAffiliate = '';
+  String pendingAffiliate = '';
+  String successfulAffiliate = '';
+  String totalAffiliate = '';
+  String userId = '12345678990';
+
+  Future<void> getaffilate() async {
+    FirebaseFirestore.instance
+        .collection('affilate_dashboard')
+        .doc('NkcdMPSuI3SSIpJ2uLuv')
+        .collection('affiliate_users')
+        .doc(widget().userNumber)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        setState(() {
+          approvedAffiliate = documentSnapshot.get('approved_affiliate');
+          completeAffiliate = documentSnapshot.get('complete_affiliate');
+          pendingAffiliate = documentSnapshot.get('pending_affiliate');
+          successfulAffiliate = documentSnapshot.get('successful_affiliate');
+          totalAffiliate = documentSnapshot.get('total_affiliate');
+          // approvedAffiliate = documentSnapshot.get('approved_affiliate');
+        });
+        log('Document data: ${documentSnapshot.data()}');
+      } else {
+        log('Document does not exist on the database ');
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    getaffilate();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -43,7 +98,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            '${rupeeSign}10k',
+                            '$rupeeSign $pendingAffiliate',
                             style: TextStyle(
                               fontSize: maxSize + 2,
                               fontWeight: FontWeight.bold,
@@ -70,7 +125,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            '${rupeeSign}40k',
+                            '$rupeeSign $completeAffiliate',
                             style: TextStyle(
                               fontSize: maxSize + 2,
                               fontWeight: FontWeight.bold,
@@ -97,7 +152,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            '${rupeeSign}100k',
+                            '$rupeeSign $approvedAffiliate',
                             style: TextStyle(
                               fontSize: maxSize + 2,
                               fontWeight: FontWeight.bold,
@@ -145,7 +200,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                         headingWidgetMethodForResources('Total Transactions'),
                         const SizedBox(height: 10),
                         Text(
-                          '100',
+                          totalAffiliate,
                           style: TextStyle(
                             fontSize: maxSize,
                             fontWeight: FontWeight.bold,
@@ -178,7 +233,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          '65',
+                          successfulAffiliate,
                           style: TextStyle(
                             fontSize: maxSize,
                             fontWeight: FontWeight.bold,

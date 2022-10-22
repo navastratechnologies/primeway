@@ -88,7 +88,7 @@ class _CourseVideoScreenState extends State<CourseVideoScreen> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 18, horizontal: 10),
                 child: Text(
-                  widget.videoTitle,
+                  widget().videoTitle,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -119,19 +119,19 @@ class _CourseVideoScreenState extends State<CourseVideoScreen> {
                         child: TabBarView(
                           children: [
                             CourseDiscussionScreen(
-                              courseId: widget.courseId,
-                              courseName: widget.courseName,
-                              userAddress: widget.userAddress,
-                              userEmail: widget.userEmail,
-                              userName: widget.userName,
-                              userNumber: widget.userNumber,
-                              userPayment: widget.userPayment,
-                              userProfileImage: widget.userProfileImage,
-                              userWalletId: widget.userWalletId,
+                              courseId: widget().courseId,
+                              courseName: widget().courseName,
+                              userAddress: widget().userAddress,
+                              userEmail: widget().userEmail,
+                              userName: widget().userName,
+                              userNumber: widget().userNumber,
+                              userPayment: widget().userPayment,
+                              userProfileImage: widget().userProfileImage,
+                              userWalletId: widget().userWalletId,
                             ),
                             Padding(
                               padding: const EdgeInsets.all(20),
-                              child: Text(widget.videoDescription),
+                              child: Text(widget().videoDescription),
                             ),
                           ],
                         ),
