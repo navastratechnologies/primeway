@@ -8,9 +8,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:primewayskills_app/view/profile_screen/affiliate_screen.dart';
 import 'package:primewayskills_app/view/profile_screen/my_courses_screen.dart';
 import 'package:primewayskills_app/view/profile_screen/profile_tile_widget.dart';
 import 'package:primewayskills_app/view/profile_screen/purchase_history_screen.dart';
+import 'package:primewayskills_app/view/profile_screen/refer_and_earn_screen.dart';
 import 'package:primewayskills_app/view/profile_screen/wallet_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -434,9 +436,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             icons: FontAwesomeIcons.wallet,
                           ),
                         ),
-                        const ProfileTileWidget(
-                          heading: 'Affiliate Dashboard',
-                          icons: FontAwesomeIcons.affiliatetheme,
+                        InkWell(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AffiliateScreen(),
+                            ),
+                          ),
+                          child: const ProfileTileWidget(
+                            heading: 'Affiliate Dashboard',
+                            icons: FontAwesomeIcons.affiliatetheme,
+                          ),
                         ),
                         InkWell(
                           onTap: () => Navigator.push(
@@ -458,9 +468,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             icons: FontAwesomeIcons.book,
                           ),
                         ),
-                        const ProfileTileWidget(
-                          heading: 'Refer & Earn',
-                          icons: FontAwesomeIcons.bullhorn,
+                        InkWell(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ReferAndEarnScreen(),
+                            ),
+                          ),
+                          child: const ProfileTileWidget(
+                            heading: 'Refer & Earn',
+                            icons: FontAwesomeIcons.bullhorn,
+                          ),
                         ),
                         InkWell(
                           onTap: () => Navigator.push(

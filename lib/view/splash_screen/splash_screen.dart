@@ -15,7 +15,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  Widget? screen;
+  Widget screen = const LoginHomeScreen();
 
   @override
   void initState() {
@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
       splash: Lottie.asset('assets/loading.json'),
-      nextScreen: screen!,
+      nextScreen: screen,
       backgroundColor: primeColor,
       splashIconSize: 250,
       splashTransition: SplashTransition.sizeTransition,
