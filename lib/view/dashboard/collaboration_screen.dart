@@ -189,14 +189,14 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                                         titles: documentSnapshot['titles'],
                                         productCategorey: documentSnapshot[
                                             'product_categorey'],
-                                        userNumber: widget().userNumber,
-                                        userAddress: widget().userAddress,
-                                        userEmail: widget().userEmail,
-                                        userName: widget().userName,
-                                        userPayment: widget().userPayment,
+                                        userNumber: widget.userNumber,
+                                        userAddress: widget.userAddress,
+                                        userEmail: widget.userEmail,
+                                        userName: widget.userName,
+                                        userPayment: widget.userPayment,
                                         userProfileImage:
-                                            widget().userProfileImage,
-                                        userWalletId: widget().userWalletId,
+                                            widget.userProfileImage,
+                                        userWalletId: widget.userWalletId,
                                       ),
                                     ),
                                   );
