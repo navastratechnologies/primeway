@@ -136,32 +136,6 @@ class DeepLinkService {
 
 class _CollaborationInternalScreenState
     extends State<CollaborationInternalScreen> {
-  FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
-
-  String url = 'https://prime.page.link';
-
-  // buildDynamicLinks(String url, String titles, String docId) async {
-  //   final dynamicLinkParams = DynamicLinkParameters(
-  //     link: Uri.parse("https://prime.page.link/NLtk/$docId"),
-  //     uriPrefix: "https://prime.page.link",
-  //     androidParameters:
-  //         const AndroidParameters(packageName: "com.example.primeway"),
-  //   );
-  //   final dynamicLink =
-  //       await FirebaseDynamicLinks.instance.buildLink(dynamicLinkParams);
-
-  //   log('url is $dynamicLink');
-
-  //   Share.share(
-  //     dynamicLink.toString(),
-  //   );
-  // }
-
-  // @override
-  // void initState() {
-  //   buildDynamicLinks(url, widget.titles, docId);
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
