@@ -60,49 +60,52 @@ sidebarIconWidget(icon) {
 }
 
 editProfileCardWidget(text) {
-  return Container(
-    padding: const EdgeInsets.all(14),
-    decoration: BoxDecoration(
-      color: whiteColor,
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          spreadRadius: 1,
-          blurRadius: 10,
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'INCOMPLETE',
-              style: TextStyle(
-                color: primeColor,
-                fontSize: 10,
-                letterSpacing: 1,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                'EDIT',
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 8),
+    child: Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: whiteColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 10,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'INCOMPLETE',
                 style: TextStyle(
                   color: primeColor,
-                  fontSize: 12,
+                  fontSize: 10,
                   letterSpacing: 1,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-          ],
-        ),
-        headingWidgetMethod(text),
-      ],
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  'EDIT',
+                  style: TextStyle(
+                    color: primeColor,
+                    fontSize: 12,
+                    letterSpacing: 1,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          headingWidgetMethod(text),
+        ],
+      ),
     ),
   );
 }
