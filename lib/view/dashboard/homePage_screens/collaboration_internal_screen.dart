@@ -40,7 +40,13 @@ class CollaborationInternalScreen extends StatefulWidget {
       required this.collaborationtype,
       required this.titles,
       required this.productCategorey,
-      required this.userNumber, required this.userName, required this.userAddress, required this.userProfileImage, required this.userPayment, required this.userEmail, required this.userWalletId})
+      required this.userNumber,
+      required this.userName,
+      required this.userAddress,
+      required this.userProfileImage,
+      required this.userPayment,
+      required this.userEmail,
+      required this.userWalletId})
       : super(key: key);
 
   @override
@@ -77,12 +83,12 @@ class DeepLinkService {
     });
   }
 
-  String url = 'https://prime.page.link';
+  String url = 'https://centurus.page.link';
 
   buildDynamicLinks(String url, String titles, String docId, referCode) async {
     final dynamicLinkParams = DynamicLinkParameters(
-      link: Uri.parse("https://prime.page.link/$docId?code=$referCode"),
-      uriPrefix: "https://prime.page.link",
+      link: Uri.parse("https://prime.page.link/TG78/$docId?code=$referCode"),
+      uriPrefix: "https://centurus.page.link",
       androidParameters:
           const AndroidParameters(packageName: "com.example.primeway"),
       socialMetaTagParameters: const SocialMetaTagParameters(
@@ -243,8 +249,8 @@ class _CollaborationInternalScreenState
                       ),
                       InkWell(
                         onTap: () {
-                          DeepLinkService._().buildDynamicLinks(
-                              url, widget().titles, widget().userNumber, '0000');
+                          DeepLinkService._().buildDynamicLinks(url,
+                              widget().titles, widget().userNumber, '0000');
                         },
                         child: SizedBox(
                           width: 35,
@@ -517,7 +523,14 @@ class _CollaborationInternalScreenState
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>  CompleteProfileScreen(userNumber: widget().userNumber, userAddress: widget().userAddress, userEmail: widget().userEmail, userName: widget().userName, userPayment: widget().userPayment, userProfileImage: widget().userProfileImage, userWalletId: widget().userWalletId),
+                    builder: (context) => CompleteProfileScreen(
+                        userNumber: widget().userNumber,
+                        userAddress: widget().userAddress,
+                        userEmail: widget().userEmail,
+                        userName: widget().userName,
+                        userPayment: widget().userPayment,
+                        userProfileImage: widget().userProfileImage,
+                        userWalletId: widget().userWalletId),
                   ),
                 );
               },
