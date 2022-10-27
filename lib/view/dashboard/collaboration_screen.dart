@@ -7,7 +7,23 @@ import 'package:primewayskills_app/view/dashboard/homePage_screens/collaboration
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class CollaborationScreen extends StatefulWidget {
-  const CollaborationScreen({Key? key}) : super(key: key);
+  final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
+  const CollaborationScreen(
+      {Key? key,
+      required this.userNumber,
+      required this.userName,
+      required this.userAddress,
+      required this.userProfileImage,
+      required this.userPayment,
+      required this.userEmail,
+      required this.userWalletId})
+      : super(key: key);
 
   @override
   State<CollaborationScreen> createState() => _CollaborationScreenState();
@@ -146,36 +162,44 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: streamSnapshot.data!.docs.length,
                           itemBuilder: (context, index) {
-                            final DocumentSnapshot documentSnapshot = streamSnapshot.data!.docs[index];
+                            final DocumentSnapshot documentSnapshot =
+                                streamSnapshot.data!.docs[index];
                             return Padding(
                               padding: const EdgeInsets.all(12),
                               child: InkWell(
                                 onTap: () {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            CollaborationInternalScreen(
-                                          heading:
-                                              documentSnapshot['brand_logo'],
-                                          image: documentSnapshot['image'],
-                                          paragraph:
-                                              documentSnapshot['descreption'],
-                                          followerDetails: documentSnapshot[
-                                              'required_followers'],
-                                          brandlogo:
-                                              documentSnapshot['brand_logo'],
-                                          categories:
-                                              documentSnapshot['categories'],
-                                          collaborationtype: documentSnapshot[
-                                              'collaboration_type'],
-                                          language:
-                                              documentSnapshot['language'],
-                                          titles: documentSnapshot['titles'], 
-                                          productCategorey: documentSnapshot['product_categorey'],
-                                        ),
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          CollaborationInternalScreen(
+                                        heading: documentSnapshot['brand_logo'],
+                                        image: documentSnapshot['image'],
+                                        paragraph:
+                                            documentSnapshot['descreption'],
+                                        followerDetails: documentSnapshot[
+                                            'required_followers'],
+                                        brandlogo:
+                                            documentSnapshot['brand_logo'],
+                                        categories:
+                                            documentSnapshot['categories'],
+                                        collaborationtype: documentSnapshot[
+                                            'collaboration_type'],
+                                        language: documentSnapshot['language'],
+                                        titles: documentSnapshot['titles'],
+                                        productCategorey: documentSnapshot[
+                                            'product_categorey'],
+                                        userNumber: widget().userNumber,
+                                        userAddress: widget().userAddress,
+                                        userEmail: widget().userEmail,
+                                        userName: widget().userName,
+                                        userPayment: widget().userPayment,
+                                        userProfileImage:
+                                            widget().userProfileImage,
+                                        userWalletId: widget().userWalletId,
                                       ),
-                                    );
+                                    ),
+                                  );
                                 },
                                 child: Card(
                                   shape: RoundedRectangleBorder(
@@ -240,7 +264,8 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                                                   child: Text(
                                                     documentSnapshot['titles'],
                                                     style: const TextStyle(
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
                                                 ),
@@ -249,9 +274,10 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                                                   width: width / 2,
                                                   child: Text(
                                                     documentSnapshot[
-                                                'required_followers'],
+                                                        'required_followers'],
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.w500,
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                       fontSize: 13,
                                                       color: Colors.black
                                                           .withOpacity(0.3),

@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 
 import 'dart:developer';
 
@@ -21,6 +21,13 @@ class CollaborationInternalScreen extends StatefulWidget {
       language,
       titles,
       productCategorey;
+  final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
   const CollaborationInternalScreen(
       {Key? key,
       required this.heading,
@@ -32,7 +39,8 @@ class CollaborationInternalScreen extends StatefulWidget {
       required this.language,
       required this.collaborationtype,
       required this.titles,
-      required this.productCategorey})
+      required this.productCategorey,
+      required this.userNumber, required this.userName, required this.userAddress, required this.userProfileImage, required this.userPayment, required this.userEmail, required this.userWalletId})
       : super(key: key);
 
   @override
@@ -40,19 +48,48 @@ class CollaborationInternalScreen extends StatefulWidget {
       _CollaborationInternalScreenState();
 }
 
-class _CollaborationInternalScreenState
-    extends State<CollaborationInternalScreen> {
+class DeepLinkService {
+  DeepLinkService._();
+  static DeepLinkService? _instance;
   FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
 
-  String docId = '1234567890';
+  static DeepLinkService? get instance {
+    _instance ??= DeepLinkService._();
+    return _instance;
+  }
+
+  ValueNotifier<String> referrerCode = ValueNotifier<String>('');
+
+  final dynamicLink = FirebaseDynamicLinks.instance;
+
+  Future<void> handleDynamicLinks() async {
+    //Get initial dynamic link if app is started using the link
+    final data = await dynamicLink.getInitialLink();
+    if (data != null) {
+      handleDeepLink(data);
+    }
+
+    //handle foreground
+    dynamicLink.onLink.listen((event) {
+      handleDeepLink(event);
+    }).onError((v) {
+      debugPrint('Failed: $v');
+    });
+  }
+
   String url = 'https://prime.page.link';
 
-  buildDynamicLinks(String url, String titles, String docId) async {
+  buildDynamicLinks(String url, String titles, String docId, referCode) async {
     final dynamicLinkParams = DynamicLinkParameters(
-      link: Uri.parse("https://prime.page.link/NLtk/$docId"),
+      link: Uri.parse("https://prime.page.link/$docId?code=$referCode"),
       uriPrefix: "https://prime.page.link",
       androidParameters:
           const AndroidParameters(packageName: "com.example.primeway"),
+      socialMetaTagParameters: const SocialMetaTagParameters(
+        // imageUrl: ,
+        title: 'REFER A FRIEND & EARN',
+        description: 'Earn 1,500 P-Coins on every referral',
+      ),
     );
     final dynamicLink =
         await FirebaseDynamicLinks.instance.buildLink(dynamicLinkParams);
@@ -63,6 +100,56 @@ class _CollaborationInternalScreenState
       dynamicLink.toString(),
     );
   }
+
+  Future<void> handleDeepLink(PendingDynamicLinkData data) async {
+    final Uri deepLink = data.link;
+    var isRefer = deepLink.pathSegments.contains('refer');
+    if (isRefer) {
+      var code = deepLink.queryParameters['code'];
+      if (code != null) {
+        referrerCode.value = code;
+        debugPrint('ReferrerCode $referrerCode');
+        referrerCode.notifyListeners();
+      }
+    }
+  }
+}
+
+// class CodeGenerator {
+//   static Random random = Random();
+
+//   static String generateCode(String prefix) {
+//     var id = random.nextInt(92143543) + 09451234356;
+//     return '$prefix-${id.toString().substring(0, 8)}';
+//   }
+// }
+
+// class RewardState extends ChangeNotifier {
+//   final userRepo = UserRepository.instance;
+// }
+
+class _CollaborationInternalScreenState
+    extends State<CollaborationInternalScreen> {
+  FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
+
+  String url = 'https://prime.page.link';
+
+  // buildDynamicLinks(String url, String titles, String docId) async {
+  //   final dynamicLinkParams = DynamicLinkParameters(
+  //     link: Uri.parse("https://prime.page.link/NLtk/$docId"),
+  //     uriPrefix: "https://prime.page.link",
+  //     androidParameters:
+  //         const AndroidParameters(packageName: "com.example.primeway"),
+  //   );
+  //   final dynamicLink =
+  //       await FirebaseDynamicLinks.instance.buildLink(dynamicLinkParams);
+
+  //   log('url is $dynamicLink');
+
+  //   Share.share(
+  //     dynamicLink.toString(),
+  //   );
+  // }
 
   // @override
   // void initState() {
@@ -78,7 +165,7 @@ class _CollaborationInternalScreenState
       appBar: AppBar(
         backgroundColor: primeColor,
         title: Text(
-          widget.titles,
+          widget().titles,
           style: TextStyle(
             fontSize: maxSize,
             color: whiteColor,
@@ -101,7 +188,7 @@ class _CollaborationInternalScreenState
                 ),
                 image: DecorationImage(
                   image: NetworkImage(
-                    widget.image,
+                    widget().image,
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -147,7 +234,7 @@ class _CollaborationInternalScreenState
                           ),
                           const SizedBox(width: 10),
                           Text(
-                            widget.followerDetails,
+                            widget().followerDetails,
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                             ),
@@ -156,7 +243,8 @@ class _CollaborationInternalScreenState
                       ),
                       InkWell(
                         onTap: () {
-                          buildDynamicLinks(url, widget.titles, docId);
+                          DeepLinkService._().buildDynamicLinks(
+                              url, widget().titles, widget().userNumber, '0000');
                         },
                         child: SizedBox(
                           width: 35,
@@ -170,7 +258,7 @@ class _CollaborationInternalScreenState
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    widget.titles,
+                    widget().titles,
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.4),
                       fontWeight: FontWeight.w400,
@@ -185,7 +273,7 @@ class _CollaborationInternalScreenState
                   //     )),
                   const SizedBox(height: 20),
                   Text(
-                    widget.paragraph,
+                    widget().paragraph,
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.4),
                       fontWeight: FontWeight.w400,
@@ -215,7 +303,7 @@ class _CollaborationInternalScreenState
                             ),
                             const SizedBox(width: 20),
                             Text(
-                              widget.followerDetails,
+                              widget().followerDetails,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w400,
@@ -262,7 +350,7 @@ class _CollaborationInternalScreenState
                               ),
                             ),
                             Text(
-                              widget.categories,
+                              widget().categories,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w400,
@@ -309,7 +397,7 @@ class _CollaborationInternalScreenState
                               ),
                             ),
                             Text(
-                              widget.language,
+                              widget().language,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w400,
@@ -429,7 +517,7 @@ class _CollaborationInternalScreenState
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CompleteProfileScreen(),
+                    builder: (context) =>  CompleteProfileScreen(userNumber: widget().userNumber, userAddress: widget().userAddress, userEmail: widget().userEmail, userName: widget().userName, userPayment: widget().userPayment, userProfileImage: widget().userProfileImage, userWalletId: widget().userWalletId),
                   ),
                 );
               },

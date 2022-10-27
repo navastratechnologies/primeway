@@ -7,7 +7,23 @@ import 'package:primewayskills_app/models/demo_models.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class CompleteProfileScreen extends StatefulWidget {
-  const CompleteProfileScreen({Key? key}) : super(key: key);
+  final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
+  const CompleteProfileScreen(
+      {Key? key,
+      required this.userNumber,
+      required this.userName,
+      required this.userAddress,
+      required this.userProfileImage,
+      required this.userPayment,
+      required this.userEmail,
+      required this.userWalletId})
+      : super(key: key);
 
   @override
   State<CompleteProfileScreen> createState() => _CompleteProfileScreenState();
@@ -182,10 +198,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                             decoration: BoxDecoration(
                                               color: whiteColor,
                                               shape: BoxShape.circle,
-                                              image: const DecorationImage(
+                                              image: DecorationImage(
                                                 image: NetworkImage(
-                                                  'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1706&q=80',
-                                                ),
+                                                    widget().userProfileImage),
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -230,7 +245,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                         color: Colors.black.withOpacity(0.2),
                                       ),
                                     ),
-                                    hintText: 'Enter Your Name',
+                                    hintText: 'Enter your name',
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Colors.black.withOpacity(0.2),
@@ -751,10 +766,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                           (BuildContext context, int index) {
                                         return Center(
                                           child: Container(
-                                            padding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 20,
-                                                    vertical: 10),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 10),
                                             decoration: BoxDecoration(
                                               color: Colors.blue,
                                               borderRadius:

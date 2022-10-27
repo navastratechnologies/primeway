@@ -8,9 +8,16 @@ import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class CreaterProgramScreen extends StatefulWidget {
   final String titles, categorey;
+  final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
 
   const CreaterProgramScreen(
-      {Key? key, required this.titles, required this.categorey})
+      {Key? key, required this.titles, required this.categorey, required this.userNumber, required this.userName, required this.userAddress, required this.userProfileImage, required this.userPayment, required this.userEmail, required this.userWalletId})
       : super(key: key);
 
   @override
@@ -28,8 +35,8 @@ class _CreaterProgramScreenState extends State<CreaterProgramScreen> {
   @override
   void initState() {
     setState(() {
-      collaboration.where('categorey', isEqualTo: widget.categorey);
-      log('log is ${widget.categorey}');
+      collaboration.where('categorey', isEqualTo: widget().categorey);
+      log('log is ${widget().categorey}');
     });
     super.initState();
   }
@@ -44,7 +51,7 @@ class _CreaterProgramScreenState extends State<CreaterProgramScreen> {
         iconTheme: IconThemeData(color: whiteColor),
         backgroundColor: primeColor,
         title: Text(
-          widget.titles,
+          widget().titles,
           style: TextStyle(
             fontSize: maxSize,
             color: whiteColor,
@@ -197,7 +204,7 @@ class _CreaterProgramScreenState extends State<CreaterProgramScreen> {
                                         language: documentSnapshot['language'],
                                         titles: documentSnapshot['titles'],
                                         productCategorey: documentSnapshot[
-                                            'product_categorey'],
+                                            'product_categorey'], userNumber: widget().userNumber, userAddress: widget().userAddress, userEmail: widget().userEmail, userName: widget().userName, userPayment: widget().userPayment, userProfileImage: widget().userProfileImage, userWalletId: widget().userWalletId,
                                       ),
                                     ),
                                   );

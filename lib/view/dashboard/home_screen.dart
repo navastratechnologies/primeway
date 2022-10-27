@@ -151,13 +151,13 @@ class _HomescreenState extends State<Homescreen> {
                         context,
                         MaterialPageRoute(
                           builder: (contex) => ProfileEditScreen(
-                            userAddress: widget.userAddress,
-                            userEmail: widget.userEmail,
-                            userName: widget.userName,
-                            userNumber: widget.userNumber,
-                            userPayment: widget.userPayment,
-                            userProfileImage: widget.userProfileImage,
-                            userWalletId: widget.userWalletId,
+                            userAddress: widget().userAddress,
+                            userEmail: widget().userEmail,
+                            userName: widget().userName,
+                            userNumber: widget().userNumber,
+                            userPayment: widget().userPayment,
+                            userProfileImage: widget().userProfileImage,
+                            userWalletId: widget().userWalletId,
                           ),
                         ),
                       );
@@ -184,13 +184,13 @@ class _HomescreenState extends State<Homescreen> {
                             context,
                             MaterialPageRoute(
                               builder: (contex) => ProfileEditScreen(
-                                userAddress: widget.userAddress,
-                                userEmail: widget.userEmail,
-                                userName: widget.userName,
-                                userNumber: widget.userNumber,
-                                userPayment: widget.userPayment,
-                                userProfileImage: widget.userProfileImage,
-                                userWalletId: widget.userWalletId,
+                                userAddress: widget().userAddress,
+                                userEmail: widget().userEmail,
+                                userName: widget().userName,
+                                userNumber: widget().userNumber,
+                                userPayment: widget().userPayment,
+                                userProfileImage: widget().userProfileImage,
+                                userWalletId: widget().userWalletId,
                               ),
                             ),
                           );
@@ -300,7 +300,7 @@ class _HomescreenState extends State<Homescreen> {
                                       builder: (context) =>
                                           CreaterProgramScreen(
                                         categorey: documentSnapshot['category'],
-                                        titles: "Creator Programs",
+                                        titles: "Creator Programs", userNumber: widget().userNumber, userAddress: widget().userAddress, userEmail: widget().userEmail, userName: widget().userName, userPayment: widget().userPayment, userProfileImage: widget().userProfileImage, userWalletId: widget().userWalletId,
                                       ),
                                     ),
                                   );
@@ -367,7 +367,7 @@ class _HomescreenState extends State<Homescreen> {
                                               documentSnapshot['language'],
                                           titles: documentSnapshot['titles'],
                                           productCategorey: documentSnapshot[
-                                              'product_categorey'],
+                                              'product_categorey'], userNumber: widget().userNumber, userAddress: widget().userAddress, userEmail: widget().userEmail, userName: widget().userName, userPayment: widget().userPayment, userProfileImage: widget().userProfileImage, userWalletId: widget().userWalletId,
                                         ),
                                       ),
                                     );

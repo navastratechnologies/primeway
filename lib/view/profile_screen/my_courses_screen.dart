@@ -79,7 +79,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('users')
-              .doc(widget.userNumber)
+              .doc(widget().userNumber)
               .collection('courses')
               // .doc()
               // .collection('chapters')
@@ -99,13 +99,13 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => CourseDetailScreen(
-                                userAddress: widget.userAddress,
-                                userEmail: widget.userEmail,
-                                userName: widget.userName,
-                                userNumber: widget.userNumber,
-                                userPayment: widget.userPayment,
-                                userProfileImage: widget.userProfileImage,
-                                userWalletId: widget.userWalletId,
+                                userAddress: widget().userAddress,
+                                userEmail: widget().userEmail,
+                                userName: widget().userName,
+                                userNumber: widget().userNumber,
+                                userPayment: widget().userPayment,
+                                userProfileImage: widget().userProfileImage,
+                                userWalletId: widget().userWalletId,
                                 courseName: documentSnapshot['name'],
                                 courseId: documentSnapshot['courses_id']),
                           ),

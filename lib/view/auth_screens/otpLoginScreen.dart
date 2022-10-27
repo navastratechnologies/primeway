@@ -146,8 +146,8 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                     ),
                     onPressed: () {
                       if (otpController != null) {
-                        authClass.signInwithPhoneNumber(widget.phone!,
-                            widget.verId!, otpController.text, context);
+                        authClass.signInwithPhoneNumber(widget().phone!,
+                            widget().verId!, otpController.text, context);
                         // verifyOTP();
                       } else {}
                     },
@@ -186,7 +186,7 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
 
   void verifyOTP() async {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
-      verificationId: widget.verId.toString(),
+      verificationId: widget().verId.toString(),
       smsCode: otpController.text,
     );
 
@@ -215,12 +215,12 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
             textColor: Colors.white,
             fontSize: 16.0,
           );
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const CompleteProfileScreen(),
-            ),
-          );
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) =>  CompleteProfileScreen(),
+          //   ),
+          // );
         }
       },
     );
