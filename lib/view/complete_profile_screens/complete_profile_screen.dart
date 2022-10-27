@@ -200,7 +200,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                               shape: BoxShape.circle,
                                               image: DecorationImage(
                                                 image: NetworkImage(
-                                                    widget().userProfileImage),
+                                                    widget.userProfileImage),
                                                 fit: BoxFit.cover,
                                               ),
                                             ),

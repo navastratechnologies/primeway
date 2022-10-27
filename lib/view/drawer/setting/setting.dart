@@ -34,13 +34,13 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavigationDrawer(
-        userAddress: widget().userAddress,
-        userEmail: widget().userEmail,
-        userName: widget().userName,
-        userNumber: widget().userNumber,
-        userPayment: widget().userPayment,
-        userProfileImage: widget().userProfileImage,
-        userWalletId: widget().userWalletId,
+        userAddress: widget.userAddress,
+        userEmail: widget.userEmail,
+        userName: widget.userName,
+        userNumber: widget.userNumber,
+        userPayment: widget.userPayment,
+        userProfileImage: widget.userProfileImage,
+        userWalletId: widget.userWalletId,
       ),
       appBar: AppBar(
         backgroundColor: primeColor,

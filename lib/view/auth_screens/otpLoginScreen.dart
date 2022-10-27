@@ -8,8 +8,6 @@ import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
-import '../complete_profile_screens/complete_profile_screen.dart';
-
 class OtpLoginScreen extends StatefulWidget {
   final String? phone, verId;
   const OtpLoginScreen({super.key, this.phone, this.verId});
@@ -146,8 +144,8 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                     ),
                     onPressed: () {
                       if (otpController != null) {
-                        authClass.signInwithPhoneNumber(widget().phone!,
-                            widget().verId!, otpController.text, context);
+                        authClass.signInwithPhoneNumber(widget.phone!,
+                            widget.verId!, otpController.text, context);
                         // verifyOTP();
                       } else {}
                     },
@@ -186,7 +184,7 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
 
   void verifyOTP() async {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
-      verificationId: widget().verId.toString(),
+      verificationId: widget.verId.toString(),
       smsCode: otpController.text,
     );
 
