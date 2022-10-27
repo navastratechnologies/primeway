@@ -215,12 +215,12 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
             textColor: Colors.white,
             fontSize: 16.0,
           );
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const CompleteProfileScreen(),
-            ),
-          );
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) =>  CompleteProfileScreen(),
+          //   ),
+          // );
         }
       },
     );

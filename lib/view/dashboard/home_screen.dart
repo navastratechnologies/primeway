@@ -300,7 +300,7 @@ class _HomescreenState extends State<Homescreen> {
                                       builder: (context) =>
                                           CreaterProgramScreen(
                                         categorey: documentSnapshot['category'],
-                                        titles: "Creator Programs", userNumber: widget().userNumber,
+                                        titles: "Creator Programs", userNumber: widget().userNumber, userAddress: widget().userAddress, userEmail: widget().userEmail, userName: widget().userName, userPayment: widget().userPayment, userProfileImage: widget().userProfileImage, userWalletId: widget().userWalletId,
                                       ),
                                     ),
                                   );
@@ -367,7 +367,7 @@ class _HomescreenState extends State<Homescreen> {
                                               documentSnapshot['language'],
                                           titles: documentSnapshot['titles'],
                                           productCategorey: documentSnapshot[
-                                              'product_categorey'], userNumber: widget().userNumber,
+                                              'product_categorey'], userNumber: widget().userNumber, userAddress: widget().userAddress, userEmail: widget().userEmail, userName: widget().userName, userPayment: widget().userPayment, userProfileImage: widget().userProfileImage, userWalletId: widget().userWalletId,
                                         ),
                                       ),
                                     );

@@ -183,6 +183,12 @@ class _DashboardState extends State<Dashboard> {
           : showCollab
               ? CollaborationScreen(
                   userNumber: userNumber,
+                  userAddress: userAddress,
+                  userEmail: userEmail,
+                  userName: userName,
+                  userPayment: userPayment,
+                  userProfileImage: userProfileImage,
+                  userWalletId: userWalletId,
                 )
               : showCourses
                   ? CoursesScreen(

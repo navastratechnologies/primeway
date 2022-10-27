@@ -22,6 +22,12 @@ class CollaborationInternalScreen extends StatefulWidget {
       titles,
       productCategorey;
   final String userNumber;
+  final String userName;
+  final String userAddress;
+  final String userProfileImage;
+  final String userPayment;
+  final String userEmail;
+  final String userWalletId;
   const CollaborationInternalScreen(
       {Key? key,
       required this.heading,
@@ -34,7 +40,7 @@ class CollaborationInternalScreen extends StatefulWidget {
       required this.collaborationtype,
       required this.titles,
       required this.productCategorey,
-      required this.userNumber})
+      required this.userNumber, required this.userName, required this.userAddress, required this.userProfileImage, required this.userPayment, required this.userEmail, required this.userWalletId})
       : super(key: key);
 
   @override
@@ -511,7 +517,7 @@ class _CollaborationInternalScreenState
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CompleteProfileScreen(),
+                    builder: (context) =>  CompleteProfileScreen(userNumber: widget().userNumber, userAddress: widget().userAddress, userEmail: widget().userEmail, userName: widget().userName, userPayment: widget().userPayment, userProfileImage: widget().userProfileImage, userWalletId: widget().userWalletId),
                   ),
                 );
               },
