@@ -7,7 +7,8 @@ import 'package:primewayskills_app/view/dashboard/homePage_screens/collaboration
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class CollaborationScreen extends StatefulWidget {
-  const CollaborationScreen({Key? key}) : super(key: key);
+  final String userNumber;
+  const CollaborationScreen({Key? key, required this.userNumber}) : super(key: key);
 
   @override
   State<CollaborationScreen> createState() => _CollaborationScreenState();
@@ -172,7 +173,7 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                                           language:
                                               documentSnapshot['language'],
                                           titles: documentSnapshot['titles'], 
-                                          productCategorey: documentSnapshot['product_categorey'],
+                                          productCategorey: documentSnapshot['product_categorey'], userNumber: widget().userNumber,
                                         ),
                                       ),
                                     );

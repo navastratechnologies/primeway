@@ -35,6 +35,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
   String successfulAffiliate = '';
   String totalAffiliate = '';
   String userId = '12345678990';
+  String today = '';
 
   Future<void> getaffilate() async {
     FirebaseFirestore.instance
@@ -52,6 +53,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
           successfulAffiliate = documentSnapshot.get('successful_affiliate');
           totalAffiliate = documentSnapshot.get('total_affiliate');
           // approvedAffiliate = documentSnapshot.get('approved_affiliate');
+          today = documentSnapshot.get('today_earning');
         });
         log('Document data: ${documentSnapshot.data()}');
       } else {
@@ -269,7 +271,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                         children: [
                           const SizedBox(height: 60),
                           Text(
-                            '${rupeeSign}100K',
+                            '$rupeeSign $today',
                             style: TextStyle(
                               fontSize: 40,
                               color: primeColor,

@@ -8,9 +8,10 @@ import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class CreaterProgramScreen extends StatefulWidget {
   final String titles, categorey;
+  final String userNumber;
 
   const CreaterProgramScreen(
-      {Key? key, required this.titles, required this.categorey})
+      {Key? key, required this.titles, required this.categorey, required this.userNumber})
       : super(key: key);
 
   @override
@@ -197,7 +198,7 @@ class _CreaterProgramScreenState extends State<CreaterProgramScreen> {
                                         language: documentSnapshot['language'],
                                         titles: documentSnapshot['titles'],
                                         productCategorey: documentSnapshot[
-                                            'product_categorey'],
+                                            'product_categorey'], userNumber: widget().userNumber,
                                       ),
                                     ),
                                   );
