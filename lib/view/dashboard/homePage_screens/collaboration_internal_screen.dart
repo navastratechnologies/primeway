@@ -136,7 +136,6 @@ class DeepLinkService {
 
 class _CollaborationInternalScreenState
     extends State<CollaborationInternalScreen> {
-
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -145,7 +144,7 @@ class _CollaborationInternalScreenState
       appBar: AppBar(
         backgroundColor: primeColor,
         title: Text(
-          widget().titles,
+          widget.titles,
           style: TextStyle(
             fontSize: maxSize,
             color: whiteColor,
@@ -168,7 +167,7 @@ class _CollaborationInternalScreenState
                 ),
                 image: DecorationImage(
                   image: NetworkImage(
-                    widget().image,
+                    widget.image,
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -214,7 +213,7 @@ class _CollaborationInternalScreenState
                           ),
                           const SizedBox(width: 10),
                           Text(
-                            widget().followerDetails,
+                            widget.followerDetails,
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                             ),
@@ -223,8 +222,8 @@ class _CollaborationInternalScreenState
                       ),
                       InkWell(
                         onTap: () {
-                          DeepLinkService._().buildDynamicLinks(url,
-                              widget().titles, widget().userNumber, '0000');
+                          // DeepLinkService._().buildDynamicLinks(
+                          //     url, widget.titles, widget.userNumber, '0000');
                         },
                         child: SizedBox(
                           width: 35,
@@ -238,7 +237,7 @@ class _CollaborationInternalScreenState
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    widget().titles,
+                    widget.titles,
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.4),
                       fontWeight: FontWeight.w400,
@@ -253,7 +252,7 @@ class _CollaborationInternalScreenState
                   //     )),
                   const SizedBox(height: 20),
                   Text(
-                    widget().paragraph,
+                    widget.paragraph,
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.4),
                       fontWeight: FontWeight.w400,
@@ -283,7 +282,7 @@ class _CollaborationInternalScreenState
                             ),
                             const SizedBox(width: 20),
                             Text(
-                              widget().followerDetails,
+                              widget.followerDetails,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w400,
@@ -330,7 +329,7 @@ class _CollaborationInternalScreenState
                               ),
                             ),
                             Text(
-                              widget().categories,
+                              widget.categories,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w400,
@@ -377,7 +376,7 @@ class _CollaborationInternalScreenState
                               ),
                             ),
                             Text(
-                              widget().language,
+                              widget.language,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w400,
@@ -498,13 +497,13 @@ class _CollaborationInternalScreenState
                   context,
                   MaterialPageRoute(
                     builder: (context) => CompleteProfileScreen(
-                        userNumber: widget().userNumber,
-                        userAddress: widget().userAddress,
-                        userEmail: widget().userEmail,
-                        userName: widget().userName,
-                        userPayment: widget().userPayment,
-                        userProfileImage: widget().userProfileImage,
-                        userWalletId: widget().userWalletId),
+                        userNumber: widget.userNumber,
+                        userAddress: widget.userAddress,
+                        userEmail: widget.userEmail,
+                        userName: widget.userName,
+                        userPayment: widget.userPayment,
+                        userProfileImage: widget.userProfileImage,
+                        userWalletId: widget.userWalletId),
                   ),
                 );
               },
