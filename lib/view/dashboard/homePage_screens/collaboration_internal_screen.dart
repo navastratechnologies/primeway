@@ -136,7 +136,6 @@ class DeepLinkService {
 class _CollaborationInternalScreenState
     extends State<CollaborationInternalScreen> {
   String url = 'https://centurus.page.link';
-
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -225,6 +224,8 @@ class _CollaborationInternalScreenState
                         onTap: () {
                           DeepLinkService._().buildDynamicLinks(
                               url, widget.titles, widget.userNumber, '0000');
+                          // DeepLinkService._().buildDynamicLinks(
+                          //     url, widget.titles, widget.userNumber, '0000');
                         },
                         child: SizedBox(
                           width: 35,

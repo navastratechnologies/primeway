@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   final String userNumber;
@@ -147,84 +146,76 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
             alignment: Alignment.bottomCenter,
             child: SizedBox(
               height: height / 1.45,
-              width: width / 1.2,
               child: ListView(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: whiteColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          spreadRadius: 1,
-                          blurRadius: 10,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'INCOMPLETE',
-                              style: TextStyle(
-                                color: primeColor,
-                                fontSize: 10,
-                                letterSpacing: 1,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                'EDIT',
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 10,
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'INCOMPLETE',
                                 style: TextStyle(
                                   color: primeColor,
-                                  fontSize: 12,
+                                  fontSize: 10,
                                   letterSpacing: 1,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        headingWidgetMethod('About you'),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            profileEditInternalWidget('Name', widget.userName),
-                            profileEditInternalWidget(
-                                'Email', widget.userEmail),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        profileEditInternalWidget('Phone', widget.userNumber),
-                      ],
+                              TextButton(
+                                onPressed: () {},
+                                child: Text(
+                                  'EDIT',
+                                  style: TextStyle(
+                                    color: primeColor,
+                                    fontSize: 12,
+                                    letterSpacing: 1,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          headingWidgetMethod('About you'),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              profileEditInternalWidget(
+                                  'Name', widget.userName),
+                              profileEditInternalWidget(
+                                  'Email', widget.userEmail),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          profileEditInternalWidget('Phone', widget.userNumber),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
                   editProfileCardWidget('Social Accounts'),
-                  Container(
-                    color: Colors.red,
-                    child: GestureDetector(
-                      onTap: () {
-                        canLaunchUrl(Uri.parse('www.google.com'));
-                      },
-                      child: const Text('Click'),
-                    ),
-                  ),
                   const SizedBox(height: 16),
                   editProfileCardWidget('Commercials'),
                   const SizedBox(height: 16),
                   editProfileCardWidget('Payments'),
-                  Text(widget.userPayment),
                   const SizedBox(height: 16),
                   editProfileCardWidget('Address'),
-                  Text(widget.userAddress),
                   const SizedBox(height: 16),
                 ],
               ),
