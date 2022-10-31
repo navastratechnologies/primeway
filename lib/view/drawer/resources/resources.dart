@@ -14,7 +14,16 @@ class ResourcesScreen extends StatelessWidget {
   final String userPayment;
   final String userEmail;
   final String userWalletId;
-  ResourcesScreen({Key? key, required this.userNumber, required this.userName, required this.userAddress, required this.userProfileImage, required this.userPayment, required this.userEmail, required this.userWalletId}) : super(key: key);
+  ResourcesScreen(
+      {Key? key,
+      required this.userNumber,
+      required this.userName,
+      required this.userAddress,
+      required this.userProfileImage,
+      required this.userPayment,
+      required this.userEmail,
+      required this.userWalletId})
+      : super(key: key);
 
   final CollectionReference resources =
       FirebaseFirestore.instance.collection('Resources');
@@ -22,16 +31,29 @@ class ResourcesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer:  NavigationDrawer(userAddress: userAddress,
-                            userEmail: userEmail,
-                            userName: userName,
-                            userNumber: userNumber,
-                            userPayment: userPayment,
-                            userProfileImage: userProfileImage,
-                            userWalletId: userWalletId,),
+      drawer: NavigationDrawer(
+        userAddress: userAddress,
+        userEmail: userEmail,
+        userName: userName,
+        userNumber: userNumber,
+        userPayment: userPayment,
+        userProfileImage: userProfileImage,
+        userWalletId: userWalletId,
+      ),
       appBar: AppBar(
-        backgroundColor: primeColor,
-        title: const Text("Resources"),
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.black.withOpacity(0.6),
+        ),
+        backgroundColor: whiteColor,
+        title: Text(
+          'Resources',
+          style: TextStyle(
+            fontSize: maxSize,
+            color: Colors.black.withOpacity(0.6),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -57,7 +79,7 @@ class ResourcesScreen extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 5,
-                          horizontal: 30,
+                          horizontal: 14,
                         ),
                         child: Container(
                           padding: const EdgeInsets.all(10),
@@ -68,6 +90,13 @@ class ResourcesScreen extends StatelessWidget {
                               image: NetworkImage(documentSnapshot['image']),
                               fit: BoxFit.cover,
                             ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                spreadRadius: 1,
+                              ),
+                            ],
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,11 +121,15 @@ class ResourcesScreen extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 50),
-                              headingWidgetMethodForResources(
-                                  documentSnapshot['title']),
+                              paragraphWidgetMethodForResources2(
+                                documentSnapshot['title'],
+                                context,
+                              ),
                               const SizedBox(height: 10),
                               paragraphWidgetMethodForResources(
-                                  documentSnapshot['descirption'], context),
+                                documentSnapshot['descirption'],
+                                context,
+                              ),
                             ],
                           ),
                         ),

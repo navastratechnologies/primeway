@@ -142,12 +142,16 @@ class _CollaborationInternalScreenState
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: primeColor,
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.black.withOpacity(0.6),
+        ),
+        backgroundColor: whiteColor,
         title: Text(
           widget.titles,
           style: TextStyle(
             fontSize: maxSize,
-            color: whiteColor,
+            color: Colors.black.withOpacity(0.6),
             fontWeight: FontWeight.bold,
           ),
         ),

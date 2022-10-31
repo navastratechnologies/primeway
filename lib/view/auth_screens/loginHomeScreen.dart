@@ -196,7 +196,7 @@ class _HomePageState extends State<LoginHomeScreen> {
                             padding: const EdgeInsets.all(5),
                             shape: const CircleBorder(),
                             onPressed: () {
-                              authClass.signInWithFacebook(context);
+                              // authClass.signInWithFacebook(context);
                             },
                             child: const FaIcon(
                               FontAwesomeIcons.facebookF,

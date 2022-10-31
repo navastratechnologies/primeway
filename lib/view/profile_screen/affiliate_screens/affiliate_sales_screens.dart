@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:primewayskills_app/view/profile_screen/affiliate_screens/affilieate_sales_history_screen.dart';
 
 class AffiliateSalesScreen extends StatefulWidget {
   const AffiliateSalesScreen({super.key});
@@ -242,70 +243,81 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                   ),
                 ),
                 const SizedBox(height: 80),
-                Container(
-                  width: width,
-                  height: 100,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: primeColor2.withOpacity(0.1),
-                        blurRadius: 10,
-                        spreadRadius: 1,
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const AffiliateSalesHistoryScreen(),
                       ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          headingWidgetMethod('View History'),
-                          const SizedBox(height: 10),
-                          Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: primeColor,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: primeColor2.withOpacity(0.6),
-                                  blurRadius: 10,
-                                  spreadRadius: 1,
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  'Go to History page',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                    color: whiteColor.withOpacity(0.5),
+                    );
+                  },
+                  child: Container(
+                    width: width,
+                    height: 100,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: primeColor2.withOpacity(0.1),
+                          blurRadius: 10,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            headingWidgetMethod('View History'),
+                            const SizedBox(height: 10),
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: primeColor,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: primeColor2.withOpacity(0.6),
+                                    blurRadius: 10,
+                                    spreadRadius: 1,
                                   ),
-                                ),
-                                const SizedBox(width: 6),
-                                Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  size: 16,
-                                  color: whiteColor,
-                                ),
-                              ],
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Go to History page',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      color: whiteColor.withOpacity(0.5),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    size: 16,
+                                    color: whiteColor,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Image.asset(
-                        'assets/history.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ],
+                          ],
+                        ),
+                        Image.asset(
+                          'assets/history.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

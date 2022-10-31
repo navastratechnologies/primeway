@@ -63,8 +63,12 @@ class _AffiliateLinksScreenState extends State<AffiliateLinksScreen> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    paragraphWidgetMethodForResourcesBoldTitle(
-                                      documentSnapshot['name'],
+                                    SizedBox(
+                                      width: width / 1.75,
+                                      child:
+                                          paragraphWidgetMethodForResourcesBoldTitle(
+                                        documentSnapshot['name'],
+                                      ),
                                     ),
                                     const SizedBox(height: 10),
                                     Container(

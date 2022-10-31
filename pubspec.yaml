@@ -42,7 +42,7 @@ dependencies:
   firebase_storage: ^10.3.9
   flutter:
     sdk: flutter
-  flutter_facebook_auth: ^4.4.1+1
+  # flutter_facebook_auth: ^4.4.1+1
   flutter_secure_storage: ^6.0.0
   fluttertoast: ^8.0.9
   font_awesome_flutter: ^10.1.0

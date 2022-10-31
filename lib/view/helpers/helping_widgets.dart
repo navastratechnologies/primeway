@@ -152,6 +152,21 @@ paragraphWidgetMethodForResources(text, context) {
       text,
       style: TextStyle(
         color: whiteColor,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
+  );
+}
+
+paragraphWidgetMethodForResources2(text, context) {
+  var width = MediaQuery.of(context).size.width;
+  return SizedBox(
+    width: width / 1.15,
+    child: Text(
+      text,
+      style: TextStyle(
+        color: whiteColor,
+        fontWeight: FontWeight.bold,
       ),
     ),
   );

@@ -57,13 +57,16 @@ class _CreaterProgramScreenState extends State<CreaterProgramScreen> {
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: whiteColor),
-        backgroundColor: primeColor,
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.black.withOpacity(0.6),
+        ),
+        backgroundColor: whiteColor,
         title: Text(
           widget.titles,
           style: TextStyle(
             fontSize: maxSize,
-            color: whiteColor,
+            color: Colors.black.withOpacity(0.6),
             fontWeight: FontWeight.bold,
           ),
         ),

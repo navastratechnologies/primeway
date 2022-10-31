@@ -43,8 +43,19 @@ class _SettingScreenState extends State<SettingScreen> {
         userWalletId: widget.userWalletId,
       ),
       appBar: AppBar(
-        backgroundColor: primeColor,
-        title: const Text("Settings"),
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.black.withOpacity(0.6),
+        ),
+        backgroundColor: whiteColor,
+        title: Text(
+          'Settings',
+          style: TextStyle(
+            fontSize: maxSize,
+            color: Colors.black.withOpacity(0.6),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
