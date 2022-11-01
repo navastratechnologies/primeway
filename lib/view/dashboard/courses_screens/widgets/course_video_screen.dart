@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_discussion_screen.dart';
+import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_landscape_video_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:video_player/video_player.dart';
 
 class CourseVideoScreen extends StatefulWidget {
   final String courseId;
@@ -18,72 +20,218 @@ class CourseVideoScreen extends StatefulWidget {
   final String userWalletId;
   final String courseName;
 
-  const CourseVideoScreen(
-      {super.key,
-      required this.courseId,
-      required this.videoId,
-      required this.videoTitle,
-      required this.videoUrl,
-      required this.videoDescription,
-      required this.userNumber,
-      required this.userName,
-      required this.userAddress,
-      required this.userProfileImage,
-      required this.userPayment,
-      required this.userEmail,
-      required this.userWalletId,
-      required this.courseName});
+  const CourseVideoScreen({
+    super.key,
+    required this.courseId,
+    required this.videoId,
+    required this.videoTitle,
+    required this.videoUrl,
+    required this.videoDescription,
+    required this.userNumber,
+    required this.userName,
+    required this.userAddress,
+    required this.userProfileImage,
+    required this.userPayment,
+    required this.userEmail,
+    required this.userWalletId,
+    required this.courseName,
+  });
 
   @override
   State<CourseVideoScreen> createState() => _CourseVideoScreenState();
 }
 
 class _CourseVideoScreenState extends State<CourseVideoScreen> {
-  final videoUrl = "https://www.youtube.com/watch?v=YMx8Bbev6T4";
-
-  late YoutubePlayerController controller;
+  late VideoPlayerController _controller;
 
   @override
   void initState() {
     super.initState();
-    final videoID = YoutubePlayer.convertUrlToId(videoUrl);
-    controller = YoutubePlayerController(
-      initialVideoId: videoID!,
-      flags: const YoutubePlayerFlags(
-        autoPlay: true,
-        showLiveFullscreenButton: true,
-        hideControls: false,
-      ),
-    );
+    _controller = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+  }
+
+  static const List<double> _examplePlaybackRates = <double>[
+    0.25,
+    0.5,
+    1.0,
+    1.5,
+    2.0,
+    3.0,
+    5.0,
+    10.0,
+  ];
+
+  String _videoDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final hours = twoDigits(duration.inHours);
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+
+    return [
+      if (duration.inHours > 0) hours,
+      minutes,
+      seconds,
+    ].join(':');
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return YoutubePlayerBuilder(
-      player: YoutubePlayer(
-        controller: controller,
-        showVideoProgressIndicator: true,
-        bottomActions: [
-          CurrentPosition(),
-          ProgressBar(
-            isExpanded: true,
-            colors: ProgressBarColors(
-              handleColor: whiteColor.withOpacity(0.8),
-              playedColor: whiteColor,
-              bufferedColor: primeColor,
-              backgroundColor: whiteColor,
-            ),
-          ),
-          const PlaybackSpeedButton(),
-          FullScreenButton(),
-        ],
-      ),
-      builder: (context, player) => SafeArea(
-        child: Scaffold(
-          body: Column(
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              player,
+              _controller.value.isInitialized
+                  ? InkWell(
+                      onTap: () {
+                        setState(
+                          () {
+                            _controller.value.isPlaying
+                                ? _controller.pause()
+                                : _controller.play();
+                          },
+                        );
+                      },
+                      child: AspectRatio(
+                        aspectRatio: _controller.value.aspectRatio,
+                        child: Stack(
+                          children: [
+                            VideoPlayer(_controller),
+                            _controller.value.isPlaying
+                                ? Container()
+                                : Center(
+                                    child: Icon(
+                                      Icons.play_arrow,
+                                      size: 80,
+                                      color: Colors.white.withOpacity(0.6),
+                                    ),
+                                  ),
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.arrow_back,
+                                  color: whiteColor,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 7,
+                                  horizontal: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.5),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    ValueListenableBuilder(
+                                      valueListenable: _controller,
+                                      builder: (context, VideoPlayerValue value,
+                                          child) {
+                                        return Text(
+                                          _videoDuration(value.position),
+                                          style: TextStyle(
+                                            color: whiteColor,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    Expanded(
+                                      child: VideoProgressIndicator(
+                                        _controller,
+                                        allowScrubbing: true,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      _videoDuration(
+                                          _controller.value.duration),
+                                      style: TextStyle(
+                                        color: whiteColor,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              CourseLandscapeVideoScreen(
+                                            controller: _controller,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 5,
+                                        ),
+                                        child: Icon(
+                                          Icons.fullscreen_rounded,
+                                          color: whiteColor,
+                                        ),
+                                      ),
+                                    ),
+                                    // PopupMenuButton<double>(
+                                    //   initialValue:
+                                    //       _controller.value.playbackSpeed,
+                                    //   tooltip: 'Playback speed',
+                                    //   onSelected: (double speed) {
+                                    //     _controller.setPlaybackSpeed(speed);
+                                    //   },
+                                    //   itemBuilder: (BuildContext context) {
+                                    //     return <PopupMenuItem<double>>[
+                                    //       for (final double speed
+                                    //           in _examplePlaybackRates)
+                                    //         PopupMenuItem<double>(
+                                    //           value: speed,
+                                    //           child: Text('${speed}x'),
+                                    //         )
+                                    //     ];
+                                    //   },
+                                    //   child: Text(
+                                    //     '${_controller.value.playbackSpeed}x',
+                                    //     style: const TextStyle(
+                                    //       color: Colors.white,
+                                    //       fontWeight: FontWeight.bold,
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                      height: MediaQuery.of(context).size.height / 4,
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Lottie.asset('assets/json/buffering.json'),
+                      ),
+                    ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 18, horizontal: 10),
