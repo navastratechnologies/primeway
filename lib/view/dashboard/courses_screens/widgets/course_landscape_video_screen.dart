@@ -46,9 +46,14 @@ class _CourseLandscapeVideoScreenState
     );
   }
 
+  bool showControls = true;
+
   @override
   void initState() {
     super.initState();
+    setState(() {
+      showControls = widget.showControls;
+    });
     _landScapeMode();
   }
 
@@ -61,134 +66,158 @@ class _CourseLandscapeVideoScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          VideoPlayer(widget.controller),
-          widget.showControls
-              ? Center(
-                  child: Icon(
-                    Icons.play_arrow,
-                    size: 50,
-                    color: Colors.white.withOpacity(0.6),
-                  ),
-                )
-              : Container(),
-          widget.showControls
-              ? Align(
-                  alignment: Alignment.topLeft,
-                  child: InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+      body: InkWell(
+        onTap: () {
+          setState(
+            () {
+              showControls = !showControls;
+            },
+          );
+        },
+        child: Stack(
+          children: [
+            VideoPlayer(widget.controller),
+            showControls
+                ? Center(
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          widget.controller.value.isPlaying
+                              ? widget.controller.pause()
+                              : widget.controller.play();
+                          widget.controller.value.isPlaying
+                              ? showControls = false
+                              : showControls = true;
+                        });
+                      },
                       child: Icon(
-                        Icons.arrow_back,
-                        color: whiteColor,
+                        widget.controller.value.isPlaying
+                            ? Icons.pause_rounded
+                            : Icons.play_arrow_rounded,
+                        size: 50,
+                        color: Colors.white.withOpacity(0.6),
                       ),
                     ),
-                  ),
-                )
-              : Container(),
-          widget.showControls
-              ? Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 7,
-                      horizontal: 10,
+                  )
+                : Container(),
+            showControls
+                ? Align(
+                    alignment: Alignment.topLeft,
+                    child: InkWell(
+                      onTap: () => Navigator.pop(context),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: whiteColor,
+                        ),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
+                  )
+                : Container(),
+            showControls
+                ? Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 7,
+                        horizontal: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              color: primeColor2,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: ValueListenableBuilder(
+                              valueListenable: widget.controller,
+                              builder:
+                                  (context, VideoPlayerValue value, child) {
+                                return Text(
+                                  _videoDuration(value.position),
+                                  style: TextStyle(
+                                    color: whiteColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: VideoProgressIndicator(
+                              widget.controller,
+                              allowScrubbing: true,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              color: primeColor2,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              _videoDuration(widget.controller.value.duration),
+                              style: TextStyle(
+                                color: whiteColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () => Navigator.pop(context),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 5,
+                              ),
+                              child: Icon(
+                                Icons.fullscreen_rounded,
+                                color: whiteColor,
+                              ),
+                            ),
+                          ),
+                          // PopupMenuButton<double>(
+                          //   initialValue:
+                          //       widget.controller.value.playbackSpeed,
+                          //   tooltip: 'Playback speed',
+                          //   onSelected: (double speed) {
+                          //     widget.controller.setPlaybackSpeed(speed);
+                          //   },
+                          //   itemBuilder: (BuildContext context) {
+                          //     return <PopupMenuItem<double>>[
+                          //       for (final double speed
+                          //           in _examplePlaybackRates)
+                          //         PopupMenuItem<double>(
+                          //           value: speed,
+                          //           child: Text('${speed}x'),
+                          //         )
+                          //     ];
+                          //   },
+                          //   child: Text(
+                          //     '${widget.controller.value.playbackSpeed}x',
+                          //     style: const TextStyle(
+                          //       color: Colors.white,
+                          //       fontWeight: FontWeight.bold,
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            color: primeColor2,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: ValueListenableBuilder(
-                            valueListenable: widget.controller,
-                            builder: (context, VideoPlayerValue value, child) {
-                              return Text(
-                                _videoDuration(value.position),
-                                style: TextStyle(
-                                  color: whiteColor,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: VideoProgressIndicator(
-                            widget.controller,
-                            allowScrubbing: true,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            color: primeColor2,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Text(
-                            _videoDuration(widget.controller.value.duration),
-                            style: TextStyle(
-                              color: whiteColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: _setAllOrientation,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 5,
-                            ),
-                            child: Icon(
-                              Icons.fullscreen_rounded,
-                              color: whiteColor,
-                            ),
-                          ),
-                        ),
-                        // PopupMenuButton<double>(
-                        //   initialValue:
-                        //       widget.controller.value.playbackSpeed,
-                        //   tooltip: 'Playback speed',
-                        //   onSelected: (double speed) {
-                        //     widget.controller.setPlaybackSpeed(speed);
-                        //   },
-                        //   itemBuilder: (BuildContext context) {
-                        //     return <PopupMenuItem<double>>[
-                        //       for (final double speed
-                        //           in _examplePlaybackRates)
-                        //         PopupMenuItem<double>(
-                        //           value: speed,
-                        //           child: Text('${speed}x'),
-                        //         )
-                        //     ];
-                        //   },
-                        //   child: Text(
-                        //     '${widget.controller.value.playbackSpeed}x',
-                        //     style: const TextStyle(
-                        //       color: Colors.white,
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                  ),
-                )
-              : Container(),
-        ],
+                  )
+                : Container(),
+          ],
+        ),
       ),
     );
   }
