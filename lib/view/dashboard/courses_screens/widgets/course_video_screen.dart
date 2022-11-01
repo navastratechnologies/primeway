@@ -44,6 +44,8 @@ class CourseVideoScreen extends StatefulWidget {
 class _CourseVideoScreenState extends State<CourseVideoScreen> {
   late VideoPlayerController _controller;
 
+  bool showControls = true;
+
   @override
   void initState() {
     super.initState();
@@ -97,9 +99,7 @@ class _CourseVideoScreenState extends State<CourseVideoScreen> {
                       onTap: () {
                         setState(
                           () {
-                            _controller.value.isPlaying
-                                ? _controller.pause()
-                                : _controller.play();
+                            showControls = !showControls;
                           },
                         );
                       },
@@ -108,119 +108,162 @@ class _CourseVideoScreenState extends State<CourseVideoScreen> {
                         child: Stack(
                           children: [
                             VideoPlayer(_controller),
-                            _controller.value.isPlaying
-                                ? Container()
-                                : Center(
-                                    child: Icon(
-                                      Icons.play_arrow,
-                                      size: 80,
-                                      color: Colors.white.withOpacity(0.6),
-                                    ),
-                                  ),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(
-                                  Icons.arrow_back,
-                                  color: whiteColor,
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 7,
-                                  horizontal: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.5),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    ValueListenableBuilder(
-                                      valueListenable: _controller,
-                                      builder: (context, VideoPlayerValue value,
-                                          child) {
-                                        return Text(
-                                          _videoDuration(value.position),
-                                          style: TextStyle(
-                                            color: whiteColor,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        );
+                            showControls
+                                ? Center(
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          _controller.value.isPlaying
+                                              ? _controller.pause()
+                                              : _controller.play();
+                                          _controller.value.isPlaying
+                                              ? showControls = false
+                                              : showControls = true;
+                                        });
                                       },
-                                    ),
-                                    Expanded(
-                                      child: VideoProgressIndicator(
-                                        _controller,
-                                        allowScrubbing: true,
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                        ),
+                                      child: Icon(
+                                        _controller.value.isPlaying
+                                            ? Icons.pause_rounded
+                                            : Icons.play_arrow_rounded,
+                                        size: 50,
+                                        color: Colors.white.withOpacity(0.6),
                                       ),
                                     ),
-                                    Text(
-                                      _videoDuration(
-                                          _controller.value.duration),
-                                      style: TextStyle(
-                                        color: whiteColor,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              CourseLandscapeVideoScreen(
-                                            controller: _controller,
-                                          ),
-                                        ),
-                                      ),
+                                  )
+                                : Container(),
+                            showControls
+                                ? Align(
+                                    alignment: Alignment.topLeft,
+                                    child: InkWell(
+                                      onTap: () => Navigator.pop(context),
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 5,
-                                        ),
+                                        padding: const EdgeInsets.all(8.0),
                                         child: Icon(
-                                          Icons.fullscreen_rounded,
+                                          Icons.arrow_back,
                                           color: whiteColor,
                                         ),
                                       ),
                                     ),
-                                    // PopupMenuButton<double>(
-                                    //   initialValue:
-                                    //       _controller.value.playbackSpeed,
-                                    //   tooltip: 'Playback speed',
-                                    //   onSelected: (double speed) {
-                                    //     _controller.setPlaybackSpeed(speed);
-                                    //   },
-                                    //   itemBuilder: (BuildContext context) {
-                                    //     return <PopupMenuItem<double>>[
-                                    //       for (final double speed
-                                    //           in _examplePlaybackRates)
-                                    //         PopupMenuItem<double>(
-                                    //           value: speed,
-                                    //           child: Text('${speed}x'),
-                                    //         )
-                                    //     ];
-                                    //   },
-                                    //   child: Text(
-                                    //     '${_controller.value.playbackSpeed}x',
-                                    //     style: const TextStyle(
-                                    //       color: Colors.white,
-                                    //       fontWeight: FontWeight.bold,
-                                    //     ),
-                                    //   ),
-                                    // ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                  )
+                                : Container(),
+                            showControls
+                                ? Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 7,
+                                        horizontal: 10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.5),
+                                      ),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(3),
+                                            decoration: BoxDecoration(
+                                              color: primeColor2,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: ValueListenableBuilder(
+                                              valueListenable: _controller,
+                                              builder: (context,
+                                                  VideoPlayerValue value,
+                                                  child) {
+                                                return Text(
+                                                  _videoDuration(
+                                                      value.position),
+                                                  style: TextStyle(
+                                                    color: whiteColor,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: VideoProgressIndicator(
+                                              _controller,
+                                              allowScrubbing: true,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 10,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.all(3),
+                                            decoration: BoxDecoration(
+                                              color: primeColor2,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: Text(
+                                              _videoDuration(
+                                                  _controller.value.duration),
+                                              style: TextStyle(
+                                                color: whiteColor,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          InkWell(
+                                            onTap: () => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CourseLandscapeVideoScreen(
+                                                  controller: _controller,
+                                                  showControls: showControls,
+                                                ),
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 5,
+                                              ),
+                                              child: Icon(
+                                                Icons.fullscreen_rounded,
+                                                color: whiteColor,
+                                              ),
+                                            ),
+                                          ),
+                                          // PopupMenuButton<double>(
+                                          //   initialValue:
+                                          //       _controller.value.playbackSpeed,
+                                          //   tooltip: 'Playback speed',
+                                          //   onSelected: (double speed) {
+                                          //     _controller.setPlaybackSpeed(speed);
+                                          //   },
+                                          //   itemBuilder: (BuildContext context) {
+                                          //     return <PopupMenuItem<double>>[
+                                          //       for (final double speed
+                                          //           in _examplePlaybackRates)
+                                          //         PopupMenuItem<double>(
+                                          //           value: speed,
+                                          //           child: Text('${speed}x'),
+                                          //         )
+                                          //     ];
+                                          //   },
+                                          //   child: Text(
+                                          //     '${_controller.value.playbackSpeed}x',
+                                          //     style: const TextStyle(
+                                          //       color: Colors.white,
+                                          //       fontWeight: FontWeight.bold,
+                                          //     ),
+                                          //   ),
+                                          // ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
                           ],
                         ),
                       ),
