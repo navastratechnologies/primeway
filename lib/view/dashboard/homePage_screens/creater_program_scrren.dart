@@ -181,7 +181,9 @@ class _CreaterProgramScreenState extends State<CreaterProgramScreen> {
                 ),
                 const SizedBox(height: 20),
                 StreamBuilder(
-                    stream: collaboration.snapshots(),
+                    stream: collaboration
+                        .where('categories', isEqualTo: widget.categorey)
+                        .snapshots(),
                     builder:
                         (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                       if (streamSnapshot.hasData) {
