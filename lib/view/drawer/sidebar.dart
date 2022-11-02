@@ -1,3 +1,9 @@
+// ignore_for_file: avoid_print
+
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
@@ -5,8 +11,9 @@ import 'package:primewayskills_app/view/drawer/resources/resources.dart';
 import 'package:primewayskills_app/view/drawer/setting/setting.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class NavigationDrawer extends StatelessWidget {
+class NavigationDrawer extends StatefulWidget {
   final String userNumber;
   final String userName;
   final String userAddress;
@@ -24,6 +31,24 @@ class NavigationDrawer extends StatelessWidget {
       required this.userEmail,
       required this.userWalletId})
       : super(key: key);
+
+  @override
+  State<NavigationDrawer> createState() => _NavigationDrawerState();
+}
+
+class _NavigationDrawerState extends State<NavigationDrawer> {
+  Future<void> checkCollection() async {
+    FirebaseFirestore.instance
+        .collection('affilate_dashboard')
+        .doc('NkcdMPSuI3SSIpJ2uLuv')
+        .collection('affiliate_users')
+        .where(widget.userNumber, isEqualTo: widget.userNumber);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) => Drawer(
@@ -62,7 +87,8 @@ class NavigationDrawer extends StatelessWidget {
                                       color: whiteColor,
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
-                                        image: NetworkImage(userProfileImage),
+                                        image: NetworkImage(
+                                            widget.userProfileImage),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -73,7 +99,7 @@ class NavigationDrawer extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      userName,
+                                      widget.userName,
                                       style: TextStyle(
                                         color: whiteColor,
                                         fontSize: maxSize,
@@ -81,7 +107,7 @@ class NavigationDrawer extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      userEmail,
+                                      widget.userEmail,
                                       style: TextStyle(
                                         color: whiteColor.withOpacity(0.6),
                                         fontWeight: FontWeight.w500,
@@ -137,13 +163,13 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => ResourcesScreen(
-                                    userAddress: userAddress,
-                                    userEmail: userEmail,
-                                    userName: userName,
-                                    userNumber: userNumber,
-                                    userPayment: userPayment,
-                                    userProfileImage: userProfileImage,
-                                    userWalletId: userWalletId,
+                                    userAddress: widget.userAddress,
+                                    userEmail: widget.userEmail,
+                                    userName: widget.userName,
+                                    userNumber: widget.userNumber,
+                                    userPayment: widget.userPayment,
+                                    userProfileImage: widget.userProfileImage,
+                                    userWalletId: widget.userWalletId,
                                   ),
                                 ),
                               ),
@@ -167,13 +193,13 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => SettingScreen(
-                                    userAddress: userAddress,
-                                    userEmail: userEmail,
-                                    userName: userName,
-                                    userNumber: userNumber,
-                                    userPayment: userPayment,
-                                    userProfileImage: userProfileImage,
-                                    userWalletId: userWalletId,
+                                    userAddress: widget.userAddress,
+                                    userEmail: widget.userEmail,
+                                    userName: widget.userName,
+                                    userNumber: widget.userNumber,
+                                    userPayment: widget.userPayment,
+                                    userProfileImage: widget.userProfileImage,
+                                    userWalletId: widget.userWalletId,
                                   ),
                                 ),
                               ),
@@ -192,21 +218,20 @@ class NavigationDrawer extends StatelessWidget {
                                 color: whiteColor,
                               ),
                             ),
-                            onTap: () => {
-                              Navigator.pop(context),
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => SettingScreen(
-                                    userAddress: userAddress,
-                                    userEmail: userEmail,
-                                    userName: userName,
-                                    userNumber: userNumber,
-                                    userPayment: userPayment,
-                                    userProfileImage: userProfileImage,
-                                    userWalletId: userWalletId,
-                                  ),
-                                ),
-                              ),
+                            onTap: () {
+                              FirebaseFirestore.instance
+                                  .collection('affilate_dashboard')
+                                  .doc('NkcdMPSuI3SSIpJ2uLuv')
+                                  .collection('affiliate_users')
+                                  .doc('1234567899')
+                                  .set({
+                                    'id': '1234567899',
+                                    'today_earning': '260',
+                                    'user_id': '1234567899',
+                                  })
+                                  .then((value) => print("User Added"))
+                                  .catchError((error) =>
+                                      print("Failed to add user: $error"));
                             },
                             trailing: FaIcon(
                               FontAwesomeIcons.chevronRight,
@@ -222,21 +247,27 @@ class NavigationDrawer extends StatelessWidget {
                                 color: whiteColor,
                               ),
                             ),
-                            onTap: () => {
-                              Navigator.pop(context),
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => SettingScreen(
-                                    userAddress: userAddress,
-                                    userEmail: userEmail,
-                                    userName: userName,
-                                    userNumber: userNumber,
-                                    userPayment: userPayment,
-                                    userProfileImage: userProfileImage,
-                                    userWalletId: userWalletId,
-                                  ),
-                                ),
-                              ),
+                            onTap: () async {
+                              // var whatsapp = "+919803428694";
+                              var whatsappURlAndroid =
+                                  "whatsapp://send?phone=+919803428694&text=Hello";
+                              var whatappURLIos =
+                                  "whatsapp://send?phone=+919803428694&text=Hello";
+
+                              if (Platform.isIOS) {
+                                try {
+                                  await launchUrl(Uri.parse(whatappURLIos));
+                                } catch (e) {
+                                  log('Error in Ios $e');
+                                }
+                              } else {
+                                try {
+                                  await launchUrl(
+                                      Uri.parse(whatsappURlAndroid));
+                                } catch (e) {
+                                  log('Error in Androiod $e');
+                                }
+                              }
                             },
                             trailing: FaIcon(
                               FontAwesomeIcons.chevronRight,
@@ -257,13 +288,13 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => SettingScreen(
-                                    userAddress: userAddress,
-                                    userEmail: userEmail,
-                                    userName: userName,
-                                    userNumber: userNumber,
-                                    userPayment: userPayment,
-                                    userProfileImage: userProfileImage,
-                                    userWalletId: userWalletId,
+                                    userAddress: widget.userAddress,
+                                    userEmail: widget.userEmail,
+                                    userName: widget.userName,
+                                    userNumber: widget.userNumber,
+                                    userPayment: widget.userPayment,
+                                    userProfileImage: widget.userProfileImage,
+                                    userWalletId: widget.userWalletId,
                                   ),
                                 ),
                               ),
@@ -287,13 +318,13 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => SettingScreen(
-                                    userAddress: userAddress,
-                                    userEmail: userEmail,
-                                    userName: userName,
-                                    userNumber: userNumber,
-                                    userPayment: userPayment,
-                                    userProfileImage: userProfileImage,
-                                    userWalletId: userWalletId,
+                                    userAddress: widget.userAddress,
+                                    userEmail: widget.userEmail,
+                                    userName: widget.userName,
+                                    userNumber: widget.userNumber,
+                                    userPayment: widget.userPayment,
+                                    userProfileImage: widget.userProfileImage,
+                                    userWalletId: widget.userWalletId,
                                   ),
                                 ),
                               ),
