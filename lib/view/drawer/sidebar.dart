@@ -243,11 +243,15 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                                         .collection('affilate_dashboard')
                                         .doc('NkcdMPSuI3SSIpJ2uLuv')
                                         .collection('affiliate_users')
-                                        .doc('1234567899')
+                                        .doc(widget.userNumber)
                                         .set({
-                                          'id': '1234567899',
-                                          'today_earning': '260',
-                                          'user_id': '1234567899',
+                                          'approved_affiliate': '',
+                                          'complete_affiliate': '',
+                                          'pending_affiliate': '',
+                                          'successful_affiliate': '',
+                                          'today_earning': '',
+                                          'total_affiliate': '',
+                                          'user_id': widget.userNumber,
                                         })
                                         .then((value) => print("User Added"))
                                         .catchError((error) => print(
