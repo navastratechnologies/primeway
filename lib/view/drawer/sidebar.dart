@@ -37,16 +37,34 @@ class NavigationDrawer extends StatefulWidget {
 }
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
+  bool showPartenerPage = true;
+  String docId = '';
   Future<void> checkCollection() async {
     FirebaseFirestore.instance
         .collection('affilate_dashboard')
         .doc('NkcdMPSuI3SSIpJ2uLuv')
         .collection('affiliate_users')
-        .where(widget.userNumber, isEqualTo: widget.userNumber);
+        .doc(widget.userNumber)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        setState(() {
+          docId = documentSnapshot.id;
+          showPartenerPage = false;
+        });
+        log('Document id: ${documentSnapshot.id}');
+      } else {
+        setState(() {
+          showPartenerPage = true;
+        });
+        log('Document does not exist on the database');
+      }
+    });
   }
 
   @override
   void initState() {
+    checkCollection();
     super.initState();
   }
 
@@ -210,35 +228,38 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                               size: 18,
                             ),
                           ),
-                          ListTile(
-                            leading: sidebarIconWidget(Icons.handshake_rounded),
-                            title: Text(
-                              "Become Partner",
-                              style: TextStyle(
-                                color: whiteColor,
-                              ),
-                            ),
-                            onTap: () {
-                              FirebaseFirestore.instance
-                                  .collection('affilate_dashboard')
-                                  .doc('NkcdMPSuI3SSIpJ2uLuv')
-                                  .collection('affiliate_users')
-                                  .doc('1234567899')
-                                  .set({
-                                    'id': '1234567899',
-                                    'today_earning': '260',
-                                    'user_id': '1234567899',
-                                  })
-                                  .then((value) => print("User Added"))
-                                  .catchError((error) =>
-                                      print("Failed to add user: $error"));
-                            },
-                            trailing: FaIcon(
-                              FontAwesomeIcons.chevronRight,
-                              color: whiteColor.withOpacity(0.6),
-                              size: 18,
-                            ),
-                          ),
+                          showPartenerPage
+                              ? ListTile(
+                                  leading: sidebarIconWidget(
+                                      Icons.handshake_rounded),
+                                  title: Text(
+                                    "Become Partner",
+                                    style: TextStyle(
+                                      color: whiteColor,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    FirebaseFirestore.instance
+                                        .collection('affilate_dashboard')
+                                        .doc('NkcdMPSuI3SSIpJ2uLuv')
+                                        .collection('affiliate_users')
+                                        .doc('1234567899')
+                                        .set({
+                                          'id': '1234567899',
+                                          'today_earning': '260',
+                                          'user_id': '1234567899',
+                                        })
+                                        .then((value) => print("User Added"))
+                                        .catchError((error) => print(
+                                            "Failed to add user: $error"));
+                                  },
+                                  trailing: FaIcon(
+                                    FontAwesomeIcons.chevronRight,
+                                    color: whiteColor.withOpacity(0.6),
+                                    size: 18,
+                                  ),
+                                )
+                              : Container(),
                           ListTile(
                             leading: sidebarIconWidget(Icons.whatsapp),
                             title: Text(
