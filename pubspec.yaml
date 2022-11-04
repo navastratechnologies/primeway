@@ -32,14 +32,15 @@ dependencies:
   animations: ^2.0.3
   bottom_navy_bar: ^6.0.0
   carousel_slider: ^4.1.1
-  cloud_firestore: ^3.4.9
+  cloud_firestore: ^4.0.3
   cupertino_icons: ^1.0.2
   file_picker: ^5.2.0+1
-  firebase_auth: ^3.10.0
-  firebase_core: ^1.23.0
-  firebase_database: ^9.1.5
-  firebase_dynamic_links: ^4.3.9
-  firebase_storage: ^10.3.9
+  firebase_auth: ^4.1.0
+  firebase_core: ^2.1.1
+  firebase_database: ^10.0.3
+  firebase_dynamic_links: ^5.0.3
+  firebase_messaging: ^14.0.3
+  firebase_storage: ^11.0.3
   flutter:
     sdk: flutter
   flutter_secure_storage: ^6.0.0
