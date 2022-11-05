@@ -37,7 +37,7 @@ class NavigationDrawer extends StatefulWidget {
 }
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
-  bool showPartenerPage = true;
+  bool showPartenerPage = false;
   String docId = '';
   Future<void> checkCollection() async {
     FirebaseFirestore.instance
