@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
@@ -5,13 +8,47 @@ import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 import 'package:primewayskills_app/view/profile_screen/affiliate_screens/affilieate_sales_history_screen.dart';
 
 class AffiliateSalesScreen extends StatefulWidget {
-  const AffiliateSalesScreen({super.key});
+  final String userNumber;
+  const AffiliateSalesScreen({super.key, required this.userNumber});
 
   @override
   State<AffiliateSalesScreen> createState() => _AffiliateSalesScreenState();
 }
 
 class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
+  String approvedAffiliate = '';
+  String completeAffiliate = '';
+  String pendingAffiliate = '';
+  String successlAffiliate = '';
+  String todayEarning = '';
+  String totalAffiliate = '';
+
+  Future<void> getAffilateDashboard() async {
+    FirebaseFirestore.instance
+        .collection('affilate_dashboard')
+        .doc('NkcdMPSuI3SSIpJ2uLuv')
+        .collection('affiliate_users')
+        .doc(widget.userNumber)
+        .get()
+        .then((value) {
+      log('affiliate is ${value.get('approved_affiliate')}');
+      setState(() {
+        approvedAffiliate = value.get('approved_affiliate');
+        completeAffiliate = value.get('complete_affiliate');
+        pendingAffiliate = value.get('pending_affiliate');
+        successlAffiliate = value.get('successful_affiliate');
+        todayEarning = value.get('today_earning');
+        totalAffiliate = value.get('total_affiliate');
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    getAffilateDashboard();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -44,7 +81,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              '${rupeeSign}10k',
+                              '$rupeeSign $pendingAffiliate',
                               style: TextStyle(
                                 fontSize: maxSize + 2,
                                 fontWeight: FontWeight.bold,
@@ -71,7 +108,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              '${rupeeSign}40k',
+                              '$rupeeSign $completeAffiliate',
                               style: TextStyle(
                                 fontSize: maxSize + 2,
                                 fontWeight: FontWeight.bold,
@@ -98,7 +135,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              '${rupeeSign}100k',
+                              '$rupeeSign $approvedAffiliate',
                               style: TextStyle(
                                 fontSize: maxSize + 2,
                                 fontWeight: FontWeight.bold,
@@ -146,7 +183,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                           headingWidgetMethodForResources('Total Transactions'),
                           const SizedBox(height: 10),
                           Text(
-                            '100',
+                            totalAffiliate,
                             style: TextStyle(
                               fontSize: maxSize,
                               fontWeight: FontWeight.bold,
@@ -179,7 +216,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            '65',
+                            successlAffiliate,
                             style: TextStyle(
                               fontSize: maxSize,
                               fontWeight: FontWeight.bold,
@@ -215,7 +252,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                           children: [
                             const SizedBox(height: 60),
                             Text(
-                              '${rupeeSign}100K',
+                              '$rupeeSign $todayEarning',
                               style: TextStyle(
                                 fontSize: 40,
                                 color: primeColor,
@@ -249,7 +286,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            const AffiliateSalesHistoryScreen(),
+                             AffiliateSalesHistoryScreen(userNumber: widget.userNumber),
                       ),
                     );
                   },

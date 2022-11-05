@@ -47,6 +47,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String walletBalance = '';
   String totalWithdrawal = '';
 
+  bool showAffiliate = false;
+  String docId = '';
+
+  Future<void> checkCollection() async {
+    FirebaseFirestore.instance
+        .collection('affilate_dashboard')
+        .doc('NkcdMPSuI3SSIpJ2uLuv')
+        .collection('affiliate_users')
+        .doc(widget.userNumber)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        setState(() {
+          docId = documentSnapshot.id;
+          showAffiliate = true;
+        });
+        log('Document id: ${documentSnapshot.id}');
+      } else {
+        setState(() {
+          showAffiliate = false;
+        });
+        log('Document does not exist on the database');
+      }
+    });
+  }
+
   Future<void> getWallet() async {
     FirebaseFirestore.instance
         .collection('wallet')
@@ -73,6 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
+    checkCollection();
     getWallet();
     super.initState();
   }
@@ -436,26 +463,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             icons: FontAwesomeIcons.wallet,
                           ),
                         ),
-                        InkWell(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AffiliateScreen(
-                                userAddress: widget.userAddress,
-                                userEmail: widget.userEmail,
-                                userName: widget.userName,
-                                userNumber: widget.userNumber,
-                                userPayment: widget.userPayment,
-                                userProfileImage: widget.userProfileImage,
-                                userWalletId: widget.userWalletId,
-                              ),
-                            ),
-                          ),
-                          child: const ProfileTileWidget(
-                            heading: 'Affiliate Dashboard',
-                            icons: FontAwesomeIcons.affiliatetheme,
-                          ),
-                        ),
+                        showAffiliate
+                            ? InkWell(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AffiliateScreen(
+                                      userAddress: widget.userAddress,
+                                      userEmail: widget.userEmail,
+                                      userName: widget.userName,
+                                      userNumber: widget.userNumber,
+                                      userPayment: widget.userPayment,
+                                      userProfileImage: widget.userProfileImage,
+                                      userWalletId: widget.userWalletId,
+                                    ),
+                                  ),
+                                ),
+                                child: const ProfileTileWidget(
+                                  heading: 'Affiliate Dashboard',
+                                  icons: FontAwesomeIcons.affiliatetheme,
+                                ),
+                              )
+                            : Container(),
                         InkWell(
                           onTap: () => Navigator.push(
                             context,

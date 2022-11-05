@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 
@@ -116,7 +117,16 @@ class _AffiliateLinksScreenState extends State<AffiliateLinksScreen> {
                               children: [
                                 MaterialButton(
                                   padding: const EdgeInsets.all(2),
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    await Clipboard.setData(ClipboardData(
+                                        text:
+                                            documentSnapshot['affilate_link']));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Copied !'),
+                                      ),
+                                    );
+                                  },
                                   child: Row(
                                     children: [
                                       Text(
