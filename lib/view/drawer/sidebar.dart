@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/drawer/resources/resources.dart';
 import 'package:primewayskills_app/view/drawer/setting/setting.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:primewayskills_app/view/splash_screen/splash_screen.dart';
 
-class NavigationDrawer extends StatelessWidget {
+class NavigationDrawer extends StatefulWidget {
   final String userNumber;
   final String userName;
   final String userAddress;
@@ -24,6 +26,13 @@ class NavigationDrawer extends StatelessWidget {
       required this.userEmail,
       required this.userWalletId})
       : super(key: key);
+
+  @override
+  State<NavigationDrawer> createState() => _NavigationDrawerState();
+}
+
+class _NavigationDrawerState extends State<NavigationDrawer> {
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) => Drawer(
@@ -62,7 +71,8 @@ class NavigationDrawer extends StatelessWidget {
                                       color: whiteColor,
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
-                                        image: NetworkImage(userProfileImage),
+                                        image: NetworkImage(
+                                            widget.userProfileImage),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -73,7 +83,7 @@ class NavigationDrawer extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      userName,
+                                      widget.userName,
                                       style: TextStyle(
                                         color: whiteColor,
                                         fontSize: maxSize,
@@ -81,7 +91,7 @@ class NavigationDrawer extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      userEmail,
+                                      widget.userEmail,
                                       style: TextStyle(
                                         color: whiteColor.withOpacity(0.6),
                                         fontWeight: FontWeight.w500,
@@ -137,13 +147,13 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => ResourcesScreen(
-                                    userAddress: userAddress,
-                                    userEmail: userEmail,
-                                    userName: userName,
-                                    userNumber: userNumber,
-                                    userPayment: userPayment,
-                                    userProfileImage: userProfileImage,
-                                    userWalletId: userWalletId,
+                                    userAddress: widget.userAddress,
+                                    userEmail: widget.userEmail,
+                                    userName: widget.userName,
+                                    userNumber: widget.userNumber,
+                                    userPayment: widget.userPayment,
+                                    userProfileImage: widget.userProfileImage,
+                                    userWalletId: widget.userWalletId,
                                   ),
                                 ),
                               ),
@@ -167,13 +177,13 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => SettingScreen(
-                                    userAddress: userAddress,
-                                    userEmail: userEmail,
-                                    userName: userName,
-                                    userNumber: userNumber,
-                                    userPayment: userPayment,
-                                    userProfileImage: userProfileImage,
-                                    userWalletId: userWalletId,
+                                    userAddress: widget.userAddress,
+                                    userEmail: widget.userEmail,
+                                    userName: widget.userName,
+                                    userNumber: widget.userNumber,
+                                    userPayment: widget.userPayment,
+                                    userProfileImage: widget.userProfileImage,
+                                    userWalletId: widget.userWalletId,
                                   ),
                                 ),
                               ),
@@ -197,13 +207,13 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => SettingScreen(
-                                    userAddress: userAddress,
-                                    userEmail: userEmail,
-                                    userName: userName,
-                                    userNumber: userNumber,
-                                    userPayment: userPayment,
-                                    userProfileImage: userProfileImage,
-                                    userWalletId: userWalletId,
+                                    userAddress: widget.userAddress,
+                                    userEmail: widget.userEmail,
+                                    userName: widget.userName,
+                                    userNumber: widget.userNumber,
+                                    userPayment: widget.userPayment,
+                                    userProfileImage: widget.userProfileImage,
+                                    userWalletId: widget.userWalletId,
                                   ),
                                 ),
                               ),
@@ -227,13 +237,13 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => SettingScreen(
-                                    userAddress: userAddress,
-                                    userEmail: userEmail,
-                                    userName: userName,
-                                    userNumber: userNumber,
-                                    userPayment: userPayment,
-                                    userProfileImage: userProfileImage,
-                                    userWalletId: userWalletId,
+                                    userAddress: widget.userAddress,
+                                    userEmail: widget.userEmail,
+                                    userName: widget.userName,
+                                    userNumber: widget.userNumber,
+                                    userPayment: widget.userPayment,
+                                    userProfileImage: widget.userProfileImage,
+                                    userWalletId: widget.userWalletId,
                                   ),
                                 ),
                               ),
@@ -257,13 +267,13 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => SettingScreen(
-                                    userAddress: userAddress,
-                                    userEmail: userEmail,
-                                    userName: userName,
-                                    userNumber: userNumber,
-                                    userPayment: userPayment,
-                                    userProfileImage: userProfileImage,
-                                    userWalletId: userWalletId,
+                                    userAddress: widget.userAddress,
+                                    userEmail: widget.userEmail,
+                                    userName: widget.userName,
+                                    userNumber: widget.userNumber,
+                                    userPayment: widget.userPayment,
+                                    userProfileImage: widget.userProfileImage,
+                                    userWalletId: widget.userWalletId,
                                   ),
                                 ),
                               ),
@@ -287,13 +297,13 @@ class NavigationDrawer extends StatelessWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => SettingScreen(
-                                    userAddress: userAddress,
-                                    userEmail: userEmail,
-                                    userName: userName,
-                                    userNumber: userNumber,
-                                    userPayment: userPayment,
-                                    userProfileImage: userProfileImage,
-                                    userWalletId: userWalletId,
+                                    userAddress: widget.userAddress,
+                                    userEmail: widget.userEmail,
+                                    userName: widget.userName,
+                                    userNumber: widget.userNumber,
+                                    userPayment: widget.userPayment,
+                                    userProfileImage: widget.userProfileImage,
+                                    userWalletId: widget.userWalletId,
                                   ),
                                 ),
                               ),
@@ -320,10 +330,11 @@ class NavigationDrawer extends StatelessWidget {
                         ),
                       ),
                       onTap: () => {
-                        Navigator.pop(context),
-                        Navigator.of(context).push(
+                        storage.delete(key: "token"),
+                        Navigator.push(
+                          context,
                           MaterialPageRoute(
-                            builder: (context) => const Dashboard(),
+                            builder: (context) => const SplashScreen(),
                           ),
                         ),
                       },

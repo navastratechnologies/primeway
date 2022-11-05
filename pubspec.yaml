@@ -32,6 +32,7 @@ dependencies:
   animations: ^2.0.3
   bottom_navy_bar: ^6.0.0
   carousel_slider: ^4.1.1
+  change_app_package_name: ^1.1.0
   cloud_firestore: ^3.4.9
   cupertino_icons: ^1.0.2
   file_picker: ^5.2.0+1
@@ -42,6 +43,7 @@ dependencies:
   firebase_storage: ^10.3.9
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.10.0
   flutter_secure_storage: ^6.0.0
   fluttertoast: ^8.0.9
   font_awesome_flutter: ^10.1.0
@@ -59,6 +61,11 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  image_path: "assets/playstore.png"
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
