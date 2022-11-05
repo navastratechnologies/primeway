@@ -1,12 +1,17 @@
+// ignore_for_file: avoid_print
+
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/drawer/resources/resources.dart';
 import 'package:primewayskills_app/view/drawer/setting/setting.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
-import 'package:primewayskills_app/view/splash_screen/splash_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NavigationDrawer extends StatefulWidget {
   final String userNumber;
@@ -32,7 +37,36 @@ class NavigationDrawer extends StatefulWidget {
 }
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
-  final FlutterSecureStorage storage = const FlutterSecureStorage();
+  bool showPartenerPage = true;
+  String docId = '';
+  Future<void> checkCollection() async {
+    FirebaseFirestore.instance
+        .collection('affilate_dashboard')
+        .doc('NkcdMPSuI3SSIpJ2uLuv')
+        .collection('affiliate_users')
+        .doc(widget.userNumber)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        setState(() {
+          docId = documentSnapshot.id;
+          showPartenerPage = false;
+        });
+        log('Document id: ${documentSnapshot.id}');
+      } else {
+        setState(() {
+          showPartenerPage = true;
+        });
+        log('Document does not exist on the database');
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    checkCollection();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) => Drawer(
@@ -194,36 +228,42 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                               size: 18,
                             ),
                           ),
-                          ListTile(
-                            leading: sidebarIconWidget(Icons.handshake_rounded),
-                            title: Text(
-                              "Become Partner",
-                              style: TextStyle(
-                                color: whiteColor,
-                              ),
-                            ),
-                            onTap: () => {
-                              Navigator.pop(context),
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => SettingScreen(
-                                    userAddress: widget.userAddress,
-                                    userEmail: widget.userEmail,
-                                    userName: widget.userName,
-                                    userNumber: widget.userNumber,
-                                    userPayment: widget.userPayment,
-                                    userProfileImage: widget.userProfileImage,
-                                    userWalletId: widget.userWalletId,
+                          showPartenerPage
+                              ? ListTile(
+                                  leading: sidebarIconWidget(
+                                      Icons.handshake_rounded),
+                                  title: Text(
+                                    "Become Partner",
+                                    style: TextStyle(
+                                      color: whiteColor,
+                                    ),
                                   ),
-                                ),
-                              ),
-                            },
-                            trailing: FaIcon(
-                              FontAwesomeIcons.chevronRight,
-                              color: whiteColor.withOpacity(0.6),
-                              size: 18,
-                            ),
-                          ),
+                                  onTap: () {
+                                    FirebaseFirestore.instance
+                                        .collection('affilate_dashboard')
+                                        .doc('NkcdMPSuI3SSIpJ2uLuv')
+                                        .collection('affiliate_users')
+                                        .doc(widget.userNumber)
+                                        .set({
+                                          'approved_affiliate': '',
+                                          'complete_affiliate': '',
+                                          'pending_affiliate': '',
+                                          'successful_affiliate': '',
+                                          'today_earning': '',
+                                          'total_affiliate': '',
+                                          'user_id': widget.userNumber,
+                                        })
+                                        .then((value) => print("User Added"))
+                                        .catchError((error) => print(
+                                            "Failed to add user: $error"));
+                                  },
+                                  trailing: FaIcon(
+                                    FontAwesomeIcons.chevronRight,
+                                    color: whiteColor.withOpacity(0.6),
+                                    size: 18,
+                                  ),
+                                )
+                              : Container(),
                           ListTile(
                             leading: sidebarIconWidget(Icons.whatsapp),
                             title: Text(
@@ -232,21 +272,27 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                                 color: whiteColor,
                               ),
                             ),
-                            onTap: () => {
-                              Navigator.pop(context),
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => SettingScreen(
-                                    userAddress: widget.userAddress,
-                                    userEmail: widget.userEmail,
-                                    userName: widget.userName,
-                                    userNumber: widget.userNumber,
-                                    userPayment: widget.userPayment,
-                                    userProfileImage: widget.userProfileImage,
-                                    userWalletId: widget.userWalletId,
-                                  ),
-                                ),
-                              ),
+                            onTap: () async {
+                              // var whatsapp = "+919803428694";
+                              var whatsappURlAndroid =
+                                  "whatsapp://send?phone=+919803428694&text=Hello";
+                              var whatappURLIos =
+                                  "whatsapp://send?phone=+919803428694&text=Hello";
+
+                              if (Platform.isIOS) {
+                                try {
+                                  await launchUrl(Uri.parse(whatappURLIos));
+                                } catch (e) {
+                                  log('Error in Ios $e');
+                                }
+                              } else {
+                                try {
+                                  await launchUrl(
+                                      Uri.parse(whatsappURlAndroid));
+                                } catch (e) {
+                                  log('Error in Androiod $e');
+                                }
+                              }
                             },
                             trailing: FaIcon(
                               FontAwesomeIcons.chevronRight,
@@ -330,11 +376,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                         ),
                       ),
                       onTap: () => {
-                        storage.delete(key: "token"),
-                        Navigator.push(
-                          context,
+                        Navigator.pop(context),
+                        Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const SplashScreen(),
+                            builder: (context) => const Dashboard(),
                           ),
                         ),
                       },
