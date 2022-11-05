@@ -1,12 +1,12 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/drawer/resources/resources.dart';
 import 'package:primewayskills_app/view/drawer/setting/setting.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:primewayskills_app/view/splash_screen/splash_screen.dart';
 
 class NavigationDrawer extends StatefulWidget {
   final String userNumber;
@@ -32,6 +32,8 @@ class NavigationDrawer extends StatefulWidget {
 }
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
+
   @override
   Widget build(BuildContext context) => Drawer(
         backgroundColor: primeColor,
