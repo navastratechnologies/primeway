@@ -2,15 +2,16 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
-import 'package:primewayskills_app/view/dashboard/dashboard.dart';
+import 'package:primewayskills_app/view/auth_screens/signup.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 class OtpLoginScreen extends StatefulWidget {
   final String? phone, verId;
-  const OtpLoginScreen({super.key, this.phone, this.verId});
+  final String phoneNumber;
+  const OtpLoginScreen(
+      {super.key, this.phone, this.verId, required this.phoneNumber});
 
   @override
   State<OtpLoginScreen> createState() => _OtpLoginScreenState();
@@ -146,8 +147,16 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                       if (otpController != null) {
                         authClass.signInwithPhoneNumber(widget.phone!,
                             widget.verId!, otpController.text, context);
-                        // verifyOTP();
-                      } else {}
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (contex) => SignUpScreen(
+                              phoneNumber: widget.phoneNumber,
+                            ),
+                          ),
+                        );
+                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -179,48 +188,6 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  void verifyOTP() async {
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(
-      verificationId: widget.verId.toString(),
-      smsCode: otpController.text,
-    );
-
-    await auth.signInWithCredential(credential).then(
-      (value) {
-        setState(() {
-          user = FirebaseAuth.instance.currentUser;
-        });
-      },
-    ).whenComplete(
-      () {
-        if (user != null) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const Dashboard(),
-            ),
-          );
-        } else {
-          Fluttertoast.showToast(
-            msg: "your are new user",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 100,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) =>  CompleteProfileScreen(),
-          //   ),
-          // );
-        }
-      },
     );
   }
 

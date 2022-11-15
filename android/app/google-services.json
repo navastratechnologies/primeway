@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "836225855666-n6tmedvud4qrm1966jrogu9f3j6am2tn.apps.googleusercontent.com",
+          "client_id": "836225855666-mq26pgr2qbs2d629mk7m5b66ouma9vfa.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.primeway.app",
-            "certificate_hash": "ba4bff2990f61a8ba4868b320d3d7cc8e7e8e073"
+            "certificate_hash": "6e7e6cc44386565550266a05898b7b1028682ea8"
           }
         },
         {
@@ -37,6 +37,13 @@
             {
               "client_id": "836225855666-qmgpvhl9hkknovg95g92nhgujus5c35q.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "836225855666-vsccoghovh72glto7d37grtgp3i4s1fg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.primeway.app"
+              }
             }
           ]
         }

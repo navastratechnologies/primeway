@@ -10,6 +10,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:primewayskills_app/view/auth_screens/otpLoginScreen.dart';
+import 'package:primewayskills_app/view/auth_screens/signup.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 
 const storage = FlutterSecureStorage();
@@ -38,6 +39,7 @@ class AuthClass {
             builder: (context) => OtpLoginScreen(
               phone: onlyPhone,
               verId: verificationID,
+              phoneNumber: phoneNumber,
             ),
           ),
         );
@@ -70,6 +72,12 @@ class AuthClass {
       // showSnackBar(context, "logged In");
       User? user = userCredential.user;
       if (userCredential.additionalUserInfo!.isNewUser) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>  SignUpScreen(phoneNumber: phoneNumber,),
+          ),
+        );
         Fluttertoast.showToast(
           msg: "your are new user",
           toastLength: Toast.LENGTH_SHORT,
@@ -191,7 +199,6 @@ class AuthClass {
 
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
-
 }
 
 void storeTokenAndData(username) async {
