@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 // import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -153,43 +154,43 @@ class AuthClass {
     return FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  // Future<UserCredential> signInWithFacebook(context) async {
-  //   // Trigger the sign-in flow
+  Future<UserCredential> signInWithFacebook(context) async {
+    // Trigger the sign-in flow
 
-  //   final LoginResult loginResult = await FacebookAuth.instance.login();
+    final LoginResult loginResult = await FacebookAuth.instance.login();
 
-  //   // Create a credential from the access token
-  //   final OAuthCredential facebookAuthCredential =
-  //       FacebookAuthProvider.credential(loginResult.accessToken!.token);
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
-  //   // Once signed in, return the UserCredential
-  //   UserCredential userCredential = await FirebaseAuth.instance
-  //       .signInWithCredential(facebookAuthCredential);
+    // Once signed in, return the UserCredential
+    UserCredential userCredential = await FirebaseAuth.instance
+        .signInWithCredential(facebookAuthCredential);
 
-  //   User? user = userCredential.user;
-  //   if (userCredential.additionalUserInfo!.isNewUser) {
-  //     Fluttertoast.showToast(
-  //       msg: "your are new user",
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.BOTTOM,
-  //       timeInSecForIosWeb: 100,
-  //       backgroundColor: Colors.red,
-  //       textColor: Colors.white,
-  //       fontSize: 16.0,
-  //     );
-  //   } else {
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => const Dashboard(),
-  //       ),
-  //     );
-  //   }
+    User? user = userCredential.user;
+    if (userCredential.additionalUserInfo!.isNewUser) {
+      Fluttertoast.showToast(
+        msg: "your are new user",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 100,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Dashboard(),
+        ),
+      );
+    }
 
-  //   log('user is $userCredential');
+    log('user is $userCredential');
 
-  //   return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-  // }
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
 
 }
 

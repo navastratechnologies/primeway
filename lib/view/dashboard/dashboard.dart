@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/appbar_screens/notification_screen.dart';
@@ -22,6 +23,8 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  String? mtoken = '';
+
   String userNumber = "";
   String userName = '';
   String userAddress = '';
@@ -56,10 +59,54 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
+  void requestPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      log('User Granted Permission: ${settings.authorizationStatus}');
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      log('User granted provisional permission');
+    } else {
+      log('User declined or has not accepted permission');
+    }
+  }
+
+  void getMsgToken() async {
+    FirebaseMessaging.instance.getToken().then((value) {
+      setState(() {
+        mtoken = value;
+        log("getToken : $mtoken");
+      });
+      saveToken(value!);
+    });
+  }
+
+  void saveToken(String value) async {
+    await FirebaseFirestore.instance
+        .collection('user_token')
+        .doc(userNumber)
+        .set({
+      'token': value,
+    });
+  }
+
   @override
   void initState() {
     checkLogin();
     super.initState();
+    requestPermission();
+    getMsgToken();
   }
 
   @override

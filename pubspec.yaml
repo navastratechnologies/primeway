@@ -44,6 +44,7 @@ dependencies:
   firebase_storage: ^11.0.3
   flutter:
     sdk: flutter
+  flutter_facebook_auth: ^5.0.6
   flutter_launcher_icons: ^0.10.0
   flutter_secure_storage: ^6.0.0
   fluttertoast: ^8.0.9
