@@ -24,8 +24,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String phonenumber = '';
   AuthClass authClass = AuthClass();
   String verificationIdFinal = "";
-  String docId = '';
-  String walletId = '';
 
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
