@@ -1,7 +1,8 @@
-// ignore_for_file: unused_local_variable, avoid_print, use_build_context_synchronously
+// ignore_for_file: unused_local_variable, avoid_print, use_build_context_synchronously, unnecessary_null_comparison, unused_element
 
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -20,6 +21,8 @@ class AuthClass {
 
   Future<void> verifyPhoneNumber(String phoneNumber, String onlyPhone,
       BuildContext context, Function setData) async {
+
+
     verificationCompleted(PhoneAuthCredential phoneAuthCredential) async {
       // showSnackBar(context, "Verification Completed");
     }
@@ -31,12 +34,25 @@ class AuthClass {
     codeSent(String verificationID, [int? forceResnedingtoken]) {
       showSnackBar(context, "Verification Code sent on the phone number");
       setData(verificationID);
-      // ignore: unnecessary_null_comparison
+
       if (verificationID != null) {
+        log('user is here ');
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => OtpLoginScreen(
+              phone: onlyPhone,
+              verId: verificationID,
+              phoneNumber: phoneNumber,
+            ),
+          ),
+        );
+      } else {
+        log('user is not here ');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SignUpScreen(
               phone: onlyPhone,
               verId: verificationID,
               phoneNumber: phoneNumber,
@@ -49,7 +65,7 @@ class AuthClass {
     codeAutoRetrievalTimeout(String verificationID) {}
     try {
       await auth.verifyPhoneNumber(
-        timeout: const Duration(seconds: 60),
+        timeout: const Duration(seconds: 120),
         phoneNumber: phoneNumber,
         verificationCompleted: verificationCompleted,
         verificationFailed: verificationFailed,
@@ -77,6 +93,8 @@ class AuthClass {
           MaterialPageRoute(
             builder: (context) => SignUpScreen(
               phoneNumber: phoneNumber,
+              phone: phoneNumber,
+              verId: verificationId,
             ),
           ),
         );

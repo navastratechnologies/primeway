@@ -1,13 +1,111 @@
+// ignore_for_file: avoid_print, invalid_return_type_for_catch_error
+
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EkycPage extends StatefulWidget {
-  const EkycPage({super.key});
+  final String phoneNumber;
+  const EkycPage({super.key, required this.phoneNumber});
 
   @override
   State<EkycPage> createState() => _EkycPageState();
 }
 
 class _EkycPageState extends State<EkycPage> {
+  TextEditingController accountNameController = TextEditingController();
+  TextEditingController accoutnNumberController = TextEditingController();
+  TextEditingController confirmAccountNumberController =
+      TextEditingController();
+  TextEditingController ifscNumberController = TextEditingController();
+
+  File? pickedFile;
+  UploadTask? uploadTask;
+  Uint8List webImage = Uint8List(8);
+  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+  bool bannerPicked = false;
+
+  Future<void> pickImage() async {
+    if (!kIsWeb) {
+      ImagePicker picker = ImagePicker();
+      XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        var selected = File(image.path);
+        setState(() {
+          pickedFile = selected;
+        });
+      } else {
+        log('no image has been selected');
+      }
+    } else if (kIsWeb) {
+      ImagePicker picker = ImagePicker();
+      XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        var selectedByte = await image.readAsBytes();
+        setState(() {
+          webImage = selectedByte;
+          pickedFile = File('a');
+        });
+      } else {
+        log('no image has been selected');
+      }
+    } else {
+      log('something went wrong');
+    }
+  }
+
+  Future uploadFile() async {
+    Reference ref =
+        FirebaseStorage.instance.ref().child('documents/${DateTime.now()}.png');
+    UploadTask uploadTask = ref.putData(
+      webImage,
+      SettableMetadata(contentType: 'image/png'),
+    );
+    TaskSnapshot taskSnapshot = await uploadTask
+        .whenComplete(
+          () => print('done'),
+        )
+        .catchError(
+          (error) => print('something went wrong'),
+        );
+    String url = await taskSnapshot.ref.getDownloadURL();
+    UploadTask uploadTask2 = ref.putData(
+      webImage,
+      SettableMetadata(contentType: 'image/png'),
+    );
+    TaskSnapshot taskSnapshot2 = await uploadTask2
+        .whenComplete(
+          () => print('done'),
+        )
+        .catchError((e) => log('something went worng : $e'));
+    String url2 = await taskSnapshot2.ref.getDownloadURL();
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.phoneNumber)
+        .update({
+      'front_document': url.toString(),
+      'back_document': url2.toString(),
+    });
+  }
+
+  Future<void> updateAccount() async {
+    FirebaseFirestore.instance
+        .collection('wallet')
+        .doc(widget.phoneNumber)
+        .update({
+      'account_number': accoutnNumberController.text,
+      'ifsc_code': ifscNumberController.text,
+      'account_holder_name': accountNameController.text,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -212,17 +310,22 @@ class _EkycPageState extends State<EkycPage> {
                                         )
                                       ],
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        children: const [
-                                          Icon(
-                                            Icons.camera,
-                                            color: Colors.blue,
-                                            size: 80,
-                                          ),
-                                          Text("Front"),
-                                        ],
+                                    child: InkWell(
+                                      onTap: () {
+                                        pickImage();
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          children: const [
+                                            Icon(
+                                              Icons.camera,
+                                              color: Colors.blue,
+                                              size: 80,
+                                            ),
+                                            Text("Front"),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -239,17 +342,22 @@ class _EkycPageState extends State<EkycPage> {
                                         )
                                       ],
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        children: const [
-                                          Icon(
-                                            Icons.camera,
-                                            color: Colors.blue,
-                                            size: 80,
-                                          ),
-                                          Text("Back"),
-                                        ],
+                                    child: InkWell(
+                                      onTap: () {
+                                        pickImage();
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          children: const [
+                                            Icon(
+                                              Icons.camera,
+                                              color: Colors.blue,
+                                              size: 80,
+                                            ),
+                                            Text("Back"),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -271,15 +379,20 @@ class _EkycPageState extends State<EkycPage> {
                                     )
                                   ],
                                 ),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "NEXT",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
+                                child: InkWell(
+                                  onTap: () {
+                                    uploadFile();
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "NEXT",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
                                 ),
                               ),

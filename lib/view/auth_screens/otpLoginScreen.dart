@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
-import 'package:primewayskills_app/view/auth_screens/signup.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 class OtpLoginScreen extends StatefulWidget {
@@ -147,16 +146,7 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                       if (otpController != null) {
                         authClass.signInwithPhoneNumber(widget.phone!,
                             widget.verId!, otpController.text, context);
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (contex) => SignUpScreen(
-                              phoneNumber: widget.phoneNumber,
-                            ),
-                          ),
-                        );
-                      }
+                      } else {}
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

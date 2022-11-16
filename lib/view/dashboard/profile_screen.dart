@@ -75,8 +75,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> getWallet() async {
     FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.userNumber)
         .collection('wallet')
         .doc(widget.userNumber)
         .get()

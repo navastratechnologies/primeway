@@ -3,12 +3,18 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/auth_screens/address.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../controllers/phone_controller.dart';
 
 class SignUpScreen extends StatefulWidget {
   final String phoneNumber;
-  const SignUpScreen({super.key, required this.phoneNumber});
+  final String phone, verId;
+  const SignUpScreen(
+      {super.key,
+      required this.phoneNumber,
+      required this.phone,
+      required this.verId});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -24,6 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController otpController = TextEditingController();
 
   final CollectionReference<Map<String, dynamic>> users =
       FirebaseFirestore.instance.collection('users');
@@ -44,6 +51,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'social_account': '',
       'total_refferals': '',
       'wallet_id': widget.phoneNumber,
+      'front_document' : '',
+      'back_document' : '',
     });
   }
 
@@ -65,8 +74,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> createWalletCollection() async {
-    users
-        .doc(widget.phoneNumber)
+    FirebaseFirestore.instance
         .collection('wallet')
         .doc(widget.phoneNumber)
         .set({
@@ -81,7 +89,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'user_name': "${firstNameController.text} ${lastNameController.text}",
       'wallet_balance': '',
       'withdrawal_req': '',
+      'account_type': '',
     });
+  }
+
+  _listenSmsCode() async {
+    await SmsAutoFill().listenForCode();
+  }
+
+  @override
+  void initState() {
+    _listenSmsCode();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    SmsAutoFill().unregisterListener();
+    super.dispose();
   }
 
   @override
@@ -278,10 +303,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   )
                 ],
               ),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: otpController,
+                  decoration: const InputDecoration(
                     labelText: 'Enter 6 digit OTP',
                     border: InputBorder.none,
                   ),
@@ -342,6 +368,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               child: InkWell(
                 onTap: () {
+                  authClass.signInwithPhoneNumber(
+                      widget.phone, widget.verId, otpController.text, context);
                   createUserCollection();
                   createUserChapterCollection();
                   createUserRefferalCollection();
