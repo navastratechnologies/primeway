@@ -26,8 +26,10 @@ class _EkycPageState extends State<EkycPage> {
   TextEditingController ifscNumberController = TextEditingController();
 
   File? pickedFile;
+  File? pickedFile2;
   UploadTask? uploadTask;
   Uint8List webImage = Uint8List(8);
+  Uint8List webImage2 = Uint8List(8);
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   bool bannerPicked = false;
 
@@ -60,6 +62,35 @@ class _EkycPageState extends State<EkycPage> {
     }
   }
 
+  Future<void> pickImage2() async {
+    if (!kIsWeb) {
+      ImagePicker picker2 = ImagePicker();
+      XFile? image2 = await picker2.pickImage(source: ImageSource.gallery);
+      if (image2 != null) {
+        var selected2 = File(image2.path);
+        setState(() {
+          pickedFile2 = selected2;
+        });
+      } else {
+        log('no image has been selected');
+      }
+    } else if (kIsWeb) {
+      ImagePicker picker2 = ImagePicker();
+      XFile? image2 = await picker2.pickImage(source: ImageSource.gallery);
+      if (image2 != null) {
+        var selectedByte2 = await image2.readAsBytes();
+        setState(() {
+          webImage2 = selectedByte2;
+          pickedFile2 = File('a');
+        });
+      } else {
+        log('no image has been selected');
+      }
+    } else {
+      log('something went wrong');
+    }
+  }
+
   Future uploadFile() async {
     Reference ref =
         FirebaseStorage.instance.ref().child('documents/${DateTime.now()}.png');
@@ -76,7 +107,7 @@ class _EkycPageState extends State<EkycPage> {
         );
     String url = await taskSnapshot.ref.getDownloadURL();
     UploadTask uploadTask2 = ref.putData(
-      webImage,
+      webImage2,
       SettableMetadata(contentType: 'image/png'),
     );
     TaskSnapshot taskSnapshot2 = await uploadTask2
@@ -344,7 +375,7 @@ class _EkycPageState extends State<EkycPage> {
                                     ),
                                     child: InkWell(
                                       onTap: () {
-                                        pickImage();
+                                        pickImage2();
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
