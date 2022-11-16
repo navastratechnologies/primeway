@@ -39,6 +39,7 @@ class NavigationDrawer extends StatefulWidget {
 class _NavigationDrawerState extends State<NavigationDrawer> {
   bool showPartenerPage = false;
   String docId = '';
+  
   Future<void> checkCollection() async {
     FirebaseFirestore.instance
         .collection('affilate_dashboard')
@@ -251,7 +252,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                                           'successful_affiliate': '',
                                           'today_earning': '',
                                           'total_affiliate': '',
-                                          'user_id': widget.userNumber,
+                                          'user_Id': widget.userNumber,
                                         })
                                         .then((value) => print("User Added"))
                                         .catchError((error) => print(

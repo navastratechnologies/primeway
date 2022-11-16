@@ -1,4 +1,10 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:primewayskills_app/view/auth_screens/address.dart';
+
+import '../../controllers/phone_controller.dart';
 
 class SignUpScreen extends StatefulWidget {
   final String phoneNumber;
@@ -9,8 +15,74 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  String phonenumber = '';
+  AuthClass authClass = AuthClass();
+  String verificationIdFinal = "";
+  String docId = '';
+  String walletId = '';
 
-  
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
+  final CollectionReference<Map<String, dynamic>> users =
+      FirebaseFirestore.instance.collection('users');
+
+  Future<void> createUserCollection() async {
+    users.doc(widget.phoneNumber).set({
+      'user_Id': widget.phoneNumber,
+      'name': "${firstNameController.text} ${lastNameController.text}",
+      'email': emailController.text,
+      'phone_number': widget.phoneNumber,
+      'address': '',
+      'affilate_id': '',
+      'approval_status': '',
+      'earning_by_refferals': '',
+      'payments': '',
+      'photo_url': '',
+      'profile_pic': '',
+      'social_account': '',
+      'total_refferals': '',
+      'wallet_id': widget.phoneNumber,
+    });
+  }
+
+  Future<void> createUserChapterCollection() async {
+    users.doc(widget.phoneNumber).collection('courses').doc().set({
+      'author_name': '',
+      'courses_id': '',
+      'image': '',
+      'name': '',
+    });
+  }
+
+  Future<void> createUserRefferalCollection() async {
+    users.doc(widget.phoneNumber).collection('refferal').doc().set({
+      'user_id': '',
+      'user_name': '',
+      'refferal_point': '',
+    });
+  }
+
+  Future<void> createWalletCollection() async {
+    users
+        .doc(widget.phoneNumber)
+        .collection('wallet')
+        .doc(widget.phoneNumber)
+        .set({
+      'account_holder_name': '',
+      'account_number': '',
+      'bank_name': '',
+      'earned_pcoins': '',
+      'ifsc_code': '',
+      'status': '',
+      'total_withdrawal': '',
+      'user_id': widget.phoneNumber,
+      'user_name': "${firstNameController.text} ${lastNameController.text}",
+      'wallet_balance': '',
+      'withdrawal_req': '',
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +147,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   )
                 ],
               ),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: firstNameController,
+                  decoration: const InputDecoration(
                     labelText: 'Enter first name',
                     border: InputBorder.none,
                   ),
@@ -100,10 +173,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   )
                 ],
               ),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: lastNameController,
+                  decoration: const InputDecoration(
                     labelText: 'Enter Last name',
                     border: InputBorder.none,
                   ),
@@ -125,10 +199,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   )
                 ],
               ),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: emailController,
+                  decoration: const InputDecoration(
                     labelText: 'Enter Email id',
                     border: InputBorder.none,
                   ),
@@ -219,8 +294,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: const [
-              Padding(
+            children: [
+              MaterialButton(
+                onPressed: () {
+                  if (widget.phoneNumber.isNotEmpty) {
+                    String countryCode = '+91';
+                    phonenumber = '$countryCode${widget.phoneNumber}';
+                    authClass.verifyPhoneNumber(
+                      phonenumber,
+                      widget.phoneNumber,
+                      context,
+                      setData,
+                    );
+                  } else {
+                    log("else is working");
+                  }
+                },
+              ),
+              const Padding(
                 padding: EdgeInsets.only(right: 15),
                 child: Text(
                   "Resend OTP",
@@ -249,16 +340,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   )
                 ],
               ),
-              child: const Padding(
-                padding: EdgeInsets.all(10),
-                child: Text(
-                  "Verify",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.white,
+              child: InkWell(
+                onTap: () {
+                  createUserCollection();
+                  createUserChapterCollection();
+                  createUserRefferalCollection();
+                  createWalletCollection();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditAddressPage(
+                        phoneNumber: widget.phoneNumber,
+                        name:
+                            '${firstNameController.text} ${lastNameController.text}',
+                      ),
+                    ),
+                  );
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    "Verify",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -266,5 +375,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ],
       ),
     );
+  }
+
+  void setData(String verificationId) {
+    setState(() {
+      verificationIdFinal = verificationId;
+    });
   }
 }

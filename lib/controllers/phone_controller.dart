@@ -75,7 +75,9 @@ class AuthClass {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>  SignUpScreen(phoneNumber: phoneNumber,),
+            builder: (context) => SignUpScreen(
+              phoneNumber: phoneNumber,
+            ),
           ),
         );
         Fluttertoast.showToast(

@@ -46,7 +46,7 @@ class _DashboardState extends State<Dashboard> {
         .doc(userNumber)
         .get()
         .then((value) {
-      log('number is ${value.get('wallet_id')}');
+      log('wallet is ${value.get('wallet_id')}');
       setState(() {
         userName = value.get('name');
         userAddress = value.get('address');

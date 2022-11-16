@@ -75,8 +75,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> getWallet() async {
     FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userNumber)
         .collection('wallet')
-        .doc(widget.userWalletId)
+        .doc(widget.userNumber)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {

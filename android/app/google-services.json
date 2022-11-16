@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "836225855666-d3tm2ohqjll3nt5b381dj5qjhflakjer.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.primeway.app",
+            "certificate_hash": "58340422fd4fe1903cf7e9a949b304cc6fc0be55"
+          }
+        },
+        {
+          "client_id": "836225855666-k7lr50p1hfpf4d53hh61htadl0kocvn1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.primeway.app",
+            "certificate_hash": "b63de9db189ededfc77c775b92b8efd9d6302284"
+          }
+        },
+        {
           "client_id": "836225855666-mq26pgr2qbs2d629mk7m5b66ouma9vfa.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
