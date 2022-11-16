@@ -51,6 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'wallet_id': widget.phoneNumber,
       'front_document' : '',
       'back_document' : '',
+      'document_type' : '',
     });
   }
 
