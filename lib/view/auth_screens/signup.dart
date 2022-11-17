@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/auth_screens/address.dart';
@@ -49,9 +47,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'social_account': '',
       'total_refferals': '',
       'wallet_id': widget.phoneNumber,
-      'front_document' : '',
-      'back_document' : '',
-      'document_type' : '',
+      'front_document': '',
+      'back_document': '',
+      'document_type': '',
     });
   }
 
@@ -321,20 +319,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               MaterialButton(
-                onPressed: () {
-                  if (widget.phoneNumber.isNotEmpty) {
-                    String countryCode = '+91';
-                    phonenumber = '$countryCode${widget.phoneNumber}';
-                    authClass.verifyPhoneNumber(
-                      phonenumber,
-                      widget.phoneNumber,
-                      context,
-                      setData,
-                    );
-                  } else {
-                    log("else is working");
-                  }
-                },
+                onPressed: () {},
               ),
               const Padding(
                 padding: EdgeInsets.only(right: 15),
@@ -367,7 +352,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               child: InkWell(
                 onTap: () {
-                  authClass.signInwithPhoneNumber(
+                  authClass.signInwithPhoneNumber2(
                       widget.phone, widget.verId, otpController.text, context);
                   createUserCollection();
                   createUserChapterCollection();
@@ -378,8 +363,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     MaterialPageRoute(
                       builder: (context) => EditAddressPage(
                         phoneNumber: widget.phoneNumber,
-                        name:
-                            '${firstNameController.text} ${lastNameController.text}',
+                        // name:
+                        //     '${firstNameController.text} ${lastNameController.text}',
                       ),
                     ),
                   );

@@ -1,6 +1,4 @@
-// ignore_for_file: avoid_print, file_names, unnecessary_null_comparison
-
-import 'dart:developer';
+// ignore_for_file: avoid_print, file_names, unnecessary_null_comparison, use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
-import 'package:primewayskills_app/view/auth_screens/signup.dart';
 
 class PhoneLoginScreen extends StatefulWidget {
   const PhoneLoginScreen({super.key});
@@ -28,8 +25,31 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
 
   String verificationID = "";
 
-  final DocumentReference<Map<String, dynamic>> user =
-      FirebaseFirestore.instance.collection('users').doc('7719767557');
+  Future<void> checkNumber() async {
+    var a = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(phoneController.text)
+        .get();
+    if (a.exists) {
+      String countryCode = '+91';
+      phonenumber = '$countryCode${phoneController.text}';
+      authClass.verifyPhoneNumber(
+        phonenumber,
+        phoneController.text,
+        context,
+        setData,
+      );
+    } else {
+      // String countryCode = '+91';
+      phonenumber = phoneController.text;
+      authClass.verifyPhoneNumber2(
+        phonenumber,
+        phoneController.text,
+        context,
+        setData,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -172,29 +192,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                       borderRadius: BorderRadius.circular(40),
                     ),
                     onPressed: () {
-                      if (user.id.isEmpty) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignUpScreen(
-                              phone: phoneController.text,
-                              verId: verificationID,
-                              phoneNumber: phoneController.text,
-                            ),
-                          ),
-                        );
-                      } else if (phoneController.text.isNotEmpty) {
-                        String countryCode = '+91';
-                        phonenumber = '$countryCode${phoneController.text}';
-                        authClass.verifyPhoneNumber(
-                          phonenumber,
-                          phoneController.text,
-                          context,
-                          setData,
-                        );
-                      } else {
-                        log("else is working");
-                      }
+                      checkNumber();
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -9,6 +9,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
+import '../dashboard/dashboard.dart';
+
 class EkycPage extends StatefulWidget {
   final String phoneNumber;
   const EkycPage({super.key, required this.phoneNumber});
@@ -827,12 +829,12 @@ class _EkycPageState extends State<EkycPage> {
                               InkWell(
                                 onTap: () {
                                   updateAccount();
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => const Dashboard(),
-                                  //   ),
-                                  // );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const Dashboard(),
+                                    ),
+                                  );
                                 },
                                 child: Container(
                                   height: 40,

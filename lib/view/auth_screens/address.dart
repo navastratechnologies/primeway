@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/auth_screens/kyc.dart';
 
 class EditAddressPage extends StatefulWidget {
-  final String name;
+  // final String name;
   final String phoneNumber;
   const EditAddressPage(
-      {super.key, required this.name, required this.phoneNumber});
+      {super.key, required this.phoneNumber});
 
   @override
   State<EditAddressPage> createState() => _EditAddressPageState();
@@ -38,7 +38,7 @@ class _EditAddressPageState extends State<EditAddressPage> {
   @override
   void initState() {
     setState(() {
-      fullNameController.text = widget.name;
+      // fullNameController.text = widget.name;
       phoneNumberController.text = widget.phoneNumber;
     });
     super.initState();
