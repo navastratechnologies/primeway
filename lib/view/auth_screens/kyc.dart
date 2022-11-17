@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class EkycPage extends StatefulWidget {
   final String phoneNumber;
@@ -353,7 +354,7 @@ class _EkycPageState extends State<EkycPage> {
                               showadharColor
                                   ? Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         Container(
                                           width: MediaQuery.of(context)
@@ -364,10 +365,12 @@ class _EkycPageState extends State<EkycPage> {
                                             color: Colors.white,
                                             borderRadius:
                                                 BorderRadius.circular(10),
-                                            boxShadow: const [
+                                            boxShadow: [
                                               BoxShadow(
-                                                color: Colors.black,
+                                                color: primeColor2
+                                                    .withOpacity(0.3),
                                                 spreadRadius: 1,
+                                                blurRadius: 10,
                                               )
                                             ],
                                           ),
@@ -375,34 +378,32 @@ class _EkycPageState extends State<EkycPage> {
                                             onTap: () {
                                               selectFile();
                                             },
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Column(
-                                                children: [
-                                                  pickedFile == null
-                                                      ? const Icon(
+                                            child: pickedFile == null
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Column(
+                                                      children: [
+                                                        Icon(
                                                           Icons.camera,
-                                                          color: Colors.blue,
+                                                          color: Colors.black
+                                                              .withOpacity(0.3),
                                                           size: 80,
-                                                        )
-                                                      : Expanded(
-                                                          child: Container(
-                                                            color: Colors
-                                                                .blue[100],
-                                                            child: Image.file(
-                                                              File(pickedFile!
-                                                                  .path!),
-                                                              width: 10,
-                                                              height: 10,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
                                                         ),
-                                                  const Text("Front"),
-                                                ],
-                                              ),
-                                            ),
+                                                        const Text("Front"),
+                                                      ],
+                                                    ),
+                                                  )
+                                                : Container(
+                                                    color: Colors.blue[100],
+                                                    child: Image.file(
+                                                      File(pickedFile!.path!),
+                                                      width: 180,
+                                                      height: 110,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
                                           ),
                                         ),
                                         Container(
@@ -414,10 +415,12 @@ class _EkycPageState extends State<EkycPage> {
                                             color: Colors.white,
                                             borderRadius:
                                                 BorderRadius.circular(10),
-                                            boxShadow: const [
+                                            boxShadow: [
                                               BoxShadow(
-                                                color: Colors.black,
+                                                color: primeColor2
+                                                    .withOpacity(0.3),
                                                 spreadRadius: 1,
+                                                blurRadius: 10,
                                               )
                                             ],
                                           ),
@@ -425,41 +428,39 @@ class _EkycPageState extends State<EkycPage> {
                                             onTap: () {
                                               selectFile2();
                                             },
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Column(
-                                                children: [
-                                                  pickedFile2 == null
-                                                      ? const Icon(
+                                            child: pickedFile2 == null
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Column(
+                                                      children: [
+                                                        Icon(
                                                           Icons.camera,
-                                                          color: Colors.blue,
+                                                          color: Colors.black
+                                                              .withOpacity(0.3),
                                                           size: 80,
-                                                        )
-                                                      : Expanded(
-                                                          child: Container(
-                                                            color: Colors
-                                                                .blue[100],
-                                                            child: Image.file(
-                                                              File(pickedFile2!
-                                                                  .path!),
-                                                              width: 200,
-                                                              height: 200,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
                                                         ),
-                                                  const Text("Back"),
-                                                ],
-                                              ),
-                                            ),
+                                                        const Text("Back"),
+                                                      ],
+                                                    ),
+                                                  )
+                                                : Container(
+                                                    color: Colors.blue[100],
+                                                    child: Image.file(
+                                                      File(pickedFile2!.path!),
+                                                      width: 180,
+                                                      height: 110,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
                                           ),
                                         ),
                                       ],
                                     )
                                   : Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         Container(
                                           width: MediaQuery.of(context)
@@ -470,10 +471,12 @@ class _EkycPageState extends State<EkycPage> {
                                             color: Colors.white,
                                             borderRadius:
                                                 BorderRadius.circular(10),
-                                            boxShadow: const [
+                                            boxShadow: [
                                               BoxShadow(
-                                                color: Colors.black,
+                                                color: primeColor2
+                                                    .withOpacity(0.3),
                                                 spreadRadius: 1,
+                                                blurRadius: 10,
                                               )
                                             ],
                                           ),
@@ -481,34 +484,32 @@ class _EkycPageState extends State<EkycPage> {
                                             onTap: () {
                                               selectFile();
                                             },
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Column(
-                                                children: [
-                                                  pickedFile == null
-                                                      ? const Icon(
+                                            child: pickedFile == null
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Column(
+                                                      children: [
+                                                        Icon(
                                                           Icons.camera,
-                                                          color: Colors.blue,
+                                                          color: Colors.black
+                                                              .withOpacity(0.3),
                                                           size: 80,
-                                                        )
-                                                      : Expanded(
-                                                          child: Container(
-                                                            color: Colors
-                                                                .blue[100],
-                                                            child: Image.file(
-                                                              File(pickedFile!
-                                                                  .path!),
-                                                              width: 200,
-                                                              height: 200,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
                                                         ),
-                                                  const Text("Front"),
-                                                ],
-                                              ),
-                                            ),
+                                                        const Text("Front"),
+                                                      ],
+                                                    ),
+                                                  )
+                                                : Container(
+                                                    color: Colors.blue[100],
+                                                    child: Image.file(
+                                                      File(pickedFile!.path!),
+                                                      width: 180,
+                                                      height: 110,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
                                           ),
                                         ),
                                       ],

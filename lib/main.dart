@@ -5,9 +5,8 @@ import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
-
-import 'view/auth_screens/kyc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,9 +60,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const EkycPage(
-        phoneNumber: '1234567890',
-      ),
+      home: const LoginHomeScreen(),
       theme: ThemeData(
         // primarySwatch: whiteColor,
         scaffoldBackgroundColor: whiteColor,
