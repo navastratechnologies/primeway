@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
+import 'package:primewayskills_app/view/auth_screens/kyc.dart';
 
 class EditAddressPage extends StatefulWidget {
   final String name;
@@ -439,7 +439,9 @@ class _EditAddressPageState extends State<EditAddressPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const LoginHomeScreen(),
+                      builder: (context) => EkycPage(
+                        phoneNumber: widget.phoneNumber,
+                      ),
                     ),
                   );
                 },

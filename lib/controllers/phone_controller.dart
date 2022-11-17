@@ -2,11 +2,10 @@
 
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-// import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -21,8 +20,6 @@ class AuthClass {
 
   Future<void> verifyPhoneNumber(String phoneNumber, String onlyPhone,
       BuildContext context, Function setData) async {
-
-
     verificationCompleted(PhoneAuthCredential phoneAuthCredential) async {
       // showSnackBar(context, "Verification Completed");
     }
