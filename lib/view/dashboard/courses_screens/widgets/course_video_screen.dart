@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_discussion_screen.dart';
@@ -56,7 +58,7 @@ class _CourseVideoScreenState extends State<CourseVideoScreen> {
       });
   }
 
-  static const List<double> _examplePlaybackRates = <double>[
+  static const List<double> examplePlaybackRates = <double>[
     0.25,
     0.5,
     1.0,
@@ -244,7 +246,7 @@ class _CourseVideoScreenState extends State<CourseVideoScreen> {
                                           //   itemBuilder: (BuildContext context) {
                                           //     return <PopupMenuItem<double>>[
                                           //       for (final double speed
-                                          //           in _examplePlaybackRates)
+                                          //           in examplePlaybackRates)
                                           //         PopupMenuItem<double>(
                                           //           value: speed,
                                           //           child: Text('${speed}x'),

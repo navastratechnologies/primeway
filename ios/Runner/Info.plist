@@ -8,16 +8,22 @@
   <dict>
   <key>CFBundleURLSchemes</key>
   <array>
-    <string>fb1121164458515299</string>
+    <string>fb1240671610162070</string>
   </array>
   </dict>
 </array>
 <key>FacebookAppID</key>
-<string>1121164458515299</string>
+<string>1240671610162070</string>
 <key>FacebookClientToken</key>
-<string>CLIENT-TOKEN</string>
+<string>7006d76548eec4aa8b71e67e5a621e73</string>
 <key>FacebookDisplayName</key>
 <string>Primeway</string>
+
+<!-- <key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>fbapi</string>
+  <string>fb-messenger-share-api</string>
+</array> -->
 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

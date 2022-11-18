@@ -280,7 +280,7 @@ class AuthClass {
 
   Future<UserCredential> signInWithFacebook(context) async {
     // Trigger the sign-in flow
-
+    
     final LoginResult loginResult = await FacebookAuth.instance.login();
 
     // Create a credential from the access token
@@ -293,15 +293,15 @@ class AuthClass {
 
     User? user = userCredential.user;
     if (userCredential.additionalUserInfo!.isNewUser) {
-      Fluttertoast.showToast(
-        msg: "your are new user",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 100,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      // Fluttertoast.showToast(
+      //   msg: "your are new user",
+      //   toastLength: Toast.LENGTH_SHORT,
+      //   gravity: ToastGravity.BOTTOM,
+      //   timeInSecForIosWeb: 100,
+      //   backgroundColor: Colors.red,
+      //   textColor: Colors.white,
+      //   fontSize: 16.0,
+      // );
     } else {
       Navigator.push(
         context,

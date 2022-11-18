@@ -5,8 +5,7 @@ import 'package:primewayskills_app/view/auth_screens/kyc.dart';
 class EditAddressPage extends StatefulWidget {
   // final String name;
   final String phoneNumber;
-  const EditAddressPage(
-      {super.key, required this.phoneNumber});
+  const EditAddressPage({super.key, required this.phoneNumber});
 
   @override
   State<EditAddressPage> createState() => _EditAddressPageState();

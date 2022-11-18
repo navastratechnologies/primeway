@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-<string name="facebook_app_id">1121164458515299</string>
-<string name="fb_login_protocol_scheme">fb1121164458515299</string>
-<string name="facebook_client_token">56789</string>
+<string name="app_name">Primeway</string>
+<string name="facebook_app_id">1240671610162070</string>
+<string name="fb_login_protocol_scheme">fb1240671610162070</string>
+<string name="facebook_client_token">7006d76548eec4aa8b71e67e5a621e73</string>
 
 </resources>
