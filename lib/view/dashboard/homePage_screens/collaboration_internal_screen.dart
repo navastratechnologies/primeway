@@ -1,14 +1,11 @@
 // ignore_for_file: avoid_print, invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 
-import 'dart:developer';
-
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:primewayskills_app/controllers/deepLink.dart';
 import 'package:primewayskills_app/view/complete_profile_screens/complete_profile_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
-import 'package:share/share.dart';
 
 class CollaborationInternalScreen extends StatefulWidget {
   final String heading,
@@ -54,88 +51,9 @@ class CollaborationInternalScreen extends StatefulWidget {
       _CollaborationInternalScreenState();
 }
 
-class DeepLinkService {
-  DeepLinkService._();
-  static DeepLinkService? _instance;
-  FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
-
-  static DeepLinkService? get instance {
-    _instance ??= DeepLinkService._();
-    return _instance;
-  }
-
-  ValueNotifier<String> referrerCode = ValueNotifier<String>('');
-  String url = 'https://centurus.page.link';
-
-  final dynamicLink = FirebaseDynamicLinks.instance;
-
-  Future<void> handleDynamicLinks() async {
-    //Get initial dynamic link if app is started using the link
-    final data = await dynamicLink.getInitialLink();
-    if (data != null) {
-      handleDeepLink(data);
-    }
-
-    //handle foreground
-    dynamicLink.onLink.listen((event) {
-      handleDeepLink(event);
-    }).onError((v) {
-      debugPrint('Failed: $v');
-    });
-  }
-
-  buildDynamicLinks(String url, String titles, String docId, referCode) async {
-    final dynamicLinkParams = DynamicLinkParameters(
-      link: Uri.parse("https://prime.page.link/TG78/$docId?code=$referCode"),
-      uriPrefix: "https://centurus.page.link",
-      androidParameters:
-          const AndroidParameters(packageName: "com.example.primeway"),
-      socialMetaTagParameters: const SocialMetaTagParameters(
-        // imageUrl: ,
-        title: 'REFER A FRIEND & EARN',
-        description: 'Earn 1,500 P-Coins on every referral',
-      ),
-    );
-    final dynamicLink =
-        await FirebaseDynamicLinks.instance.buildLink(dynamicLinkParams);
-
-    log('url is $dynamicLink');
-
-    Share.share(
-      dynamicLink.toString(),
-    );
-  }
-
-  Future<void> handleDeepLink(PendingDynamicLinkData data) async {
-    final Uri deepLink = data.link;
-    var isRefer = deepLink.pathSegments.contains('refer');
-    if (isRefer) {
-      var code = deepLink.queryParameters['code'];
-      if (code != null) {
-        referrerCode.value = code;
-        debugPrint('ReferrerCode $referrerCode');
-        referrerCode.notifyListeners();
-      }
-    }
-  }
-}
-
-// class CodeGenerator {
-//   static Random random = Random();
-
-//   static String generateCode(String prefix) {
-//     var id = random.nextInt(92143543) + 09451234356;
-//     return '$prefix-${id.toString().substring(0, 8)}';
-//   }
-// }
-
-// class RewardState extends ChangeNotifier {
-//   final userRepo = UserRepository.instance;
-// }
-
 class _CollaborationInternalScreenState
     extends State<CollaborationInternalScreen> {
-  String url = 'https://centurus.page.link';
+  String url = 'https://primeway.page.link';
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -226,10 +144,8 @@ class _CollaborationInternalScreenState
                       ),
                       InkWell(
                         onTap: () {
-                          DeepLinkService._().buildDynamicLinks(
-                              url, widget.titles, widget.userNumber, '0000');
-                          // DeepLinkService._().buildDynamicLinks(
-                          //     url, widget.titles, widget.userNumber, '0000');
+                          DeepLinkService.instance!.buildDynamicLinks(
+                              url, widget.titles, widget.userNumber, '00');
                         },
                         child: SizedBox(
                           width: 35,

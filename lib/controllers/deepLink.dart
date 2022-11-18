@@ -44,15 +44,16 @@ class DeepLinkService {
       uriPrefix: "https://prime.page.link",
       androidParameters:
           const AndroidParameters(packageName: "com.example.primeway"),
-      socialMetaTagParameters: const SocialMetaTagParameters(
+      socialMetaTagParameters: SocialMetaTagParameters(
         title: 'REFER A FRIEND & EARN',
         description: 'Earn 1,500 P-Coins on every referral',
+        imageUrl: Uri.parse(''),
       ),
     );
     final dynamicLink =
         await FirebaseDynamicLinks.instance.buildLink(dynamicLinkParams);
 
-    // log('url is $dynamicLink');
+    // log(int.parse('url is $dynamicLink'));
 
     Share.share(
       dynamicLink.toString(),

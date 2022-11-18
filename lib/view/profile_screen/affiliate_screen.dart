@@ -76,7 +76,9 @@ class _AffiliateScreenState extends State<AffiliateScreen> {
         ),
         body: TabBarView(
           children: [
-             AffiliateSalesScreen(userNumber: widget.userNumber,),
+            AffiliateSalesScreen(
+              userNumber: widget.userNumber,
+            ),
             const AffiliateLinksScreen(),
             AffiliateReferScreen(
               userNumber: widget.userNumber,
