@@ -40,7 +40,6 @@ class AuthClass {
             builder: (context) => OtpLoginScreen(
               phone: onlyPhone,
               verId: verificationID,
-              phoneNumber: phoneNumber,
             ),
           ),
         );
@@ -52,7 +51,6 @@ class AuthClass {
             builder: (context) => SignUpScreen(
               phone: onlyPhone,
               verId: verificationID,
-              phoneNumber: phoneNumber,
             ),
           ),
         );
@@ -96,22 +94,21 @@ class AuthClass {
             builder: (context) => SignUpScreen(
               phone: onlyPhone,
               verId: verificationID,
-              phoneNumber: phoneNumber,
             ),
           ),
         );
       } else {
-        log('user is not here ');
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SignUpScreen(
-              phone: onlyPhone,
-              verId: verificationID,
-              phoneNumber: phoneNumber,
-            ),
-          ),
-        );
+        // log('user is not here ');
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => SignUpScreen(
+        //       phone: onlyPhone,
+        //       verId: verificationID,
+        //       phoneNumber: phoneNumber,
+        //     ),
+        //   ),
+        // );
       }
     }
 
@@ -145,7 +142,6 @@ class AuthClass {
           context,
           MaterialPageRoute(
             builder: (context) => SignUpScreen(
-              phoneNumber: phoneNumber,
               phone: phoneNumber,
               verId: verificationId,
             ),
@@ -280,7 +276,7 @@ class AuthClass {
 
   Future<UserCredential> signInWithFacebook(context) async {
     // Trigger the sign-in flow
-    
+
     final LoginResult loginResult = await FacebookAuth.instance.login();
 
     // Create a credential from the access token

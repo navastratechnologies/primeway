@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+
 import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -34,6 +35,8 @@ void main() async {
       log('Message also contained a notification: ${message.notification}');
     }
   });
+
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   runApp(
     const MyApp(),

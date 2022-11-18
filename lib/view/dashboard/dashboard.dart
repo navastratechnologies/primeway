@@ -46,7 +46,7 @@ class _DashboardState extends State<Dashboard> {
         .doc(userNumber)
         .get()
         .then((value) {
-      log('wallet is ${value.get('wallet_id')}');
+      log('user name is ${value.get('name')}');
       setState(() {
         userName = value.get('name');
         userAddress = value.get('address');
@@ -57,29 +57,6 @@ class _DashboardState extends State<Dashboard> {
         userNumber = value.get('phone_number');
       });
     });
-  }
-
-  void requestPermission() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      log('User Granted Permission: ${settings.authorizationStatus}');
-    } else if (settings.authorizationStatus ==
-        AuthorizationStatus.provisional) {
-      log('User granted provisional permission');
-    } else {
-      log('User declined or has not accepted permission');
-    }
   }
 
   void getMsgToken() async {
@@ -105,7 +82,6 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     checkLogin();
     super.initState();
-    requestPermission();
     getMsgToken();
   }
 

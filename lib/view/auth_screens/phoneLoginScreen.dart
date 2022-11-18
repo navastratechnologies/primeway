@@ -30,7 +30,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
         .collection('users')
         .doc(phoneController.text)
         .get();
-    if (a.exists) {
+    if (a.exists && phoneController.text.isNotEmpty) {
       String countryCode = '+91';
       phonenumber = '$countryCode${phoneController.text}';
       authClass.verifyPhoneNumber(
@@ -39,9 +39,9 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
         context,
         setData,
       );
-    } else {
-      // String countryCode = '+91';
-      phonenumber = phoneController.text;
+    } else if (phoneController.text.isNotEmpty) {
+      String countryCode = '+91';
+      phonenumber = '$countryCode${phoneController.text}';
       authClass.verifyPhoneNumber2(
         phonenumber,
         phoneController.text,

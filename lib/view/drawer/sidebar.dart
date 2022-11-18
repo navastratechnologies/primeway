@@ -1,11 +1,13 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/drawer/resources/resources.dart';
 import 'package:primewayskills_app/view/drawer/setting/setting.dart';
@@ -39,7 +41,7 @@ class NavigationDrawer extends StatefulWidget {
 class _NavigationDrawerState extends State<NavigationDrawer> {
   bool showPartenerPage = false;
   String docId = '';
-  
+
   Future<void> checkCollection() async {
     FirebaseFirestore.instance
         .collection('affilate_dashboard')
@@ -376,13 +378,22 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                           color: whiteColor,
                         ),
                       ),
-                      onTap: () => {
-                        Navigator.pop(context),
+                      onTap: () async {
+                        await FirebaseAuth.instance.signOut();
+                        FirebaseAuth.instance
+                            .authStateChanges()
+                            .listen((User? user) {
+                          if (user == null) {
+                            log('User is currently signed out!');
+                          } else {
+                            log('User is signed in!');
+                          }
+                        });
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const Dashboard(),
+                            builder: (context) => const LoginHomeScreen(),
                           ),
-                        ),
+                        );
                       },
                     ),
                     Container(

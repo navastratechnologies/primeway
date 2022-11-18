@@ -8,9 +8,9 @@ import 'package:sms_autofill/sms_autofill.dart';
 
 class OtpLoginScreen extends StatefulWidget {
   final String? phone, verId;
-  final String phoneNumber;
+ 
   const OtpLoginScreen(
-      {super.key, this.phone, this.verId, required this.phoneNumber});
+      {super.key, this.phone, this.verId});
 
   @override
   State<OtpLoginScreen> createState() => _OtpLoginScreenState();

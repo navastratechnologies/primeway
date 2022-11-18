@@ -1,18 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:primewayskills_app/view/auth_screens/address.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../controllers/phone_controller.dart';
 
 class SignUpScreen extends StatefulWidget {
-  final String phoneNumber;
   final String phone, verId;
-  const SignUpScreen(
-      {super.key,
-      required this.phoneNumber,
-      required this.phone,
-      required this.verId});
+  const SignUpScreen({super.key, required this.phone, required this.verId});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -32,11 +26,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       FirebaseFirestore.instance.collection('users');
 
   Future<void> createUserCollection() async {
-    users.doc(widget.phoneNumber).set({
-      'user_Id': widget.phoneNumber,
+    users.doc(widget.phone).set({
+      'user_Id': widget.phone,
       'name': "${firstNameController.text} ${lastNameController.text}",
       'email': emailController.text,
-      'phone_number': widget.phoneNumber,
+      'phone_number': widget.phone,
       'address': '',
       'affilate_id': '',
       'approval_status': '',
@@ -46,7 +40,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'profile_pic': '',
       'social_account': '',
       'total_refferals': '',
-      'wallet_id': widget.phoneNumber,
+      'wallet_id': widget.phone,
       'front_document': '',
       'back_document': '',
       'document_type': '',
@@ -54,7 +48,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> createUserChapterCollection() async {
-    users.doc(widget.phoneNumber).collection('courses').doc().set({
+    users.doc(widget.phone).collection('courses').doc().set({
       'author_name': '',
       'courses_id': '',
       'image': '',
@@ -63,7 +57,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> createUserRefferalCollection() async {
-    users.doc(widget.phoneNumber).collection('refferal').doc().set({
+    users.doc(widget.phone).collection('refferal').doc().set({
       'user_id': '',
       'user_name': '',
       'refferal_point': '',
@@ -71,10 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> createWalletCollection() async {
-    FirebaseFirestore.instance
-        .collection('wallet')
-        .doc(widget.phoneNumber)
-        .set({
+    FirebaseFirestore.instance.collection('wallet').doc(widget.phone).set({
       'account_holder_name': '',
       'account_number': '',
       'bank_name': '',
@@ -82,7 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'ifsc_code': '',
       'status': '',
       'total_withdrawal': '',
-      'user_id': widget.phoneNumber,
+      'user_id': widget.phone,
       'user_name': "${firstNameController.text} ${lastNameController.text}",
       'wallet_balance': '',
       'withdrawal_req': '',
@@ -266,7 +257,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 width: 20,
               ),
               Text(
-                "+91- ${widget.phoneNumber}",
+                "+91- ${widget.phone}",
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 12,
@@ -358,16 +349,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   createUserChapterCollection();
                   createUserRefferalCollection();
                   createWalletCollection();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditAddressPage(
-                        phoneNumber: widget.phoneNumber,
-                        // name:
-                        //     '${firstNameController.text} ${lastNameController.text}',
-                      ),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => EditAddressPage(
+                  //       phoneNumber: widget.phoneNumber,
+                  //       // name:
+                  //       //     '${firstNameController.text} ${lastNameController.text}',
+                  //     ),
+                  //   ),
+                  // );
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(10),
