@@ -69,6 +69,13 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   void initState() {
     checkCollection();
     super.initState();
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        log('User is currently signed out!');
+      } else {
+        log('User is signed in!');
+      }
+    });
   }
 
   @override
