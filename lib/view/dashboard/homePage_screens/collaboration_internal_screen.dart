@@ -145,7 +145,10 @@ class _CollaborationInternalScreenState
                       InkWell(
                         onTap: () {
                           DeepLinkService.instance!.buildDynamicLinks(
-                              url, widget.titles, widget.userNumber, '00');
+                            url,
+                            widget.titles,
+                            widget.userNumber,
+                          );
                         },
                         child: SizedBox(
                           width: 35,

@@ -35,19 +35,19 @@ class DeepLinkService {
     });
   }
 
-  String docId = '1234567890';
+  // String docId = '1234567890';
   String url = 'https://prime.page.link';
 
-  buildDynamicLinks(String url, String titles, String docId, referCode) async {
+  buildDynamicLinks(String url, String titles, String docId) async {
     final dynamicLinkParams = DynamicLinkParameters(
-      link: Uri.parse("https://prime.page.link/NLtk/$docId?code=$referCode"),
-      uriPrefix: "https://prime.page.link",
+      link: Uri.parse("https://primeway.page.link/$docId"),
+      uriPrefix: "https://primeway.page.link/QYkB",
       androidParameters:
           const AndroidParameters(packageName: "com.example.primeway"),
-      socialMetaTagParameters: SocialMetaTagParameters(
+      socialMetaTagParameters: const SocialMetaTagParameters(
         title: 'REFER A FRIEND & EARN',
         description: 'Earn 1,500 P-Coins on every referral',
-        imageUrl: Uri.parse(''),
+        // imageUrl: Uri.parse(''),
       ),
     );
     final dynamicLink =
