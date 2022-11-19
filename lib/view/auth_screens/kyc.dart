@@ -7,9 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:primewayskills_app/view/auth_screens/upload_image.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
-
-import '../dashboard/dashboard.dart';
 
 class EkycPage extends StatefulWidget {
   final String phoneNumber;
@@ -832,7 +831,9 @@ class _EkycPageState extends State<EkycPage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const Dashboard(),
+                                      builder: (context) => SocialScreen(
+                                        phoneNumber: widget.phoneNumber,
+                                      ),
                                     ),
                                   );
                                 },

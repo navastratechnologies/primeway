@@ -5,12 +5,14 @@ import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
+import 'package:primewayskills_app/view/auth_screens/upload_image.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  WidgetsFlutterBinding.ensureInitialized();
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
@@ -62,7 +64,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const LoginHomeScreen(),
+      home: const SocialScreen(
+        phoneNumber: '1234567890',
+      ),
       theme: ThemeData(
         // primarySwatch: whiteColor,
         scaffoldBackgroundColor: whiteColor,
