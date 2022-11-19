@@ -831,7 +831,7 @@ class _EkycPageState extends State<EkycPage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => SocialScreen(
+                                      builder: (context) => UplodeImage(
                                         phoneNumber: widget.phoneNumber,
                                       ),
                                     ),

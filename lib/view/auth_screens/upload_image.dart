@@ -10,15 +10,15 @@ import 'package:image_picker/image_picker.dart';
 import '../dashboard/dashboard.dart';
 import '../helpers/colors.dart';
 
-class SocialScreen extends StatefulWidget {
+class UplodeImage extends StatefulWidget {
   final String phoneNumber;
-  const SocialScreen({super.key, required this.phoneNumber});
+  const UplodeImage({super.key, required this.phoneNumber});
 
   @override
-  State<SocialScreen> createState() => _SocialScreenState();
+  State<UplodeImage> createState() => _UplodeImageState();
 }
 
-class _SocialScreenState extends State<SocialScreen> {
+class _UplodeImageState extends State<UplodeImage> {
   // PlatformFile? pickedFile;
   UploadTask? uploadTask;
   File? image;
