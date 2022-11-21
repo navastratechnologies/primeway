@@ -222,8 +222,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => SocialScreen(
-                            userName: widget.userName,
-                            userProfileImage: widget.userProfileImage, userNumber: widget.userNumber,
+                           userNumber: widget.userNumber, userName: widget.userName, userProfileImage: widget.userProfileImage,
                           ),
                         ),
                       );

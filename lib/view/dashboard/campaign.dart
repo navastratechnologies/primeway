@@ -4,16 +4,20 @@ import 'package:lottie/lottie.dart';
 import '../helpers/colors.dart';
 
 class CampaingnScreen extends StatefulWidget {
-  final String instagram;
-  final String youTube;
+  final String userNumber;
   final String userName;
   final String userProfileImage;
+  final String instagramFollowers;
+  final String instagramUserName;
+  final String instagrsmBio;
+  final String instagramImage;
+  final String instagramFolowing;
+  final String instagramWebsite;
+ 
   const CampaingnScreen(
       {super.key,
-      required this.instagram,
-      required this.youTube,
       required this.userName,
-      required this.userProfileImage});
+      required this.userProfileImage, required this.userNumber, required this.instagramFollowers, required this.instagramUserName, required this.instagrsmBio, required this.instagramImage, required this.instagramFolowing, required this.instagramWebsite});
 
   @override
   State<CampaingnScreen> createState() => _CampaingnScreenState();
