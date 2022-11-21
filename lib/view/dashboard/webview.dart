@@ -14,12 +14,16 @@ class WebViewClass extends StatefulWidget {
   final String youtubeController;
   final String instagramUrl;
   final String youTubeUrl;
+  final String userName;
+  final String userProfileImage;
+  final String userNumber;
   const WebViewClass(
       {super.key,
       required this.instagramController,
       required this.youtubeController,
       required this.instagramUrl,
-      required this.youTubeUrl});
+      required this.youTubeUrl,
+      required this.userName, required this.userProfileImage, required this.userNumber});
 
   @override
   _WebViewClassState createState() => _WebViewClassState();
@@ -102,6 +106,7 @@ class _WebViewClassState extends State<WebViewClass> {
                     builder: (context) => CampaingnScreen(
                       instagram: instagram,
                       youTube: youTube,
+                      userName: widget.userName, userProfileImage: widget.userProfileImage,
                     ),
                   ),
                 );
@@ -129,7 +134,9 @@ class _WebViewClassState extends State<WebViewClass> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SocialScreen(),
+                    builder: (context) => SocialScreen(
+                      userName: widget.userName, userProfileImage: widget.userProfileImage, userNumber: widget.userNumber,
+                    ),
                   ),
                 );
               },

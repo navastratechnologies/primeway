@@ -1,11 +1,22 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_insta/flutter_insta.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/view/dashboard/webview.dart';
 
 import '../helpers/colors.dart';
 
 class SocialScreen extends StatefulWidget {
-  const SocialScreen({super.key});
+  final String userName;
+  final String userProfileImage;
+  final String userNumber;
+  const SocialScreen(
+      {super.key,
+      required this.userName,
+      required this.userProfileImage,
+      required this.userNumber});
 
   @override
   State<SocialScreen> createState() => _SocialScreenState();
@@ -15,8 +26,54 @@ class _SocialScreenState extends State<SocialScreen> {
   TextEditingController instagramController = TextEditingController();
   TextEditingController youtubeController = TextEditingController();
 
+  String instagramFollowers = '';
+  String instagramUserName = '';
+  String instagrsmBio = '';
+  String instagramImage = '';
+  String instagramFolowing = '';
+  String instagramWebsite = '';
+
   final instagram = 'https://www.instagram.com/';
   final youTube = 'https://www.youtube.com/';
+
+  FlutterInsta flutterInsta = FlutterInsta();
+
+  Future<void> instagramDetails() async {
+    await flutterInsta.getProfileData(instagramController.text).then((value) {
+      instagramFollowers = flutterInsta.followers.toString();
+      instagramUserName = flutterInsta.username.toString();
+      instagramFolowing = flutterInsta.following.toString();
+      instagramImage = flutterInsta.imgurl.toString();
+      instagrsmBio = flutterInsta.bio.toString();
+      instagramWebsite = flutterInsta.website.toString();
+      log('this is : $instagramFollowers');
+    });
+    log("Username : ${flutterInsta.username}");
+    log("Followers : ${flutterInsta.followers}");
+    log("Folowing : ${flutterInsta.following}");
+    log("Bio : ${flutterInsta.bio}");
+    log("Website : ${flutterInsta.website}");
+    log("Profile Image : ${flutterInsta.imgurl}");
+    log("Feed images : ${flutterInsta.feedImagesUrl}");
+  }
+
+  // YoutubeDataApi youtubeDataApi = YoutubeDataApi();
+
+  // Future<void> youtubeDetail() async {
+  //   youtubeDataApi.fetchChannelData('https://www.youtube.com/watch?v=nqUN530Rgtw').then((value) {
+  //     log('you tube : $value');
+  //   });
+  // }
+
+  Future<void> updateUser() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userNumber)
+        .update({
+      'instagram_followers': instagramFollowers,
+      'instagram_username': instagramUserName,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,11 +141,10 @@ class _SocialScreenState extends State<SocialScreen> {
                               BoxShadow(color: Colors.black.withOpacity(0.1)),
                             ],
                             shape: BoxShape.circle,
-
-                            // image: DecorationImage(
-                            //   image: NetworkImage(),
-                            //   fit: BoxFit.cover,
-                            // ),
+                            image: DecorationImage(
+                              image: NetworkImage(widget.userProfileImage),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                           child: Icon(
                             Icons.add_a_photo,
@@ -321,8 +377,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                       controller: instagramController,
                                       decoration: const InputDecoration(
                                         border: UnderlineInputBorder(),
-                                        labelText:
-                                            'Enter your instagram id',
+                                        labelText: 'Enter your instagram id',
                                       ),
                                     ),
                                   ),
@@ -331,18 +386,23 @@ class _SocialScreenState extends State<SocialScreen> {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => WebViewClass(
-                                            instagramController:
-                                                instagramController.text,
-                                            youtubeController: '',
-                                            instagramUrl: instagram,
-                                            youTubeUrl: '',
-                                          ),
-                                        ),
-                                      );
+                                      instagramDetails();
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => WebViewClass(
+                                      //       instagramController:
+                                      //           instagramController.text,
+                                      //       youtubeController: '',
+                                      //       instagramUrl: instagram,
+                                      //       youTubeUrl: '',
+                                      //       userName: widget.userName,
+                                      //       userProfileImage:
+                                      //           widget.userProfileImage,
+                                      //       userNumber: widget.userNumber,
+                                      //     ),
+                                      //   ),
+                                      // );
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(10),
@@ -478,6 +538,10 @@ class _SocialScreenState extends State<SocialScreen> {
                                                 youtubeController.text,
                                             instagramUrl: '',
                                             youTubeUrl: youTube,
+                                            userName: widget.userName,
+                                            userProfileImage:
+                                                widget.userProfileImage,
+                                            userNumber: widget.userNumber,
                                           ),
                                         ),
                                       );

@@ -1,5 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -30,13 +34,20 @@ class CompleteProfileScreen extends StatefulWidget {
 }
 
 class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
+  TextEditingController nameController = TextEditingController();
   TextEditingController describeController = TextEditingController();
-
+  TextEditingController dateOfBrithController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController seconderyNumberController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController languageController = TextEditingController();
+  List languageType = [];
   int describeCharLength = 0;
 
   bool male = false;
   bool female = false;
   bool otherGender = false;
+  String genderType = '';
 
   bool pageOne = true;
   bool pageTwo = false;
@@ -44,9 +55,72 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   bool pageOneEditing = false;
   bool pageTwoEditing = false;
   bool pageThreeEditing = false;
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
 
   String dob = 'Date of Birth';
   DateTime _indobDate = DateTime.now();
+
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
+
+  Future uploadFile() async {
+    final path = 'users/${pickedFile!.name}';
+    final file = File(pickedFile!.path!);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    setState(() {
+      uploadTask = ref.putFile(file);
+    });
+
+    final snapshot = await uploadTask!.whenComplete(() {});
+
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    log('Download link : $urlDownload');
+
+    setState(() {
+      uploadTask = null;
+    });
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userNumber)
+        .update({
+      'profile_pic': urlDownload.toString(),
+    });
+  }
+
+  Future<void> updateProfile() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userNumber)
+        .update({
+      'name': nameController.text,
+      'email': emailController.text,
+      'secondry_phone_number': seconderyNumberController.text,
+      'description': describeController.text,
+      'gender': genderType,
+      'date_of_brith': dob,
+      'address': addressController.text,
+      'language':
+          languageType.toString().replaceAll('[', '').replaceAll(']', ''),
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      nameController.text = widget.userName;
+      addressController.text = widget.userAddress;
+      emailController.text = widget.userEmail;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -190,21 +264,35 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                   child: SizedBox(
                                     width: 100,
                                     child: InkWell(
+                                      onTap: () {
+                                        selectFile();
+                                      },
                                       child: Stack(
                                         children: [
-                                          Container(
-                                            width: 80,
-                                            height: 80,
-                                            decoration: BoxDecoration(
-                                              color: whiteColor,
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                image: NetworkImage(
-                                                    widget.userProfileImage),
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
+                                          pickedFile == null
+                                              ? Container(
+                                                  width: 80,
+                                                  height: 80,
+                                                  decoration: BoxDecoration(
+                                                    color: whiteColor,
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                      image: NetworkImage(widget
+                                                          .userProfileImage),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                )
+                                              : SizedBox(
+                                                  width: 80,
+                                                  height: 80,
+                                                  child: Image.file(
+                                                    File(pickedFile!.path!),
+                                                    width: 180,
+                                                    height: 110,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 20),
@@ -239,6 +327,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                 ),
                                 const SizedBox(height: 10),
                                 TextField(
+                                  controller: nameController,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderSide: BorderSide(
@@ -316,6 +405,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                             male = true;
                                             female = false;
                                             otherGender = false;
+                                            genderType = 'Male';
                                           });
                                           log('log is $male $female $otherGender');
                                         },
@@ -352,6 +442,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                             male = false;
                                             female = true;
                                             otherGender = false;
+                                            genderType = 'Female';
                                           });
                                           log('log is $male $female $otherGender');
                                         },
@@ -389,6 +480,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                             male = false;
                                             female = false;
                                             otherGender = true;
+                                            genderType = 'Other Gender';
                                           });
                                           log('log is $male $female $otherGender');
                                         },
@@ -555,6 +647,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                     ),
                                     const SizedBox(height: 10),
                                     TextField(
+                                      controller: addressController,
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                           borderSide: BorderSide(
@@ -588,9 +681,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                       ),
                                     ),
                                     const SizedBox(height: 10),
-                                    const Text(
-                                      '9876543210',
-                                      style: TextStyle(
+                                    Text(
+                                      widget.userNumber,
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -610,7 +703,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                                 Colors.black.withOpacity(0.2),
                                           ),
                                         ),
-                                        hintText: '9876543210',
+                                        hintText: '1234567890',
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
                                             color:
@@ -618,7 +711,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                           ),
                                         ),
                                       ),
-                                      controller: describeController,
+                                      controller: seconderyNumberController,
                                       onChanged: (value) {
                                         setState(() {
                                           describeCharLength = value.length;
@@ -648,6 +741,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                     ),
                                     const SizedBox(height: 10),
                                     TextField(
+                                      controller: emailController,
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                           borderSide: BorderSide(
@@ -765,19 +859,43 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                       itemBuilder:
                                           (BuildContext context, int index) {
                                         return Center(
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20, vertical: 10),
-                                            decoration: BoxDecoration(
-                                              color: Colors.blue,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: Text(
-                                              languageModel[index],
-                                              style: TextStyle(
-                                                color: whiteColor,
-                                                fontWeight: FontWeight.w500,
+                                          child: InkWell(
+                                            onTap: () {
+                                              if (languageType.contains(
+                                                  languageModel[index])) {
+                                                setState(() {
+                                                  languageType.remove(
+                                                      languageModel[index]);
+                                                });
+                                              } else {
+                                                if (languageType.length < 3) {
+                                                  setState(() {
+                                                    languageType.add(
+                                                        languageModel[index]);
+                                                  });
+                                                }
+                                              }
+                                              log('language is : $languageType');
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 10),
+                                              decoration: BoxDecoration(
+                                                color: languageType.contains(
+                                                        languageModel[index])
+                                                    ? primeColor2
+                                                    : Colors.blue,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: Text(
+                                                languageModel[index],
+                                                style: TextStyle(
+                                                  color: whiteColor,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -811,13 +929,21 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                                   ),
                                                 ],
                                               ),
-                                              child: Center(
-                                                child: Text(
-                                                  'Next',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: maxSize - 3,
-                                                    color: whiteColor,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  updateProfile();
+                                                  uploadFile();
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Center(
+                                                  child: Text(
+                                                    'Next',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: maxSize - 3,
+                                                      color: whiteColor,
+                                                    ),
                                                   ),
                                                 ),
                                               ),

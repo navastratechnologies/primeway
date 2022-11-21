@@ -2,6 +2,9 @@ import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:primewayskills_app/view/auth_screens/address.dart';
+import 'package:primewayskills_app/view/auth_screens/kyc.dart';
+import 'package:primewayskills_app/view/dashboard/social_account.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 
@@ -213,13 +216,191 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  editProfileCardWidget('Social Accounts'),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SocialScreen(
+                            userName: widget.userName,
+                            userProfileImage: widget.userProfileImage, userNumber: widget.userNumber,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'INCOMPLETE',
+                                  style: TextStyle(
+                                    color: primeColor,
+                                    fontSize: 10,
+                                    letterSpacing: 1,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Text(
+                                    'EDIT',
+                                    style: TextStyle(
+                                      color: primeColor,
+                                      fontSize: 12,
+                                      letterSpacing: 1,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            headingWidgetMethod('Social Accounts'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   editProfileCardWidget('Commercials'),
                   const SizedBox(height: 16),
-                  editProfileCardWidget('Payments'),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EkycPage(
+                            phoneNumber: widget.userNumber,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'INCOMPLETE',
+                                  style: TextStyle(
+                                    color: primeColor,
+                                    fontSize: 10,
+                                    letterSpacing: 1,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Text(
+                                    'EDIT',
+                                    style: TextStyle(
+                                      color: primeColor,
+                                      fontSize: 12,
+                                      letterSpacing: 1,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            headingWidgetMethod('Payments'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 16),
-                  editProfileCardWidget('Address'),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditAddressPage(
+                            phoneNumber: widget.userNumber,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'INCOMPLETE',
+                                  style: TextStyle(
+                                    color: primeColor,
+                                    fontSize: 10,
+                                    letterSpacing: 1,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Text(
+                                    'EDIT',
+                                    style: TextStyle(
+                                      color: primeColor,
+                                      fontSize: 12,
+                                      letterSpacing: 1,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            headingWidgetMethod('Address'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 16),
                 ],
               ),

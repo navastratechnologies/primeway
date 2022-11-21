@@ -44,6 +44,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'front_document': '',
       'back_document': '',
       'document_type': '',
+      'language': '',
+      'secondry_phone_number': '',
+      'description': '',
+      'gender': '',
+      'date_of_brith': '',
+      'instagram_followers': '',
+      'instagram_username': '',
     });
   }
 

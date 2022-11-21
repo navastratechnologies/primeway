@@ -64,7 +64,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const SocialScreen(),
+      home: const SocialScreen(
+        userName: 'Ankit',
+        userProfileImage: '', userNumber: '9783169832',
+      ),
       theme: ThemeData(
         // primarySwatch: whiteColor,
         scaffoldBackgroundColor: whiteColor,

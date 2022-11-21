@@ -25,6 +25,8 @@ class Homescreen extends StatefulWidget {
   final String userPayment;
   final String userEmail;
   final String userWalletId;
+  final String userLanguage;
+  final String userFollowers;
 
   const Homescreen({
     Key? key,
@@ -35,6 +37,8 @@ class Homescreen extends StatefulWidget {
     required this.userPayment,
     required this.userEmail,
     required this.userWalletId,
+    required this.userLanguage,
+    required this.userFollowers,
   }) : super(key: key);
 
   @override
@@ -309,6 +313,9 @@ class _HomescreenState extends State<Homescreen> {
                                         userProfileImage:
                                             widget.userProfileImage,
                                         userWalletId: widget.userWalletId,
+                                        userLanguage:
+                                            widget.userLanguage.toString(),
+                                        userFollowers: widget.userFollowers,
                                       ),
                                     ),
                                   );
@@ -384,6 +391,9 @@ class _HomescreenState extends State<Homescreen> {
                                           userProfileImage:
                                               widget.userProfileImage,
                                           userWalletId: widget.userWalletId,
+                                          userLanguage:
+                                              widget.userLanguage.toString(),
+                                          userFollowers: widget.userFollowers,
                                         ),
                                       ),
                                     );

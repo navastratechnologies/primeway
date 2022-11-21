@@ -14,6 +14,8 @@ class CollaborationScreen extends StatefulWidget {
   final String userPayment;
   final String userEmail;
   final String userWalletId;
+  final String userLanguage;
+  final String userFollowers;
   const CollaborationScreen(
       {Key? key,
       required this.userNumber,
@@ -22,7 +24,7 @@ class CollaborationScreen extends StatefulWidget {
       required this.userProfileImage,
       required this.userPayment,
       required this.userEmail,
-      required this.userWalletId})
+      required this.userWalletId, required this.userLanguage, required this.userFollowers,})
       : super(key: key);
 
   @override
@@ -196,7 +198,7 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                                         userPayment: widget.userPayment,
                                         userProfileImage:
                                             widget.userProfileImage,
-                                        userWalletId: widget.userWalletId,
+                                        userWalletId: widget.userWalletId, userLanguage: widget.userLanguage, userFollowers: widget.userFollowers,
                                       ),
                                     ),
                                   );

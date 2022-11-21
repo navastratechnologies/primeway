@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:lottie/lottie.dart';
 
 import '../helpers/colors.dart';
@@ -7,7 +6,14 @@ import '../helpers/colors.dart';
 class CampaingnScreen extends StatefulWidget {
   final String instagram;
   final String youTube;
-  const CampaingnScreen({super.key, required this.instagram, required this.youTube});
+  final String userName;
+  final String userProfileImage;
+  const CampaingnScreen(
+      {super.key,
+      required this.instagram,
+      required this.youTube,
+      required this.userName,
+      required this.userProfileImage});
 
   @override
   State<CampaingnScreen> createState() => _CampaingnScreenState();
@@ -107,11 +113,10 @@ class _CampaingnScreenState extends State<CampaingnScreen> {
                                       color: Colors.black.withOpacity(0.1)),
                                 ],
                                 shape: BoxShape.circle,
-
-                                // image: DecorationImage(
-                                //   image: NetworkImage(),
-                                //   fit: BoxFit.cover,
-                                // ),
+                                image: DecorationImage(
+                                  image: NetworkImage(widget.userProfileImage),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                               child: Icon(
                                 Icons.add_a_photo,
@@ -127,7 +132,7 @@ class _CampaingnScreenState extends State<CampaingnScreen> {
                       height: 40,
                     ),
                     Text(
-                      "rohitrai199705",
+                      widget.userName,
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,

@@ -32,6 +32,8 @@ class _DashboardState extends State<Dashboard> {
   String userPayment = '';
   String userEmail = '';
   String userWalletId = '';
+  String userLanguage = '';
+  String userFollowers = '';
 
   final int _currentIndex = 0;
 
@@ -55,6 +57,8 @@ class _DashboardState extends State<Dashboard> {
         userEmail = value.get('email');
         userWalletId = value.get('wallet_id');
         userNumber = value.get('phone_number');
+        userLanguage = value.get('language');
+        userFollowers = value.get('instagram_followers');
       });
     });
   }
@@ -202,7 +206,10 @@ class _DashboardState extends State<Dashboard> {
               userNumber: userNumber,
               userPayment: userPayment,
               userProfileImage: userProfileImage,
-              userWalletId: userWalletId)
+              userWalletId: userWalletId,
+              userLanguage: userLanguage,
+              userFollowers: userFollowers,
+            )
           : showCollab
               ? CollaborationScreen(
                   userNumber: userNumber,
@@ -212,6 +219,8 @@ class _DashboardState extends State<Dashboard> {
                   userPayment: userPayment,
                   userProfileImage: userProfileImage,
                   userWalletId: userWalletId,
+                  userLanguage: userLanguage,
+                  userFollowers: userFollowers,
                 )
               : showCourses
                   ? CoursesScreen(
