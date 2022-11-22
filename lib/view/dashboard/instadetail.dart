@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:primewayskills_app/view/dashboard/social_account.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 import 'campaign.dart';
@@ -33,6 +33,20 @@ class WebViewClass extends StatefulWidget {
 }
 
 class _WebViewClassState extends State<WebViewClass> {
+  Future<void> updateUser() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userNumber)
+        .update({
+      'instagram_followers': widget.instagramFollowers,
+      'instagram_username': widget.instagramUserName,
+      'instagram_website': widget.instagramWebsite,
+      'instagram_bio': widget.instagrsmBio,
+      'instagram_image': widget.instagramImage,
+      'instagram_following': widget.instagramFolowing,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -262,11 +276,12 @@ class _WebViewClassState extends State<WebViewClass> {
           children: [
             InkWell(
               onTap: () {
+                updateUser();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => CampaingnScreen(
-                      instagramFollowers: widget.instagramFollowers ,
+                      instagramFollowers: widget.instagramFollowers,
                       instagramFolowing: widget.instagramFolowing,
                       instagramImage: widget.instagramImage,
                       instagramUserName: widget.instagramUserName,

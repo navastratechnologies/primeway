@@ -13,11 +13,18 @@ class CampaingnScreen extends StatefulWidget {
   final String instagramImage;
   final String instagramFolowing;
   final String instagramWebsite;
- 
+
   const CampaingnScreen(
       {super.key,
       required this.userName,
-      required this.userProfileImage, required this.userNumber, required this.instagramFollowers, required this.instagramUserName, required this.instagrsmBio, required this.instagramImage, required this.instagramFolowing, required this.instagramWebsite});
+      required this.userProfileImage,
+      required this.userNumber,
+      required this.instagramFollowers,
+      required this.instagramUserName,
+      required this.instagrsmBio,
+      required this.instagramImage,
+      required this.instagramFolowing,
+      required this.instagramWebsite});
 
   @override
   State<CampaingnScreen> createState() => _CampaingnScreenState();
@@ -118,7 +125,7 @@ class _CampaingnScreenState extends State<CampaingnScreen> {
                                 ],
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                  image: NetworkImage(widget.userProfileImage),
+                                  image: NetworkImage(widget.instagramImage),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -136,7 +143,7 @@ class _CampaingnScreenState extends State<CampaingnScreen> {
                       height: 40,
                     ),
                     Text(
-                      widget.userName,
+                      widget.instagramUserName,
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,

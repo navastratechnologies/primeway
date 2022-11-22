@@ -51,6 +51,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'date_of_brith': '',
       'instagram_followers': '',
       'instagram_username': '',
+      'instagram_website': '',
+      'instagram_bio': '',
+      'instagram_image': '', 
+      'instagram_following': '', 
     });
   }
 
