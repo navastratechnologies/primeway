@@ -5,7 +5,7 @@ import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:primewayskills_app/view/dashboard/social_account.dart';
+import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 void main() async {
@@ -64,15 +64,15 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const SocialScreen(
-        userName: 'Ankit',
-        userProfileImage: '', userNumber: '9783169832',
-      ),
+      // home: const SocialScreen(
+      //   userName: 'Ankit',
+      //   userProfileImage: '', userNumber: '9783169832',
+      // ),
       theme: ThemeData(
         // primarySwatch: whiteColor,
         scaffoldBackgroundColor: whiteColor,
       ),
-      // home: Dashboard(),
+      home: const Dashboard(),
     );
   }
 }
