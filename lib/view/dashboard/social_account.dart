@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_insta/flutter_insta.dart';
 import 'package:lottie/lottie.dart';
@@ -15,7 +14,9 @@ class SocialScreen extends StatefulWidget {
 
   const SocialScreen({
     super.key,
-    required this.userNumber, required this.userName, required this.userProfileImage,
+    required this.userNumber,
+    required this.userName,
+    required this.userProfileImage,
   });
 
   @override
@@ -39,14 +40,16 @@ class _SocialScreenState extends State<SocialScreen> {
   FlutterInsta flutterInsta = FlutterInsta();
 
   Future<void> instagramDetails() async {
-    await flutterInsta.getProfileData(instagramController.text).then((value) {
-      instagramFollowers = flutterInsta.followers.toString();
-      instagramUserName = flutterInsta.username.toString();
-      instagramFolowing = flutterInsta.following.toString();
-      instagramImage = flutterInsta.imgurl.toString();
-      instagrsmBio = flutterInsta.bio.toString();
-      instagramWebsite = flutterInsta.website.toString();
-      log('this is : $instagramFollowers');
+    await flutterInsta.getProfileData('ankitsaini406').then((value) {
+      setState(() {
+        instagramFollowers = flutterInsta.followers.toString();
+        instagramUserName = flutterInsta.username.toString();
+        instagramFolowing = flutterInsta.following.toString();
+        instagramImage = flutterInsta.imgurl.toString();
+        instagrsmBio = flutterInsta.bio.toString();
+        instagramWebsite = flutterInsta.website.toString();
+        log('this is : $instagramFollowers');
+      });
     });
     log("Username : ${flutterInsta.username}");
     log("Followers : ${flutterInsta.followers}");
@@ -55,24 +58,6 @@ class _SocialScreenState extends State<SocialScreen> {
     log("Website : ${flutterInsta.website}");
     log("Profile Image : ${flutterInsta.imgurl}");
     log("Feed images : ${flutterInsta.feedImagesUrl}");
-  }
-
-  // YoutubeDataApi youtubeDataApi = YoutubeDataApi();
-
-  // Future<void> youtubeDetail() async {
-  //   youtubeDataApi.fetchChannelData('https://www.youtube.com/watch?v=nqUN530Rgtw').then((value) {
-  //     log('you tube : $value');
-  //   });
-  // }
-
-  Future<void> updateUser() async {
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.userNumber)
-        .update({
-      'instagram_followers': instagramFollowers,
-      'instagram_username': instagramUserName,
-    });
   }
 
   @override
@@ -387,23 +372,23 @@ class _SocialScreenState extends State<SocialScreen> {
                                   InkWell(
                                     onTap: () {
                                       instagramDetails();
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => WebViewClass(
-                                            userNumber: widget.userNumber,
-                                            instagramFollowers:
-                                                instagramFollowers,
-                                            instagramFolowing:
-                                                instagramFolowing,
-                                            instagramImage: instagramImage,
-                                            instagramUserName:
-                                                instagramUserName,
-                                            instagramWebsite: instagramWebsite,
-                                            instagrsmBio: instagrsmBio, userName: '', userProfileImage: '',
-                                          ),
-                                        ),
-                                      );
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => WebViewClass(
+                                      //       userNumber: widget.userNumber,
+                                      //       instagramFollowers:
+                                      //           instagramFollowers,
+                                      //       instagramFolowing:
+                                      //           instagramFolowing,
+                                      //       instagramImage: instagramImage,
+                                      //       instagramUserName:
+                                      //           instagramUserName,
+                                      //       instagramWebsite: instagramWebsite,
+                                      //       instagrsmBio: instagrsmBio, userName: '', userProfileImage: '',
+                                      //     ),
+                                      //   ),
+                                      // );
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(10),
@@ -540,7 +525,9 @@ class _SocialScreenState extends State<SocialScreen> {
                                             instagramImage: '',
                                             instagramUserName: '',
                                             instagramWebsite: '',
-                                            instagrsmBio: '', userName: '', userProfileImage: '',
+                                            instagrsmBio: '',
+                                            userName: '',
+                                            userProfileImage: '',
                                           ),
                                         ),
                                       );
