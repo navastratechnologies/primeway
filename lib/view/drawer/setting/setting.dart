@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:primewayskills_app/view/drawer/setting/privacypolicy.dart';
+import 'package:primewayskills_app/view/drawer/setting/termofservice.dart';
 import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
@@ -61,26 +63,62 @@ class _SettingScreenState extends State<SettingScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                headingWidgetMethod('Terms Of Service'),
-                const SizedBox(height: 5),
-                paragraphWidgetMethod('Read Terms Of Service', context),
-                const SizedBox(height: 14),
-                const Divider(),
-              ],
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TermOfServiceScreen(
+                      userAddress: widget.userAddress,
+                      userEmail: widget.userEmail,
+                      userName: widget.userName,
+                      userNumber: widget.userNumber,
+                      userPayment: widget.userPayment,
+                      userProfileImage: widget.userProfileImage,
+                      userWalletId: widget.userWalletId,
+                    ),
+                  ),
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  headingWidgetMethod('Terms Of Service'),
+                  const SizedBox(height: 5),
+                  paragraphWidgetMethod('Read Terms Of Service', context),
+                  const SizedBox(height: 14),
+                  const Divider(),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                headingWidgetMethod('Privacy Policy'),
-                const SizedBox(height: 5),
-                paragraphWidgetMethod('Read Privacy Policy', context),
-                const SizedBox(height: 20),
-                const Divider(),
-              ],
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PrivacyPloicyScreen(
+                      userAddress: widget.userAddress,
+                      userEmail: widget.userEmail,
+                      userName: widget.userName,
+                      userNumber: widget.userNumber,
+                      userPayment: widget.userPayment,
+                      userProfileImage: widget.userProfileImage,
+                      userWalletId: widget.userWalletId,
+                    ),
+                  ),
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  headingWidgetMethod('Privacy Policy'),
+                  const SizedBox(height: 5),
+                  paragraphWidgetMethod('Read Privacy Policy', context),
+                  const SizedBox(height: 20),
+                  const Divider(),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             Column(
