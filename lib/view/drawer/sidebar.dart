@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
+import 'package:primewayskills_app/view/drawer/about_us.dart';
 import 'package:primewayskills_app/view/drawer/feedback.dart';
 import 'package:primewayskills_app/view/drawer/resources/resources.dart';
 import 'package:primewayskills_app/view/drawer/setting/setting.dart';
@@ -323,15 +324,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                               Navigator.pop(context),
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => SettingScreen(
-                                    userAddress: widget.userAddress,
-                                    userEmail: widget.userEmail,
-                                    userName: widget.userName,
-                                    userNumber: widget.userNumber,
-                                    userPayment: widget.userPayment,
-                                    userProfileImage: widget.userProfileImage,
-                                    userWalletId: widget.userWalletId,
-                                  ),
+                                  builder: (context) => AboutUsScreen(),
                                 ),
                               ),
                             },
