@@ -1,8 +1,12 @@
 // ignore_for_file: avoid_print
 
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/drawer/setting/privacypolicy.dart';
 import 'package:primewayskills_app/view/drawer/setting/termofservice.dart';
+import 'package:primewayskills_app/view/drawer/setting/version.dart';
 import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
@@ -32,6 +36,28 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   bool isSwitched = false;
+  String appVersion = '';
+
+  Future<void> appVersions() async {
+    FirebaseFirestore.instance
+        .collection('app_version')
+        .doc('eGrmtdJDkF7LhjMjGnsN')
+        .get()
+        .then((value) {
+      log('app version is : ${value.get('version')}');
+      setState(() {
+        appVersion = value.get('version');
+      });
+      log('app version is : $appVersion');
+    });
+  }
+
+  @override
+  void initState() {
+    appVersions();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,15 +156,25 @@ class _SettingScreenState extends State<SettingScreen> {
               ],
             ),
             const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                headingWidgetMethod('App Version'),
-                const SizedBox(height: 5),
-                paragraphWidgetMethod('1.0.0', context),
-                const SizedBox(height: 20),
-                const Divider(),
-              ],
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const VersionScreen(),
+                  ),
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  headingWidgetMethod('App Version'),
+                  const SizedBox(height: 5),
+                  paragraphWidgetMethod(appVersion, context),
+                  const SizedBox(height: 20),
+                  const Divider(),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             Column(

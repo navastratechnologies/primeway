@@ -521,11 +521,9 @@ class _HomescreenState extends State<Homescreen> {
                                   aspectRatio: 2.0,
                                   viewportFraction: 2.0,
                                   onPageChanged: (index, reason) {
-                                    setState(
-                                      () {
-                                        _current = index;
-                                      },
-                                    );
+                                    setState(() {
+                                      _current = index;
+                                    });
                                   },
                                 ),
                               );

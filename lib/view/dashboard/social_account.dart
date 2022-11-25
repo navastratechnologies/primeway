@@ -40,7 +40,7 @@ class _SocialScreenState extends State<SocialScreen> {
   FlutterInsta flutterInsta = FlutterInsta();
 
   Future<void> instagramDetails() async {
-    await flutterInsta.getProfileData('ankitsaini406').then((value) {
+    flutterInsta.getProfileData(instagramController.text).then((value) {
       setState(() {
         instagramFollowers = flutterInsta.followers.toString();
         instagramUserName = flutterInsta.username.toString();
@@ -51,8 +51,8 @@ class _SocialScreenState extends State<SocialScreen> {
         log('this is : $instagramFollowers');
       });
     });
-    log("Username : ${flutterInsta.username}");
-    log("Followers : ${flutterInsta.followers}");
+    log("Username : $instagramUserName");
+    log("Followers : $instagramFollowers");
     log("Folowing : ${flutterInsta.following}");
     log("Bio : ${flutterInsta.bio}");
     log("Website : ${flutterInsta.website}");
@@ -372,23 +372,25 @@ class _SocialScreenState extends State<SocialScreen> {
                                   InkWell(
                                     onTap: () {
                                       instagramDetails();
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => WebViewClass(
-                                      //       userNumber: widget.userNumber,
-                                      //       instagramFollowers:
-                                      //           instagramFollowers,
-                                      //       instagramFolowing:
-                                      //           instagramFolowing,
-                                      //       instagramImage: instagramImage,
-                                      //       instagramUserName:
-                                      //           instagramUserName,
-                                      //       instagramWebsite: instagramWebsite,
-                                      //       instagrsmBio: instagrsmBio, userName: '', userProfileImage: '',
-                                      //     ),
-                                      //   ),
-                                      // );
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => WebViewClass(
+                                            userNumber: widget.userNumber,
+                                            instagramFollowers:
+                                                instagramFollowers,
+                                            instagramFolowing:
+                                                instagramFolowing,
+                                            instagramImage: instagramImage,
+                                            instagramUserName:
+                                                instagramUserName,
+                                            instagramWebsite: instagramWebsite,
+                                            instagrsmBio: instagrsmBio,
+                                            userName: '',
+                                            userProfileImage: '',
+                                          ),
+                                        ),
+                                      );
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(10),

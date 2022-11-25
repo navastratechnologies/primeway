@@ -48,7 +48,7 @@ class _DashboardState extends State<Dashboard> {
         .doc(userNumber)
         .get()
         .then((value) {
-      log('user name is ${value.get('profile_pic')}');
+      log('user name is ${value.get('name')}');
       setState(() {
         userName = value.get('name');
         userAddress = value.get('address');

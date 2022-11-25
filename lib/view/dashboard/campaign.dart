@@ -65,7 +65,9 @@ class _CampaingnScreenState extends State<CampaingnScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       child: const Text(
                         "SKIP",
                         style: TextStyle(color: Colors.white),
