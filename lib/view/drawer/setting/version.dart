@@ -20,7 +20,7 @@ class _VersionScreenState extends State<VersionScreen> {
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: Lottie.asset(
-              'assets/jsons/abstract-background.json',
+              'assets/json/abstract-background.json',
               fit: BoxFit.fitHeight,
             ),
           ),

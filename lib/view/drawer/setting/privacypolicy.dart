@@ -119,17 +119,12 @@ class _PrivacyPloicyScreenState extends State<PrivacyPloicyScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          documentSnapshot['heading'],
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                      ],
+                                    Text(
+                                      documentSnapshot['heading'],
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
