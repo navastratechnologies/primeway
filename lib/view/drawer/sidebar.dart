@@ -324,7 +324,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                               Navigator.pop(context),
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => AboutUsScreen(),
+                                  builder: (context) => const AboutUsScreen(),
                                 ),
                               ),
                             },
