@@ -4,13 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
+import 'package:primewayskills_app/view/auth_screens/phoneLoginScreen.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 class OtpLoginScreen extends StatefulWidget {
   final String? phone, verId;
- 
-  const OtpLoginScreen(
-      {super.key, this.phone, this.verId});
+
+  const OtpLoginScreen({super.key, this.phone, this.verId});
 
   @override
   State<OtpLoginScreen> createState() => _OtpLoginScreenState();
@@ -49,7 +49,12 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
         leading: Padding(
           padding: const EdgeInsets.all(10),
           child: InkWell(
-            onTap: () => Navigator.pop(context),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PhoneLoginScreen(),
+              ),
+            ),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.05),

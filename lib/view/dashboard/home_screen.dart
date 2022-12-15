@@ -74,48 +74,49 @@ class _HomescreenState extends State<Homescreen> {
               children: [
                 const SizedBox(height: 10),
                 StreamBuilder(
-                    stream: banner.snapshots(),
-                    builder:
-                        (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-                      if (streamSnapshot.hasData) {
-                        return CarouselSlider.builder(
-                          itemCount: streamSnapshot.data!.docs.length,
-                          itemBuilder: (context, index, realIndex) {
-                            final DocumentSnapshot documentSnapshot =
-                                streamSnapshot.data!.docs[index];
-                            return Container(
-                              width: MediaQuery.of(context).size.width / 1.1,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    documentSnapshot['Banner_image'],
-                                  ),
-                                  fit: BoxFit.cover,
+                  stream: banner.snapshots(),
+                  builder:
+                      (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                    if (streamSnapshot.hasData) {
+                      return CarouselSlider.builder(
+                        itemCount: streamSnapshot.data!.docs.length,
+                        itemBuilder: (context, index, realIndex) {
+                          final DocumentSnapshot documentSnapshot =
+                              streamSnapshot.data!.docs[index];
+                          return Container(
+                            width: MediaQuery.of(context).size.width / 1.1,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  documentSnapshot['Banner_image'],
                                 ),
-                                borderRadius: BorderRadius.circular(10),
+                                fit: BoxFit.cover,
                               ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          );
+                        },
+                        options: CarouselOptions(
+                          autoPlayInterval: const Duration(seconds: 5),
+                          autoPlay: true,
+                          enlargeCenterPage: true,
+                          aspectRatio: 2.0,
+                          viewportFraction: 2.0,
+                          onPageChanged: (index, reason) {
+                            setState(
+                              () {
+                                _current = index;
+                              },
                             );
                           },
-                          options: CarouselOptions(
-                            autoPlayInterval: const Duration(seconds: 5),
-                            autoPlay: true,
-                            enlargeCenterPage: true,
-                            aspectRatio: 2.0,
-                            viewportFraction: 2.0,
-                            onPageChanged: (index, reason) {
-                              setState(
-                                () {
-                                  _current = index;
-                                },
-                              );
-                            },
-                          ),
-                        );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                        ),
                       );
-                    }),
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: imgList.asMap().entries.map(

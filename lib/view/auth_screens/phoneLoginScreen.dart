@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
+import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
+import 'package:primewayskills_app/view/helpers/loader.dart';
 
 class PhoneLoginScreen extends StatefulWidget {
   const PhoneLoginScreen({super.key});
@@ -24,6 +26,8 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
   String phonenumber = '';
 
   String verificationID = "";
+
+  bool showLoader = false;
 
   Future<void> checkNumber() async {
     var a = await FirebaseFirestore.instance
@@ -53,177 +57,192 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(10),
-          child: InkWell(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.05),
-                shape: BoxShape.circle,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 4),
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  size: 18,
-                  color: Colors.black.withOpacity(0.4),
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            leading: Padding(
+              padding: const EdgeInsets.all(10),
+              child: InkWell(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginHomeScreen(),
+                  ),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.05),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 4),
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      size: 18,
+                      color: Colors.black.withOpacity(0.4),
+                    ),
+                  ),
                 ),
               ),
             ),
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black.withOpacity(0.6),
+            elevation: 0,
           ),
-        ),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black.withOpacity(0.6),
-        elevation: 0,
-      ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 160,
-              bottom: 60,
-            ),
-            child: Center(
-              child: Lottie.asset('assets/json/sanyasi_baba.json'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
+          body: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 160,
+                  bottom: 60,
+                ),
+                child: Center(
+                  child: Lottie.asset('assets/json/sanyasi_baba.json'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const SizedBox(height: 30),
-                    Text(
-                      'Welcome to Primway!',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black.withOpacity(0.6),
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Enter your phone number to continue.',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black.withOpacity(0.2),
-                        // fontSize: 20,
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.black.withOpacity(0.1),
-                            width: 2,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 30),
+                        Text(
+                          'Welcome to Primway!',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black.withOpacity(0.6),
+                            fontSize: 18,
                           ),
                         ),
-                      ),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 100,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Icon(
-                                  Icons.phone_android,
-                                  color: Colors.black.withOpacity(0.2),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Enter your phone number to continue.',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black.withOpacity(0.2),
+                            // fontSize: 20,
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Colors.black.withOpacity(0.1),
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 100,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Icon(
+                                      Icons.phone_android,
+                                      color: Colors.black.withOpacity(0.2),
+                                    ),
+                                    Image.asset(
+                                      'assets/india-flag.png',
+                                      height: 30,
+                                      width: 30,
+                                    ),
+                                    Text(
+                                      '+91',
+                                      style: TextStyle(
+                                        color: Colors.black.withOpacity(0.3),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Image.asset(
-                                  'assets/india-flag.png',
-                                  height: 30,
-                                  width: 30,
-                                ),
-                                Text(
-                                  '+91',
-                                  style: TextStyle(
-                                    color: Colors.black.withOpacity(0.3),
+                              ),
+                              const SizedBox(width: 10),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width / 1.67,
+                                child: TextFormField(
+                                  controller: phoneController,
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 1.67,
-                            child: TextFormField(
-                              controller: phoneController,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Enter Phone Number',
-                                hintStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'Enter Phone Number',
+                                    hintStyle: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(10),
+                                  ],
                                 ),
                               ),
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(10),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: MaterialButton(
-                    minWidth: 0,
-                    height: 0,
-                    color: Colors.red[900],
-                    padding: const EdgeInsets.all(10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    onPressed: () {
-                      checkNumber();
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Continue',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.red[700],
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white,
-                            size: 16,
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: MaterialButton(
+                        minWidth: 0,
+                        height: 0,
+                        color: Colors.red[900],
+                        padding: const EdgeInsets.all(10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                        onPressed: () {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          setState(() {
+                            showLoader = true;
+                          });
+                          checkNumber();
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Continue',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Colors.red[700],
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        showLoader ? const LoaderWidget() : Container(),
+      ],
     );
   }
 

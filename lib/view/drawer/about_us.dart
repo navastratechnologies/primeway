@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
@@ -190,7 +191,16 @@ class AboutUsScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        await FlutterEmailSender.send(
+                          Email(
+                            body: 'body of email',
+                            subject: 'subject of email',
+                            recipients: [companyMail],
+                            isHTML: false,
+                          ),
+                        );
+                      },
                       child: Text(
                         'Contact Us',
                         style: TextStyle(color: whiteColor),

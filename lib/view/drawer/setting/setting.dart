@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:primewayskills_app/view/drawer/setting/privacypolicy.dart';
 import 'package:primewayskills_app/view/drawer/setting/termofservice.dart';
 import 'package:primewayskills_app/view/drawer/setting/version.dart';
@@ -147,13 +148,25 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                headingWidgetMethod('Contact Us'),
-                const SizedBox(height: 20),
-                const Divider(),
-              ],
+            InkWell(
+              onTap: () async {
+                await FlutterEmailSender.send(
+                  Email(
+                    body: 'body of email',
+                    subject: 'subject of email',
+                    recipients: [companyMail],
+                    isHTML: false,
+                  ),
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  headingWidgetMethod('Contact Us'),
+                  const SizedBox(height: 20),
+                  const Divider(),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             InkWell(
