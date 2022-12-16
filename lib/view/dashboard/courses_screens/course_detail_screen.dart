@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:primewayskills_app/view/dashboard/courses_screens/add_to_cart_screen.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_chapter_screen.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_discussion_screen.dart';
 import 'package:primewayskills_app/view/drawer/sidebar.dart';
@@ -67,6 +68,79 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
+          actions: [
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddToCartScreen(
+                      userAddress: widget.userAddress,
+                      userEmail: widget.userEmail,
+                      userName: widget.userName,
+                      userNumber: widget.userNumber,
+                      userPayment: widget.userPayment,
+                      userProfileImage: widget.userProfileImage,
+                      userWalletId: widget.userWalletId,
+                      courseName: widget.courseName,
+                      courseId: widget.courseId,
+                    ),
+                  ),
+                );
+              },
+              child: SizedBox(
+                width: 40,
+                height: 100,
+                child: Stack(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddToCartScreen(
+                              userAddress: widget.userAddress,
+                              userEmail: widget.userEmail,
+                              userName: widget.userName,
+                              userNumber: widget.userNumber,
+                              userPayment: widget.userPayment,
+                              userProfileImage: widget.userProfileImage,
+                              userWalletId: widget.userWalletId,
+                              courseName: widget.courseName,
+                              courseId: widget.courseId,
+                            ),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.shopping_cart_rounded,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5, right: 5),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: primeColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Text(
+                            '2',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
           bottom: TabBar(
             indicatorColor: primeColor,
             indicatorSize: TabBarIndicatorSize.label,
@@ -110,6 +184,55 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
               userWalletId: widget.userWalletId,
             ),
           ],
+        ),
+        bottomNavigationBar: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 70,
+          decoration: BoxDecoration(
+            color: whiteColor,
+            boxShadow: [
+              BoxShadow(
+                color: primeColor.withOpacity(0.1),
+                blurRadius: 10,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              MaterialButton(
+                color: purpleColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                onPressed: () {},
+                child: Text(
+                  'Add To Cart',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: whiteColor,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              MaterialButton(
+                color: primeColor2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                onPressed: () {},
+                child: Text(
+                  'Buy Now',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: whiteColor,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
