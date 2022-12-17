@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:primewayskills_app/view/dashboard/courses_screens/add_to_cart_screen.dart';
+import 'package:primewayskills_app/view/dashboard/courses_screens/cart_screen.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_chapter_screen.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_discussion_screen.dart';
 import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
+import 'package:primewayskills_app/view/profile_screen/congrats_screen.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   final String userNumber;
@@ -16,17 +20,26 @@ class CourseDetailScreen extends StatefulWidget {
   final String userWalletId;
   final String courseName;
   final String courseId;
-  const CourseDetailScreen(
-      {super.key,
-      required this.courseName,
-      required this.courseId,
-      required this.userNumber,
-      required this.userName,
-      required this.userAddress,
-      required this.userProfileImage,
-      required this.userPayment,
-      required this.userEmail,
-      required this.userWalletId});
+  final String courseAuthor;
+  final String courseImage;
+  final String courseAmount;
+  final String pageType;
+  const CourseDetailScreen({
+    super.key,
+    required this.courseName,
+    required this.courseId,
+    required this.userNumber,
+    required this.userName,
+    required this.userAddress,
+    required this.userProfileImage,
+    required this.userPayment,
+    required this.userEmail,
+    required this.userWalletId,
+    required this.courseAuthor,
+    required this.courseImage,
+    required this.courseAmount,
+    required this.pageType,
+  });
 
   @override
   State<CourseDetailScreen> createState() => _CourseDetailScreenState();
@@ -37,6 +50,130 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
       .collection('courses')
       .doc()
       .collection('chapters');
+
+  Future getcartDataCount() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(widget.userNumber)
+        .collection('mycart')
+        .get();
+    setState(
+      () {
+        cartCount = querySnapshot.docs.length.toString();
+      },
+    );
+  }
+
+  Future getWalletBalance() async {
+    FirebaseFirestore.instance
+        .collection("wallet")
+        .doc(widget.userNumber)
+        .get()
+        .then(
+      (value) {
+        walletBalance = value.get("wallet_balance");
+      },
+    );
+  }
+
+  Future getCoursePrice() async {
+    FirebaseFirestore.instance
+        .collection("courses")
+        .doc(widget.courseId)
+        .get()
+        .then(
+      (value) {
+        gst = value.get("gst_ammount");
+        baseAmount = value.get("net_ammount");
+        var total = double.parse(gst) + double.parse(baseAmount);
+        totalAmount = total.toString();
+
+        log('total amount is $totalAmount');
+
+        if (double.parse(walletBalance) < total) {
+          var amount = total - double.parse(walletBalance);
+          finalAmountForPayment = amount.toString();
+          log('total amount is $finalAmountForPayment');
+        }
+      },
+    );
+  }
+
+  String walletBalance = '';
+  String gst = '';
+  String baseAmount = '';
+  String totalAmount = '';
+  String finalAmountForPayment = '';
+
+  String cartCount = '0';
+
+  late Razorpay _razorpay;
+
+  void openCheckout(price) async {
+    var options = {
+      'key': razor_key_id,
+      'amount': price,
+      'name': 'Primeway Skills - Influencing & Marketing',
+      'description': '',
+      'retry': {
+        'enabled': true,
+      },
+      'send_sms_hash': true,
+      'prefill': {
+        'contact': widget.userNumber,
+        'email': widget.userEmail,
+      },
+      'external': {
+        'wallets': ['paytm']
+      },
+    };
+
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint('Error : e');
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    // ignore: use_build_context_synchronously
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CongratsScreen(
+          msg: 'Congrats, Your payment is successfully completed.',
+        ),
+      ),
+    );
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {}
+
+  void _handlePaymentWallet(ExternalWalletResponse response) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("EXTERNAL WALLET"),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handlePaymentWallet);
+    getcartDataCount();
+    getWalletBalance();
+    getCoursePrice();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _razorpay.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +211,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddToCartScreen(
+                    builder: (context) => CartScreen(
                       userAddress: widget.userAddress,
                       userEmail: widget.userEmail,
                       userName: widget.userName,
@@ -98,7 +235,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AddToCartScreen(
+                            builder: (context) => CartScreen(
                               userAddress: widget.userAddress,
                               userEmail: widget.userEmail,
                               userName: widget.userName,
@@ -126,9 +263,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                             color: primeColor,
                             shape: BoxShape.circle,
                           ),
-                          child: const Text(
-                            '2',
-                            style: TextStyle(
+                          child: Text(
+                            cartCount,
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 10,
                             ),
@@ -185,55 +322,316 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: Container(
-          width: MediaQuery.of(context).size.width,
-          height: 70,
-          decoration: BoxDecoration(
-            color: whiteColor,
-            boxShadow: [
-              BoxShadow(
-                color: primeColor.withOpacity(0.1),
-                blurRadius: 10,
-                spreadRadius: 1,
+        bottomNavigationBar: widget.pageType == "my_course"
+            ? null
+            : Container(
+                width: MediaQuery.of(context).size.width,
+                height: 70,
+                decoration: BoxDecoration(
+                  color: whiteColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: primeColor.withOpacity(0.1),
+                      blurRadius: 10,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    MaterialButton(
+                      color: purpleColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(widget.userNumber)
+                            .collection('mycart')
+                            .add({
+                          'author_name': widget.courseAuthor,
+                          'courses_id': widget.courseId,
+                          'image': widget.courseImage,
+                          'name': widget.courseName,
+                          'base_ammount': widget.courseAmount,
+                        }).whenComplete(
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CartScreen(
+                                userAddress: widget.userAddress,
+                                userEmail: widget.userEmail,
+                                userName: widget.userName,
+                                userNumber: widget.userNumber,
+                                userPayment: widget.userPayment,
+                                userProfileImage: widget.userProfileImage,
+                                userWalletId: widget.userWalletId,
+                                courseName: widget.courseName,
+                                courseId: widget.courseId,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Add To Cart',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: whiteColor,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    MaterialButton(
+                      color: primeColor2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Container(
+                                height: 240,
+                                width: MediaQuery.of(context).size.width,
+                                color: whiteColor,
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Image.asset(
+                                              'assets/icons/wallet.png',
+                                              height: 40,
+                                              width: 60,
+                                            ),
+                                            const Text(
+                                              'Wallet Balance',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          "Rs.$walletBalance",
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold,
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: whiteColor,
+                                          border: Border.all(
+                                            color: primeColor,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  primeColor.withOpacity(0.2),
+                                              blurRadius: 10,
+                                              spreadRadius: 1,
+                                            ),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  'Base Amount :',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black
+                                                        .withOpacity(0.5),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  baseAmount,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  'GST :',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black
+                                                        .withOpacity(0.5),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  gst,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const Text(
+                                                  'Total :',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  totalAmount,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            double.parse(walletBalance) >
+                                                    double.parse(totalAmount)
+                                                ? Text(
+                                                    totalAmount,
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16,
+                                                    ),
+                                                  )
+                                                : double.parse(walletBalance) ==
+                                                        double.parse(
+                                                            totalAmount)
+                                                    ? const Text(
+                                                        '0.00',
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16,
+                                                        ),
+                                                      )
+                                                    : Text(
+                                                        finalAmountForPayment,
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                            Text(
+                                              'You have to pay',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 10,
+                                                color: primeColor2,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        MaterialButton(
+                                          color: primeColor2,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          onPressed: () {
+                                            if (double.parse(walletBalance) >
+                                                double.parse(totalAmount)) {
+                                              openCheckout(
+                                                double.parse(totalAmount) * 100,
+                                              );
+                                            } else if (double.parse(
+                                                    walletBalance) ==
+                                                double.parse(totalAmount)) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const CongratsScreen(
+                                                    msg:
+                                                        'Congrats, Your have purchased this course successfully.',
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              openCheckout(
+                                                double.parse(
+                                                        finalAmountForPayment) *
+                                                    100,
+                                              );
+                                            }
+                                          },
+                                          child: Text(
+                                            'Buy Now',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: whiteColor,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            });
+                      },
+                      child: Text(
+                        'Buy Now',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: whiteColor,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              MaterialButton(
-                color: purpleColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                onPressed: () {},
-                child: Text(
-                  'Add To Cart',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: whiteColor,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              MaterialButton(
-                color: primeColor2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                onPressed: () {},
-                child: Text(
-                  'Buy Now',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: whiteColor,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

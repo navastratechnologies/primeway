@@ -31,6 +31,60 @@ class _CoursesScreenState extends State<CoursesScreen> {
   final CollectionReference course =
       FirebaseFirestore.instance.collection('courses');
 
+  Future alreadyPurchasedOrNot(documentSnapshot, courseId) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userNumber)
+        .collection('courses')
+        .where('courses_id', isEqualTo: courseId)
+        .get();
+    final List<DocumentSnapshot> documents = querySnapshot.docs;
+
+    if (documents.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CourseDetailScreen(
+            userAddress: widget.userAddress,
+            userEmail: widget.userEmail,
+            userName: widget.userName,
+            userNumber: widget.userNumber,
+            userPayment: widget.userPayment,
+            userProfileImage: widget.userProfileImage,
+            userWalletId: widget.userWalletId,
+            courseName: documentSnapshot['name'],
+            courseId: documentSnapshot.id,
+            courseAuthor: documentSnapshot['author_name'],
+            courseImage: documentSnapshot['image'],
+            courseAmount: documentSnapshot['base_ammount'],
+            pageType: 'my_course',
+          ),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CourseDetailScreen(
+            userAddress: widget.userAddress,
+            userEmail: widget.userEmail,
+            userName: widget.userName,
+            userNumber: widget.userNumber,
+            userPayment: widget.userPayment,
+            userProfileImage: widget.userProfileImage,
+            userWalletId: widget.userWalletId,
+            courseName: documentSnapshot['name'],
+            courseId: documentSnapshot.id,
+            courseAuthor: documentSnapshot['author_name'],
+            courseImage: documentSnapshot['image'],
+            courseAmount: documentSnapshot['base_ammount'],
+            pageType: 'purchase_course',
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -73,21 +127,12 @@ class _CoursesScreenState extends State<CoursesScreen> {
                         return Padding(
                           padding: const EdgeInsets.all(10),
                           child: InkWell(
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CourseDetailScreen(
-                                    userAddress: widget.userAddress,
-                                    userEmail: widget.userEmail,
-                                    userName: widget.userName,
-                                    userNumber: widget.userNumber,
-                                    userPayment: widget.userPayment,
-                                    userProfileImage: widget.userProfileImage,
-                                    userWalletId: widget.userWalletId,
-                                    courseName: documentSnapshot['name'],
-                                    courseId: documentSnapshot.id),
-                              ),
-                            ),
+                            onTap: () {
+                              alreadyPurchasedOrNot(
+                                documentSnapshot,
+                                documentSnapshot.id,
+                              );
+                            },
                             child: Container(
                               padding: const EdgeInsets.all(10),
                               width: MediaQuery.of(context).size.width,
@@ -256,15 +301,22 @@ class _CoursesScreenState extends State<CoursesScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => CourseDetailScreen(
-                                      userAddress: widget.userAddress,
-                                      userEmail: widget.userEmail,
-                                      userName: widget.userName,
-                                      userNumber: widget.userNumber,
-                                      userPayment: widget.userPayment,
-                                      userProfileImage: widget.userProfileImage,
-                                      userWalletId: widget.userWalletId,
-                                      courseName: documentSnapshot['name'],
-                                      courseId: documentSnapshot['courses_id']),
+                                    userAddress: widget.userAddress,
+                                    userEmail: widget.userEmail,
+                                    userName: widget.userName,
+                                    userNumber: widget.userNumber,
+                                    userPayment: widget.userPayment,
+                                    userProfileImage: widget.userProfileImage,
+                                    userWalletId: widget.userWalletId,
+                                    courseName: documentSnapshot['name'],
+                                    courseId: documentSnapshot['courses_id'],
+                                    courseAuthor:
+                                        documentSnapshot['author_name'],
+                                    courseImage: documentSnapshot['image'],
+                                    courseAmount:
+                                        documentSnapshot['base_ammount'],
+                                    pageType: 'my_course',
+                                  ),
                                 ),
                               );
                               log('userAddress: ${documentSnapshot['courses_id']}');

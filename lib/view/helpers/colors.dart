@@ -10,3 +10,6 @@ double minSize = 14;
 String rupeeSign = '₹';
 
 String companyMail = 'primewaycollab@gmail.com';
+
+String razor_key_id = 'rzp_live_MVBbf5jhqDScOv';
+String razor_key_secret = 'eTeGNpTRjs9FcUMyNZAnYs0q';
