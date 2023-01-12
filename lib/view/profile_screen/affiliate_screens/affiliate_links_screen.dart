@@ -2,20 +2,26 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:primewayskills_app/controllers/course_share_controller.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 
 class AffiliateLinksScreen extends StatefulWidget {
-  const AffiliateLinksScreen({super.key});
+  final String userId;
+  const AffiliateLinksScreen({
+    super.key,
+    required this.userId,
+  });
 
   @override
   State<AffiliateLinksScreen> createState() => _AffiliateLinksScreenState();
 }
 
 class _AffiliateLinksScreenState extends State<AffiliateLinksScreen> {
+  String affiliateCount = '';
   final CollectionReference course =
       FirebaseFirestore.instance.collection('courses');
+
   @override
   Widget build(BuildContext context) {
     // var height = MediaQuery.of(context).size.height;
@@ -23,7 +29,7 @@ class _AffiliateLinksScreenState extends State<AffiliateLinksScreen> {
     return Scaffold(
       backgroundColor: whiteColor,
       body: StreamBuilder(
-          stream: course.snapshots(),
+          stream: course.where('isInAffiliate', isEqualTo: 'true').snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
             if (streamSnapshot.hasData) {
               return ListView.builder(
@@ -89,7 +95,7 @@ class _AffiliateLinksScreenState extends State<AffiliateLinksScreen> {
                                         ],
                                       ),
                                       child: Text(
-                                        documentSnapshot['affilate_link'],
+                                        'https://primewaycollab.page.link/courses?courseId=${documentSnapshot.id}&userId=${widget.userId}',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 12,
@@ -119,14 +125,14 @@ class _AffiliateLinksScreenState extends State<AffiliateLinksScreen> {
                               children: [
                                 MaterialButton(
                                   padding: const EdgeInsets.all(2),
-                                  onPressed: () async {
-                                    await Clipboard.setData(ClipboardData(
-                                        text:
-                                            documentSnapshot['affilate_link']));
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Copied !'),
-                                      ),
+                                  onPressed: () {
+                                    buidDynamicLinks(
+                                      documentSnapshot['name'],
+                                      documentSnapshot['image'],
+                                      documentSnapshot.id,
+                                      widget.userId,
+                                      'copy',
+                                      context,
                                     );
                                   },
                                   child: Row(
@@ -151,7 +157,16 @@ class _AffiliateLinksScreenState extends State<AffiliateLinksScreen> {
                                 ),
                                 MaterialButton(
                                   padding: const EdgeInsets.all(2),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    buidDynamicLinks(
+                                      documentSnapshot['name'],
+                                      documentSnapshot['image'],
+                                      documentSnapshot.id,
+                                      widget.userId,
+                                      'share',
+                                      context,
+                                    );
+                                  },
                                   child: Row(
                                     children: [
                                       Text(

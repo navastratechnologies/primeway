@@ -79,7 +79,9 @@ class _AffiliateScreenState extends State<AffiliateScreen> {
             AffiliateSalesScreen(
               userNumber: widget.userNumber,
             ),
-            const AffiliateLinksScreen(),
+            AffiliateLinksScreen(
+              userId: widget.userNumber,
+            ),
             AffiliateReferScreen(
               userNumber: widget.userNumber,
             ),

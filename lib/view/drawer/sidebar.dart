@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
+import 'package:primewayskills_app/view/dashboard/courses_screens/affiliate_course_screen.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/drawer/about_us.dart';
 import 'package:primewayskills_app/view/drawer/feedback.dart';
@@ -354,6 +355,32 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                                     userPayment: widget.userPayment,
                                     userProfileImage: widget.userProfileImage,
                                     userWalletId: widget.userWalletId,
+                                  ),
+                                ),
+                              ),
+                            },
+                            trailing: FaIcon(
+                              FontAwesomeIcons.chevronRight,
+                              color: whiteColor.withOpacity(0.6),
+                              size: 18,
+                            ),
+                          ),
+                          ListTile(
+                            leading: sidebarIconWidget(Icons.quiz_rounded),
+                            title: Text(
+                              "Affiliate",
+                              style: TextStyle(
+                                color: whiteColor,
+                              ),
+                            ),
+                            onTap: () => {
+                              Navigator.pop(context),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AffiliateCourseDetailScreen(
+                                    userNumber: widget.userNumber,
+                                    courseId: "18cN7p2fOGbCO0DdHeUd",
                                   ),
                                 ),
                               ),

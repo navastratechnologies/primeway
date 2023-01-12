@@ -247,7 +247,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                       Align(
                         alignment: Alignment.center,
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const SizedBox(height: 60),
@@ -266,7 +266,7 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                               ),
                             ),
                             Text(
-                              "Today's Earning",
+                              "Earning's",
                               style: TextStyle(
                                 fontSize: 12,
                                 color: primeColor,
@@ -285,8 +285,9 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                             AffiliateSalesHistoryScreen(userNumber: widget.userNumber),
+                        builder: (context) => AffiliateSalesHistoryScreen(
+                          userNumber: widget.userNumber,
+                        ),
                       ),
                     );
                   },

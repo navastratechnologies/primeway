@@ -56,8 +56,8 @@ class _CartScreenState extends State<CartScreen> {
         .get()
         .then(
       (value) {
-        gst = value.get("gst_ammount");
-        baseAmount = value.get("net_ammount");
+        gst = value.get("gst_rate");
+        baseAmount = value.get("base_ammount");
         var total = double.parse(gst) + double.parse(baseAmount);
         totalAmount = total.toString();
 

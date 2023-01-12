@@ -1,0 +1,70 @@
+import 'dart:developer';
+
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:primewayskills_app/view/helpers/colors.dart';
+import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
+import 'package:share/share.dart';
+
+buidDynamicLinks(title, image, docId, userId, functionType, context) async {
+  String url = 'https://primewaycollab.page.link';
+  final dynamicLinkParams = DynamicLinkParameters(
+    link: Uri.parse("$url?userId=$userId&courseId=$docId"),
+    uriPrefix: url,
+    androidParameters: const AndroidParameters(
+      packageName: "com.primeway.app",
+      minimumVersion: 0,
+    ),
+    iosParameters: const IOSParameters(
+      bundleId: "com.primeway.app",
+      appStoreId: "123456789",
+      minimumVersion: "1.0.1",
+    ),
+    socialMetaTagParameters: SocialMetaTagParameters(
+      title: title,
+      imageUrl: Uri.parse(image),
+    ),
+  );
+
+  final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(
+    dynamicLinkParams,
+  );
+
+  log('dynamic link is $image ${dynamicLink.shortUrl.toString()}');
+
+  if (functionType == "share") {
+    Share.share(
+      dynamicLink.shortUrl.toString(),
+    );
+  } else {
+    Clipboard.setData(
+      ClipboardData(
+        text: dynamicLink.shortUrl.toString(),
+      ),
+    ).then(
+      (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            width: displayWidth(context) / 1.5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            behavior: SnackBarBehavior.floating,
+            // margin: const EdgeInsets.all(14),
+            backgroundColor: primeColor2,
+            elevation: 0,
+            content: Text(
+              "Affiliate link copied to clipboard",
+              style: TextStyle(
+                color: whiteColor,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}

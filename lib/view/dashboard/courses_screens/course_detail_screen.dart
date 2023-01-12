@@ -51,6 +51,41 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
       .doc()
       .collection('chapters');
 
+  Future updateUserWalletbalance(String walletBalance) async {
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(widget.userNumber)
+        .collection('courses')
+        .doc(widget.courseId)
+        .set(
+      {
+        "author_name": widget.courseAuthor,
+        "courses_id": widget.courseId,
+        "image": widget.courseImage,
+        "name": widget.courseName,
+        "base_ammount": widget.courseAmount,
+      },
+    );
+    FirebaseFirestore.instance
+        .collection('wallet')
+        .doc(widget.userNumber)
+        .update(
+      {
+        "wallet_balance": walletBalance,
+      },
+    ).then((value) {
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const CongratsScreen(
+            msg: 'Congrats, Your have purchased this course successfully.',
+          ),
+        ),
+      );
+    });
+  }
+
   Future getcartDataCount() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection("users")
@@ -83,8 +118,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         .get()
         .then(
       (value) {
-        gst = value.get("gst_ammount");
-        baseAmount = value.get("net_ammount");
+        gst = value.get("gst_rate");
+        baseAmount = value.get("base_ammount");
         var total = double.parse(gst) + double.parse(baseAmount);
         totalAmount = total.toString();
 
@@ -104,6 +139,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   String baseAmount = '';
   String totalAmount = '';
   String finalAmountForPayment = '';
+  double exactTotalToPay = 0.0;
+  double exactWalletBalanceAfterDeduction = 0.0;
 
   String cartCount = '0';
 
@@ -137,6 +174,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     // ignore: use_build_context_synchronously
+    updateUserWalletbalance(
+      exactWalletBalanceAfterDeduction.toString(),
+    );
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -390,235 +430,213 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       onPressed: () {
+                        if (double.parse(walletBalance) <=
+                            double.parse(totalAmount)) {
+                          setState(() {
+                            exactTotalToPay = double.parse(totalAmount) -
+                                double.parse(walletBalance);
+                          });
+                        } else if (double.parse(walletBalance) == 0.0) {
+                          setState(() {
+                            exactTotalToPay = double.parse(totalAmount);
+                          });
+                        } else if (double.parse(walletBalance) >
+                            double.parse(totalAmount)) {
+                          setState(() {
+                            exactWalletBalanceAfterDeduction =
+                                double.parse(walletBalance) -
+                                    double.parse(totalAmount);
+                          });
+                        }
+                        log('wallet exact is $exactTotalToPay $exactWalletBalanceAfterDeduction');
                         showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Container(
-                                height: 240,
-                                width: MediaQuery.of(context).size.width,
-                                color: whiteColor,
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Image.asset(
-                                              'assets/icons/wallet.png',
-                                              height: 40,
-                                              width: 60,
-                                            ),
-                                            const Text(
-                                              'Wallet Balance',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          "Rs.$walletBalance",
-                                          style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold,
-                                            color:
-                                                Colors.black.withOpacity(0.5),
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Container(
+                              height: 240,
+                              width: MediaQuery.of(context).size.width,
+                              color: whiteColor,
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Image.asset(
+                                            'assets/icons/wallet.png',
+                                            height: 40,
+                                            width: 60,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Expanded(
-                                      child: Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: whiteColor,
-                                          border: Border.all(
-                                            color: primeColor,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  primeColor.withOpacity(0.2),
-                                              blurRadius: 10,
-                                              spreadRadius: 1,
-                                            ),
-                                          ],
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  'Base Amount :',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black
-                                                        .withOpacity(0.5),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  baseAmount,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  'GST :',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black
-                                                        .withOpacity(0.5),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  gst,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                const Text(
-                                                  'Total :',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  totalAmount,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            double.parse(walletBalance) >
-                                                    double.parse(totalAmount)
-                                                ? Text(
-                                                    totalAmount,
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16,
-                                                    ),
-                                                  )
-                                                : double.parse(walletBalance) ==
-                                                        double.parse(
-                                                            totalAmount)
-                                                    ? const Text(
-                                                        '0.00',
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 16,
-                                                        ),
-                                                      )
-                                                    : Text(
-                                                        finalAmountForPayment,
-                                                        style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 16,
-                                                        ),
-                                                      ),
-                                            Text(
-                                              'You have to pay',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 10,
-                                                color: primeColor2,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        MaterialButton(
-                                          color: primeColor2,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          onPressed: () {
-                                            if (double.parse(walletBalance) >
-                                                double.parse(totalAmount)) {
-                                              openCheckout(
-                                                double.parse(totalAmount) * 100,
-                                              );
-                                            } else if (double.parse(
-                                                    walletBalance) ==
-                                                double.parse(totalAmount)) {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const CongratsScreen(
-                                                    msg:
-                                                        'Congrats, Your have purchased this course successfully.',
-                                                  ),
-                                                ),
-                                              );
-                                            } else {
-                                              openCheckout(
-                                                double.parse(
-                                                        finalAmountForPayment) *
-                                                    100,
-                                              );
-                                            }
-                                          },
-                                          child: Text(
-                                            'Buy Now',
+                                          const Text(
+                                            'Wallet Balance',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              color: whiteColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        "Rs.$walletBalance",
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black.withOpacity(0.5),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: whiteColor,
+                                        border: Border.all(
+                                          color: primeColor,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: primeColor.withOpacity(0.2),
+                                            blurRadius: 10,
+                                            spreadRadius: 1,
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Base Amount :',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black
+                                                      .withOpacity(0.5),
+                                                ),
+                                              ),
+                                              Text(
+                                                baseAmount,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'GST :',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black
+                                                      .withOpacity(0.5),
+                                                ),
+                                              ),
+                                              Text(
+                                                gst,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'Total :',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                              Text(
+                                                totalAmount,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            exactTotalToPay.toString(),
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
                                               fontSize: 16,
                                             ),
                                           ),
+                                          Text(
+                                            'You have to pay',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 10,
+                                              color: primeColor2,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      MaterialButton(
+                                        color: primeColor2,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              );
-                            });
+                                        onPressed: () {
+                                          if (double.parse(walletBalance) >=
+                                              double.parse(totalAmount)) {
+                                            updateUserWalletbalance(
+                                              exactWalletBalanceAfterDeduction
+                                                  .toString(),
+                                            );
+                                          } else {
+                                            openCheckout(
+                                              exactTotalToPay * 100,
+                                            );
+                                          }
+                                        },
+                                        child: Text(
+                                          'Buy Now',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: whiteColor,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
                       },
                       child: Text(
                         'Buy Now',
