@@ -147,15 +147,6 @@ class AuthClass {
             ),
           ),
         );
-        Fluttertoast.showToast(
-          msg: "your are new user",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 100,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
       } else {
         storeTokenAndData(phoneNumber);
         Navigator.push(
@@ -318,6 +309,20 @@ void storeTokenAndData(username) async {
   await storage.write(key: "token", value: username.toString());
 }
 
+void storeReffererData(userId, referralId) async {
+  await storage.write(key: "referralUserId", value: userId.toString());
+  await storage.write(key: "referralId", value: referralId.toString());
+  log("refferal token stored ${userId.toString()} ${referralId.toString()}");
+}
+
 Future<String?> getToken() async {
   return await storage.read(key: "token");
+}
+
+Future<String?> getReferralUserId() async {
+  return await storage.read(key: "referralUserId");
+}
+
+Future<String?> getReferralId() async {
+  return await storage.read(key: "referralId");
 }

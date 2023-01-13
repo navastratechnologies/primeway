@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
+import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
@@ -257,12 +259,11 @@ class _AffiliateCourseDetailScreenState
         backgroundColor: whiteColor,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Dashboard(),
-              ),
-            );
+            if (userNumber.isNotEmpty) {
+              context.go('/homeScreen/');
+            } else {
+              context.go('/loginScreen/');
+            }
           },
           icon: const Icon(Icons.arrow_back_rounded),
         ),
@@ -270,7 +271,7 @@ class _AffiliateCourseDetailScreenState
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('courses')
-            .where('course_id', isEqualTo: "LhYFP9r9WPurBdlKOTZx")
+            .where('course_id', isEqualTo: widget.courseId)
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
           if (streamSnapshot.hasData) {

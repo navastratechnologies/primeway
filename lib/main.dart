@@ -4,13 +4,10 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:primewayskills_app/controllers/route_controller.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
-import 'package:primewayskills_app/view/splash_screen/splash_screen.dart';
-
-import 'view/dashboard/courses_screens/affiliate_course_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,29 +53,19 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   log("Handling a background message: ${message.messageId}");
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      home: const SplashScreen(),
-      // home: const AffiliateCourseDetailScreen(
-      //     courseId: '18cN7p2fOGbCO0DdHeUd', userNumber: '1234567890'),
       theme: ThemeData(
-        // primarySwatch: whiteColor,
         scaffoldBackgroundColor: whiteColor,
       ),
-      // home: Dashboard(),
+      routerConfig: router,
     );
   }
 }

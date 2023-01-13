@@ -1,15 +1,14 @@
 import 'dart:developer';
 
-import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
-import 'package:primewayskills_app/view/dashboard/courses_screens/affiliate_course_screen.dart';
-import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
+import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -31,26 +30,26 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSplashScreen(
-      splash: Lottie.asset('assets/loading.json'),
-      nextScreen: screen,
-      backgroundColor: primeColor,
-      splashIconSize: 250,
-      splashTransition: SplashTransition.sizeTransition,
-      pageTransitionType: PageTransitionType.leftToRightWithFade,
+    return Scaffold(
+      body: Container(
+        height: displayHeight(context),
+        width: displayWidth(context),
+        decoration: BoxDecoration(
+          color: primeColor,
+        ),
+        child: Center(
+          child: Lottie.asset('assets/loading.json'),
+        ),
+      ),
     );
   }
 
   checkLogin() async {
     String? token = await getToken();
     if (token != null) {
-      setState(() {
-        screen = const Dashboard();
-      });
+      context.go('/homeScreen/');
     } else {
-      setState(() {
-        screen = const LoginHomeScreen();
-      });
+      context.go('/loginScreen/');
     }
   }
 }
@@ -58,19 +57,44 @@ class _SplashScreenState extends State<SplashScreen> {
 class DynamicLinkClass {
   Future initDynamicLinks(BuildContext context) async {
     FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) async {
-      String dynamicReferrerId = "${dynamicLinkData.link.queryParameters["userId"]}";
-      String dynamicCourseId = "${dynamicLinkData.link.queryParameters["courseId"]}";
+      String dynamicReferrerId =
+          "${dynamicLinkData.link.queryParameters["userId"]}";
+      String dynamicCourseId =
+          "${dynamicLinkData.link.queryParameters["courseId"]}";
 
-      log("initial link $dynamicReferrerId $dynamicCourseId");
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (context) => AffiliateCourseDetailScreen(
-            courseId: dynamicCourseId,
-            userNumber: dynamicReferrerId,
-          ),
-        ),
-        (route) => false,
-      );
+      String dynamicreferralCode =
+          "${dynamicLinkData.link.queryParameters["referrelId"]}";
+
+      log("initial link $dynamicReferrerId $dynamicCourseId $dynamicreferralCode");
+      if (dynamicCourseId.isEmpty ||
+          dynamicCourseId == "" ||
+          dynamicCourseId == "null") {
+        storeReffererData(
+          dynamicReferrerId,
+          dynamicreferralCode,
+        );
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(dynamicReferrerId)
+            .get()
+            .then((value) {
+          var totalRefferals = value.get('total_refferals');
+          int totalRefferalInc = int.parse(totalRefferals) + 1;
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(dynamicReferrerId)
+              .update({
+            "total_refferals": totalRefferalInc.toString(),
+          });
+          log('total refferal is $totalRefferals $totalRefferalInc');
+        });
+        context.go('/loginScreen/');
+        log('dynamic url is courseid empty');
+      } else {
+        log('dynamic url is courseid not empty');
+        context
+            .go('/affiliateCourseScreen/$dynamicCourseId/$dynamicReferrerId');
+      }
     }).onError((error) {
       log('initial link onLink error ${error.message}');
     });

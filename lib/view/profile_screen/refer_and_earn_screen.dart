@@ -1,16 +1,70 @@
+import 'dart:developer';
+import 'dart:math' as math;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
+import 'package:primewayskills_app/controllers/referrel_controller.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class ReferAndEarnScreen extends StatefulWidget {
-  const ReferAndEarnScreen({super.key});
+  final String userNumber;
+  const ReferAndEarnScreen({
+    super.key,
+    required this.userNumber,
+  });
 
   @override
   State<ReferAndEarnScreen> createState() => _ReferAndEarnScreenState();
 }
 
 class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
+  math.Random random = math.Random.secure();
+
+  String referralId = '';
+  String referralCharge = '';
+
+  Future getRefferalCharges() async {
+    FirebaseFirestore.instance
+        .collection('refer_charge')
+        .doc("gzCPY5vpI3OBXWX22dKZ")
+        .get()
+        .then(
+      (value) {
+        setState(
+          () {
+            referralCharge = value.get('refer_charge');
+          },
+        );
+        log('refer id is $referralId');
+      },
+    );
+  }
+
+  Future getRefferalCode() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userNumber)
+        .get()
+        .then(
+      (value) {
+        setState(
+          () {
+            referralId = value.get('referrel_id');
+          },
+        );
+        log('refer id is $referralId');
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    getRefferalCode();
+    getRefferalCharges();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +104,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                 child: Column(
                   children: [
                     Text(
-                      "Refer to your friend and Get a cash reward of ${rupeeSign}50",
+                      "Refer to your friend and Get reward of $rupeeSign$referralCharge",
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -59,7 +113,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      "Share this link with your friends and after they install, both of you will get ${rupeeSign}50 cash rewards.",
+                      "Share this link with your friends and after they install, both of you will get $rupeeSign$referralCharge PrimeCoins as reward.",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -69,7 +123,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                     ),
                     const SizedBox(height: 30),
                     Container(
-                      width: 120,
+                      width: 150,
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: whiteColor,
@@ -85,18 +139,28 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            "PWCT01",
-                            style: TextStyle(
+                          Text(
+                            referralId.toUpperCase(),
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(
-                            width: 25,
-                            height: 25,
-                            child: Image.asset('assets/copy.png'),
+                          InkWell(
+                            onTap: () {
+                              buidDynamicLinkForReferral(
+                                referralId,
+                                widget.userNumber,
+                                "copy",
+                                context,
+                              );
+                            },
+                            child: SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: Image.asset('assets/copy.png'),
+                            ),
                           ),
                         ],
                       ),
@@ -218,7 +282,14 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        buidDynamicLinkForReferral(
+                          referralId,
+                          widget.userNumber,
+                          "share",
+                          context,
+                        );
+                      },
                       child: Text(
                         'Refer Friend',
                         style: TextStyle(

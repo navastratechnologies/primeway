@@ -509,7 +509,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ReferAndEarnScreen(),
+                              builder: (context) => ReferAndEarnScreen(
+                                userNumber: widget.userNumber,
+                              ),
                             ),
                           ),
                           child: const ProfileTileWidget(

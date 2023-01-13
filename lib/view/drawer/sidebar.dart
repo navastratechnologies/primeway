@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/affiliate_course_screen.dart';
@@ -42,6 +43,8 @@ class NavigationDrawer extends StatefulWidget {
 }
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
+  FlutterSecureStorage storage = const FlutterSecureStorage();
+
   bool showPartenerPage = false;
   String docId = '';
 
@@ -408,6 +411,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                       ),
                       onTap: () async {
                         await FirebaseAuth.instance.signOut();
+                        storage.delete(key: 'token');
                         FirebaseAuth.instance
                             .authStateChanges()
                             .listen((User? user) {

@@ -6,7 +6,12 @@ import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/auth_screens/phoneLoginScreen.dart';
 
 class LoginHomeScreen extends StatefulWidget {
-  const LoginHomeScreen({super.key});
+  final String? userId, referralId;
+  const LoginHomeScreen({
+    super.key,
+    this.userId,
+    this.referralId,
+  });
 
   @override
   State<LoginHomeScreen> createState() => _HomePageState();

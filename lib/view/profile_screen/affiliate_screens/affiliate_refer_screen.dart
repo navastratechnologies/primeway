@@ -17,8 +17,8 @@ class _AffiliateReferScreenState extends State<AffiliateReferScreen> {
   final CollectionReference refferal =
       FirebaseFirestore.instance.collection('users');
 
-  String earningByRefferals = '';
-  String totalRefferals = '';
+  String earningByRefferals = '0';
+  String totalRefferals = '0';
 
   Future<void> getUserProfileData() async {
     FirebaseFirestore.instance
@@ -72,7 +72,7 @@ class _AffiliateReferScreenState extends State<AffiliateReferScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                totalRefferals,
+                                totalRefferals.isEmpty ? "0" : totalRefferals,
                                 style: TextStyle(
                                   fontSize: maxSize + 2,
                                   fontWeight: FontWeight.bold,
@@ -99,7 +99,9 @@ class _AffiliateReferScreenState extends State<AffiliateReferScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                '$rupeeSign $earningByRefferals',
+                                earningByRefferals.isEmpty
+                                    ? '${rupeeSign}0'
+                                    : '$rupeeSign $earningByRefferals',
                                 style: TextStyle(
                                   fontSize: maxSize + 2,
                                   fontWeight: FontWeight.bold,
