@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:primewayskills_app/controllers/notification_controller.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/appbar_screens/notification_screen.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
@@ -63,8 +64,8 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  void getMsgToken() async {
-    FirebaseMessaging.instance.getToken().then((value) {
+  Future getMsgToken() async {
+    await FirebaseMessaging.instance.getToken().then((value) {
       setState(() {
         mtoken = value;
         log("getToken : $mtoken");
@@ -73,7 +74,7 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  void saveToken(String value) async {
+  Future saveToken(String value) async {
     await FirebaseFirestore.instance
         .collection('user_token')
         .doc(userNumber)
@@ -85,6 +86,9 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     checkLogin();
+    requestPermission();
+    loadFCM();
+    listenFCM();
     super.initState();
     getMsgToken();
   }
@@ -93,13 +97,14 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavigationDrawer(
-          userAddress: userAddress,
-          userEmail: userEmail,
-          userName: userName,
-          userNumber: userNumber,
-          userPayment: userPayment,
-          userProfileImage: userProfileImage,
-          userWalletId: userWalletId),
+        userAddress: userAddress,
+        userEmail: userEmail,
+        userName: userName,
+        userNumber: userNumber,
+        userPayment: userPayment,
+        userProfileImage: userProfileImage,
+        userWalletId: userWalletId,
+      ),
       appBar: showProfile
           ? null
           : AppBar(

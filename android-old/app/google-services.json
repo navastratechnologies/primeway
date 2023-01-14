@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "836225855666",
+    "project_id": "primeway-e0f3f",
+    "storage_bucket": "primeway-e0f3f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836225855666:android:e403e218ac0e4b0fa3d9ab",
+        "android_client_info": {
+          "package_name": "com.primeway.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836225855666-d3tm2ohqjll3nt5b381dj5qjhflakjer.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.primeway.app",
+            "certificate_hash": "58340422fd4fe1903cf7e9a949b304cc6fc0be55"
+          }
+        },
+        {
+          "client_id": "836225855666-k7lr50p1hfpf4d53hh61htadl0kocvn1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.primeway.app",
+            "certificate_hash": "b63de9db189ededfc77c775b92b8efd9d6302284"
+          }
+        },
+        {
+          "client_id": "836225855666-mq26pgr2qbs2d629mk7m5b66ouma9vfa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.primeway.app",
+            "certificate_hash": "6e7e6cc44386565550266a05898b7b1028682ea8"
+          }
+        },
+        {
+          "client_id": "836225855666-qmgpvhl9hkknovg95g92nhgujus5c35q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPKVWmYlYahoBWvNd4QV8PSrD-IlHrAOU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836225855666-qmgpvhl9hkknovg95g92nhgujus5c35q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "836225855666-vsccoghovh72glto7d37grtgp3i4s1fg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.primeway.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:primewayskills_app/controllers/notification_controller.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -36,6 +37,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   math.Random random = math.Random();
 
   String randomString = '';
+
+  String reffererToken = '';
 
   final CollectionReference<Map<String, dynamic>> users =
       FirebaseFirestore.instance.collection('users');
@@ -89,30 +92,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
           .collection('users')
           .doc(refferalUserIdController.text)
           .get()
-          .then((value) {
-        var totalRefferalEarnings = value.get('earning_by_refferals');
-        int totalRefferalEarningInc =
-            int.parse(totalRefferalEarnings) + int.parse(referralCharges);
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(refferalUserIdController.text)
-            .update({
-          "earning_by_refferals": totalRefferalEarningInc.toString(),
-        });
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(refferalUserIdController.text)
-            .collection('refferal')
-            .add(
-          {
-            "refferal_point": referralCharges.toString(),
-            "user_id": widget.phone,
-            "user_name":
-                "${firstNameController.text} ${lastNameController.text}",
-          },
-        );
-        log('total refferal is $totalRefferalEarnings $totalRefferalEarningInc');
-      });
+          .then(
+        (value) {
+          var totalRefferalEarnings = value.get('earning_by_refferals');
+          int totalRefferalEarningInc =
+              int.parse(totalRefferalEarnings) + int.parse(referralCharges);
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(refferalUserIdController.text)
+              .update({
+            "earning_by_refferals": totalRefferalEarningInc.toString(),
+          });
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(refferalUserIdController.text)
+              .collection('refferal')
+              .add(
+            {
+              "refferal_point": referralCharges.toString(),
+              "user_id": widget.phone,
+              "user_name":
+                  "${firstNameController.text} ${lastNameController.text}",
+            },
+          );
+          log('total refferal is $totalRefferalEarnings $totalRefferalEarningInc');
+        },
+      );
+      sendPushMessage(
+        reffererToken,
+        "${firstNameController.text} joined Primeway from your link. You have received $referralCharges PrimeCoins in your wallet",
+        "Congrats!!!",
+      );
     }
   }
 
@@ -556,7 +566,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
         referrelController.text = refferalId;
         refferalUserIdController.text = refferalUser;
       });
-      log('refferal data is ${referrelController.text} ${refferalUserIdController.text}');
+      FirebaseFirestore.instance
+          .collection('user_token')
+          .doc(refferalUserIdController.text)
+          .get()
+          .then(
+        (value) {
+          setState(() {
+            reffererToken = value.get('token');
+          });
+          log('refer token is $reffererToken');
+        },
+      );
+      log('refferal data is $reffererToken ${referrelController.text} ${refferalUserIdController.text} $refferalUser');
     }
   }
 }
