@@ -43,6 +43,8 @@ class _DashboardState extends State<Dashboard> {
   bool showProfile = false;
   bool showCourses = false;
 
+  int profileCompletionPercentage = 0;
+
   Future<void> getUserProfileData() async {
     FirebaseFirestore.instance
         .collection('users')
@@ -81,6 +83,47 @@ class _DashboardState extends State<Dashboard> {
         .set({
       'token': value,
     });
+  }
+
+  Future getUserDataCompletionPercentage() async {
+    FirebaseFirestore.instance.collection('users').doc(userNumber).get().then(
+      (value) {
+        setState(
+          () {
+            if (value.get('address') != "") {
+              profileCompletionPercentage = 10;
+            }
+            if (value.get('date_of_brith') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('description') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('email') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('gender') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('instagram_username') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('language') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('name') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('phone_number') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('profile_pic') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -160,13 +203,16 @@ class _DashboardState extends State<Dashboard> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ProfileEditScreen(
-                            userAddress: userAddress,
-                            userEmail: userEmail,
-                            userName: userName,
-                            userNumber: userNumber,
-                            userPayment: userPayment,
-                            userProfileImage: userProfileImage,
-                            userWalletId: userWalletId),
+                          userAddress: userAddress,
+                          userEmail: userEmail,
+                          userName: userName,
+                          userNumber: userNumber,
+                          userPayment: userPayment,
+                          userProfileImage: userProfileImage,
+                          userWalletId: userWalletId,
+                          userProfileCompletionPercentage:
+                              profileCompletionPercentage.toString(),
+                        ),
                       ),
                     );
                   },
@@ -214,6 +260,8 @@ class _DashboardState extends State<Dashboard> {
               userWalletId: userWalletId,
               userLanguage: userLanguage,
               userFollowers: userFollowers,
+              userProfileCompletionPercentage:
+                  profileCompletionPercentage.toString(),
             )
           : showCollab
               ? CollaborationScreen(
@@ -415,6 +463,7 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         userNumber = token;
         getUserProfileData();
+        getUserDataCompletionPercentage();
       });
     }
   }

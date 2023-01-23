@@ -8,7 +8,6 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:primewayskills_app/view/auth_screens/address.dart';
 import 'package:primewayskills_app/view/auth_screens/otpLoginScreen.dart';
 import 'package:primewayskills_app/view/auth_screens/signup.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
@@ -162,48 +161,48 @@ class AuthClass {
     }
   }
 
-  Future<void> signInwithPhoneNumber2(String phoneNumber, String verificationId,
-      String smsCode, BuildContext context) async {
-    try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: verificationId, smsCode: smsCode);
+  // Future<void> signInwithPhoneNumber2(String phoneNumber, String verificationId,
+  //     String smsCode, BuildContext context) async {
+  //   try {
+  //     PhoneAuthCredential credential = PhoneAuthProvider.credential(
+  //         verificationId: verificationId, smsCode: smsCode);
 
-      UserCredential userCredential =
-          await auth.signInWithCredential(credential);
-      // showSnackBar(context, "logged In");
-      User? user = userCredential.user;
-      if (userCredential.additionalUserInfo!.isNewUser) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EditAddressPage(
-              phoneNumber: phoneNumber,
-            ),
-          ),
-        );
-        // Fluttertoast.showToast(
-        //   msg: "your are new user",
-        //   toastLength: Toast.LENGTH_SHORT,
-        //   gravity: ToastGravity.BOTTOM,
-        //   timeInSecForIosWeb: 100,
-        //   backgroundColor: Colors.red,
-        //   textColor: Colors.white,
-        //   fontSize: 16.0,
-        // );
-      } else {
-        storeTokenAndData(phoneNumber);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Dashboard(),
-          ),
-        );
-      }
-      log('user is $userCredential');
-    } catch (e) {
-      showSnackBar(context, e.toString());
-    }
-  }
+  //     UserCredential userCredential =
+  //         await auth.signInWithCredential(credential);
+  //     // showSnackBar(context, "logged In");
+  //     User? user = userCredential.user;
+  //     if (userCredential.additionalUserInfo!.isNewUser) {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => EditAddressPage(
+  //             phoneNumber: phoneNumber,
+  //           ),
+  //         ),
+  //       );
+  //       // Fluttertoast.showToast(
+  //       //   msg: "your are new user",
+  //       //   toastLength: Toast.LENGTH_SHORT,
+  //       //   gravity: ToastGravity.BOTTOM,
+  //       //   timeInSecForIosWeb: 100,
+  //       //   backgroundColor: Colors.red,
+  //       //   textColor: Colors.white,
+  //       //   fontSize: 16.0,
+  //       // );
+  //     } else {
+  //       storeTokenAndData(phoneNumber);
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => const Dashboard(),
+  //         ),
+  //       );
+  //     }
+  //     log('user is $userCredential');
+  //   } catch (e) {
+  //     showSnackBar(context, e.toString());
+  //   }
+  // }
 
   void showSnackBar(BuildContext context, String text) {
     final snackBar = SnackBar(content: Text(text));

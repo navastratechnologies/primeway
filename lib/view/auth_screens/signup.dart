@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/controllers/notification_controller.dart';
+import 'package:primewayskills_app/view/auth_screens/address.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -43,6 +45,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final CollectionReference<Map<String, dynamic>> users =
       FirebaseFirestore.instance.collection('users');
 
+  Future<void> signInwithPhoneNumber2(String phoneNumber, String verificationId,
+      String smsCode, BuildContext context) async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: verificationId, smsCode: smsCode);
+
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      // showSnackBar(context, "logged In");
+      User? user = userCredential.user;
+      createUserCollection();
+      createUserChapterCollection();
+      createUserRefferalCollection();
+      createWalletCollection();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditAddressPage(
+            phoneNumber: widget.phone,
+            pageType: "new",
+          ),
+        ),
+      );
+      log('user is $userCredential');
+    } catch (e) {
+      // showSnackBar(context, e.toString());
+    }
+  }
+
   Future<void> createUserCollection() async {
     const availableChars =
         'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
@@ -82,6 +113,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'instagram_image': '',
       'instagram_following': '',
       'referrel_id': "PWCT$randomString",
+      'account_number': "",
+      'bank_name': "",
+      'ifsc': "",
+      'account_holder_name': "",
+      'account_type': "",
+      'youtube_subscribers': "",
+      'youtube_username': "",
     });
     storage.delete(key: 'referralUserId');
     storage.delete(key: 'referralId');
@@ -509,12 +547,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Center(
                 child: InkWell(
                   onTap: () {
-                    authClass.signInwithPhoneNumber2(widget.phone, widget.verId,
+                    signInwithPhoneNumber2(widget.phone, widget.verId,
                         otpController.text, context);
-                    createUserCollection();
-                    createUserChapterCollection();
-                    createUserRefferalCollection();
-                    createWalletCollection();
                   },
                   child: Container(
                     height: 50,

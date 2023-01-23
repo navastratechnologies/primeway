@@ -1,11 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_insta/flutter_insta.dart';
 import 'package:lottie/lottie.dart';
-
 import '../helpers/colors.dart';
-import 'instadetail.dart';
+import 'social_account_detail_screen.dart';
 
 class SocialScreen extends StatefulWidget {
   final String userNumber;
@@ -27,38 +23,7 @@ class _SocialScreenState extends State<SocialScreen> {
   TextEditingController instagramController = TextEditingController();
   TextEditingController youtubeController = TextEditingController();
 
-  String instagramFollowers = '';
-  String instagramUserName = '';
-  String instagrsmBio = '';
-  String instagramImage = '';
-  String instagramFolowing = '';
-  String instagramWebsite = '';
-
   final instagram = 'https://www.instagram.com/';
-  final youTube = 'https://www.youtube.com/';
-
-  FlutterInsta flutterInsta = FlutterInsta();
-
-  Future<void> instagramDetails() async {
-    flutterInsta.getProfileData(instagramController.text).then((value) {
-      setState(() {
-        instagramFollowers = flutterInsta.followers.toString();
-        instagramUserName = flutterInsta.username.toString();
-        instagramFolowing = flutterInsta.following.toString();
-        instagramImage = flutterInsta.imgurl.toString();
-        instagrsmBio = flutterInsta.bio.toString();
-        instagramWebsite = flutterInsta.website.toString();
-        log('this is : $instagramFollowers');
-      });
-    });
-    log("Username : $instagramUserName");
-    log("Followers : $instagramFollowers");
-    log("Folowing : ${flutterInsta.following}");
-    log("Bio : ${flutterInsta.bio}");
-    log("Website : ${flutterInsta.website}");
-    log("Profile Image : ${flutterInsta.imgurl}");
-    log("Feed images : ${flutterInsta.feedImagesUrl}");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -371,26 +336,19 @@ class _SocialScreenState extends State<SocialScreen> {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      instagramDetails();
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => WebViewClass(
-                                            userNumber: widget.userNumber,
-                                            instagramFollowers:
-                                                instagramFollowers,
-                                            instagramFolowing:
-                                                instagramFolowing,
-                                            instagramImage: instagramImage,
-                                            instagramUserName:
-                                                instagramUserName,
-                                            instagramWebsite: instagramWebsite,
-                                            instagrsmBio: instagrsmBio,
-                                            userName: '',
-                                            userProfileImage: '',
+                                      if (instagramController.text.isNotEmpty) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => WebViewClass(
+                                              userNumber: widget.userNumber,
+                                              url:
+                                                  "$instagram${instagramController.text}",
+                                              linkType: "insta",
+                                            ),
                                           ),
-                                        ),
-                                      );
+                                        );
+                                      }
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(10),
@@ -517,22 +475,18 @@ class _SocialScreenState extends State<SocialScreen> {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => WebViewClass(
-                                            userNumber: widget.userNumber,
-                                            instagramFollowers: '',
-                                            instagramFolowing: '',
-                                            instagramImage: '',
-                                            instagramUserName: '',
-                                            instagramWebsite: '',
-                                            instagrsmBio: '',
-                                            userName: '',
-                                            userProfileImage: '',
+                                      if (youtubeController.text.isNotEmpty) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => WebViewClass(
+                                              userNumber: widget.userNumber,
+                                              url: youtubeController.text,
+                                              linkType: "youtube",
+                                            ),
                                           ),
-                                        ),
-                                      );
+                                        );
+                                      }
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(10),

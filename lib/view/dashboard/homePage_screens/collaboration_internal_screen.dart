@@ -16,8 +16,7 @@ class CollaborationInternalScreen extends StatefulWidget {
       categories,
       collaborationtype,
       language,
-      titles,
-      productCategorey;
+      titles;
   final String userNumber;
   final String userName;
   final String userAddress;
@@ -38,7 +37,6 @@ class CollaborationInternalScreen extends StatefulWidget {
       required this.language,
       required this.collaborationtype,
       required this.titles,
-      required this.productCategorey,
       required this.userNumber,
       required this.userName,
       required this.userAddress,
@@ -46,7 +44,8 @@ class CollaborationInternalScreen extends StatefulWidget {
       required this.userPayment,
       required this.userEmail,
       required this.userWalletId,
-      required this.userLanguage, required this.userFollowers})
+      required this.userLanguage,
+      required this.userFollowers})
       : super(key: key);
 
   @override
@@ -218,29 +217,31 @@ class _CollaborationInternalScreenState
                             ),
                           ],
                         ),
-                       widget.userFollowers == widget.followerDetails ? Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.green,
-                          ),
-                          child: Icon(
-                            Icons.check,
-                            color: whiteColor,
-                            size: 11,
-                          ),
-                        ) :  Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration:  BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: primeColor,
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            color: whiteColor,
-                            size: 11,
-                          ),
-                        ),
+                        widget.userFollowers == widget.followerDetails
+                            ? Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                                child: Icon(
+                                  Icons.check,
+                                  color: whiteColor,
+                                  size: 11,
+                                ),
+                              )
+                            : Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: primeColor,
+                                ),
+                                child: Icon(
+                                  Icons.close,
+                                  color: whiteColor,
+                                  size: 11,
+                                ),
+                              ),
                       ],
                     ),
                   ),

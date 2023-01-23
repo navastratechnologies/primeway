@@ -29,7 +29,8 @@ class CreaterProgramScreen extends StatefulWidget {
       required this.userPayment,
       required this.userEmail,
       required this.userWalletId,
-      required this.userLanguage, required this.userFollowers})
+      required this.userLanguage,
+      required this.userFollowers})
       : super(key: key);
 
   @override
@@ -220,8 +221,6 @@ class _CreaterProgramScreenState extends State<CreaterProgramScreen> {
                                             'collaboration_type'],
                                         language: documentSnapshot['language'],
                                         titles: documentSnapshot['titles'],
-                                        productCategorey: documentSnapshot[
-                                            'product_categorey'],
                                         userNumber: widget.userNumber,
                                         userAddress: widget.userAddress,
                                         userEmail: widget.userEmail,
@@ -230,7 +229,8 @@ class _CreaterProgramScreenState extends State<CreaterProgramScreen> {
                                         userProfileImage:
                                             widget.userProfileImage,
                                         userWalletId: widget.userWalletId,
-                                        userLanguage: widget.userLanguage, userFollowers: widget.userFollowers,
+                                        userLanguage: widget.userLanguage,
+                                        userFollowers: widget.userFollowers,
                                       ),
                                     ),
                                   );

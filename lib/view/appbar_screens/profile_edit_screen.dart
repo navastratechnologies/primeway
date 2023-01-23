@@ -1,12 +1,16 @@
 import 'dart:core';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/auth_screens/address.dart';
+import 'package:primewayskills_app/view/auth_screens/edit_details.dart';
 import 'package:primewayskills_app/view/auth_screens/kyc.dart';
 import 'package:primewayskills_app/view/dashboard/social_account.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   final String userNumber;
@@ -16,17 +20,19 @@ class ProfileEditScreen extends StatefulWidget {
   final String userPayment;
   final String userEmail;
   final String userWalletId;
+  final String userProfileCompletionPercentage;
 
-  const ProfileEditScreen(
-      {Key? key,
-      required this.userNumber,
-      required this.userName,
-      required this.userAddress,
-      required this.userProfileImage,
-      required this.userPayment,
-      required this.userEmail,
-      required this.userWalletId})
-      : super(key: key);
+  const ProfileEditScreen({
+    Key? key,
+    required this.userNumber,
+    required this.userName,
+    required this.userAddress,
+    required this.userProfileImage,
+    required this.userPayment,
+    required this.userEmail,
+    required this.userWalletId,
+    required this.userProfileCompletionPercentage,
+  }) : super(key: key);
 
   @override
   State<ProfileEditScreen> createState() => _ProfileEditScreenState();
@@ -35,10 +41,45 @@ class ProfileEditScreen extends StatefulWidget {
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final firebaseInstance = FirebaseFirestore.instance;
 
+  String youtubeId = '';
+  String instaId = '';
+  String idProof = '';
+  String accountNumber = '';
+  String accountName = '';
+  String accountHolderName = '';
+  String accountIFSC = '';
+  String accountType = '';
+
+  Future<void> getUserProfileData() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userNumber)
+        .get()
+        .then(
+      (value) {
+        setState(() {
+          youtubeId = value.get('youtube_username');
+          instaId = value.get('instagram_username');
+          accountNumber = value.get('account_number');
+          accountHolderName = value.get('account_holder_name');
+          accountType = value.get('account_type');
+          accountName = value.get('bank_name');
+          accountIFSC = value.get('ifsc');
+          idProof = value.get('front_document');
+          log('edit name is $accountNumber $idProof');
+        });
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    getUserProfileData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -68,22 +109,63 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                InkWell(
-                  child: Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: whiteColor,
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          widget.userProfileImage,
+                widget.userProfileImage.isNotEmpty
+                    ? Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: primeColor.withOpacity(0.1),
+                              blurRadius: 10,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              widget.userProfileImage,
+                            ),
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                        fit: BoxFit.cover,
+                      )
+                    : InkWell(
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: whiteColor,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: primeColor.withOpacity(0.4),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: primeColor.withOpacity(0.1),
+                                blurRadius: 10,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                widget.userProfileImage,
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              widget.userName.substring(0, 1),
+                              style: TextStyle(
+                                fontSize: maxSize,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
                 const SizedBox(width: 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +198,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       children: [
                         Container(
                           height: 6,
-                          width: width / 2,
+                          width: double.parse(
+                                  widget.userProfileCompletionPercentage) *
+                              1.8,
                           decoration: BoxDecoration(
                             color: whiteColor,
                             borderRadius: BorderRadius.circular(20),
@@ -125,9 +209,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                             children: [
                               Container(
                                 height: 6,
-                                width: 30,
+                                width: double.parse(widget
+                                        .userProfileCompletionPercentage) *
+                                    1.8,
                                 decoration: BoxDecoration(
-                                  color: primeColor,
+                                  color: primeColor2,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
@@ -136,9 +222,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          "28%",
+                          "${widget.userProfileCompletionPercentage}%",
                           style: TextStyle(
-                            color: primeColor,
+                            color: Colors.black.withOpacity(0.5),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -152,83 +238,21 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           Align(
             alignment: Alignment.bottomCenter,
             child: SizedBox(
-              height: height / 1.45,
+              height: displayHeight(context) / 1.45,
               child: ListView(
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: whiteColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 10,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EditDetailsPage(phoneNumber: widget.userNumber),
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'INCOMPLETE',
-                                style: TextStyle(
-                                  color: primeColor,
-                                  fontSize: 10,
-                                  letterSpacing: 1,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  'EDIT',
-                                  style: TextStyle(
-                                    color: primeColor,
-                                    fontSize: 12,
-                                    letterSpacing: 1,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          headingWidgetMethod('About you'),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              profileEditInternalWidget(
-                                  'Name', widget.userName),
-                              profileEditInternalWidget(
-                                  'Email', widget.userEmail),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          profileEditInternalWidget('Phone', widget.userNumber),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SocialScreen(
-                           userNumber: widget.userNumber, userName: widget.userName, userProfileImage: widget.userProfileImage,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                        );
+                      },
                       child: Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
@@ -245,32 +269,230 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: widget.userEmail.isNotEmpty &&
+                                      widget.userName.isNotEmpty
+                                  ? MainAxisAlignment.end
+                                  : MainAxisAlignment.spaceBetween,
                               children: [
+                                widget.userEmail.isNotEmpty &&
+                                        widget.userName.isNotEmpty
+                                    ? Container()
+                                    : Text(
+                                        'INCOMPLETE',
+                                        style: TextStyle(
+                                          color: primeColor,
+                                          fontSize: 10,
+                                          letterSpacing: 1,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                 Text(
-                                  'INCOMPLETE',
+                                  'EDIT',
                                   style: TextStyle(
                                     color: primeColor,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     letterSpacing: 1,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: Text(
-                                    'EDIT',
-                                    style: TextStyle(
-                                      color: primeColor,
-                                      fontSize: 12,
-                                      letterSpacing: 1,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                              ],
+                            ),
+                            headingWidgetMethod('About you'),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                profileEditInternalWidget(
+                                    'Name', widget.userName),
+                                profileEditInternalWidget(
+                                    'Email', widget.userEmail),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            profileEditInternalWidget(
+                                'Phone', widget.userNumber),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SocialScreen(
+                            userNumber: widget.userNumber,
+                            userName: widget.userName,
+                            userProfileImage: widget.userProfileImage,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 30,
+                        ),
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment:
+                                  youtubeId.isNotEmpty || instaId.isNotEmpty
+                                      ? MainAxisAlignment.end
+                                      : MainAxisAlignment.spaceBetween,
+                              children: [
+                                youtubeId.isNotEmpty || instaId.isNotEmpty
+                                    ? Container()
+                                    : Text(
+                                        'INCOMPLETE',
+                                        style: TextStyle(
+                                          color: primeColor,
+                                          fontSize: 10,
+                                          letterSpacing: 1,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                Text(
+                                  'EDIT',
+                                  style: TextStyle(
+                                    color: primeColor,
+                                    fontSize: 12,
+                                    letterSpacing: 1,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 5),
                             headingWidgetMethod('Social Accounts'),
+                            const SizedBox(height: 20),
+                            profileEditInternalWidget(
+                              'Email',
+                              widget.userEmail,
+                            ),
+                            youtubeId.isEmpty
+                                ? Container()
+                                : const SizedBox(height: 20),
+                            youtubeId.isEmpty
+                                ? Container()
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            FontAwesomeIcons.youtube,
+                                            color: primeColor,
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Text(
+                                            youtubeId,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                              letterSpacing: 1,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      MaterialButton(
+                                        color: purpleColor,
+                                        onPressed: () {
+                                          FirebaseFirestore.instance
+                                              .collection("users")
+                                              .doc(widget.userNumber)
+                                              .update(
+                                            {
+                                              "youtube_username": "",
+                                              "youtube_subscribers": "",
+                                            },
+                                          );
+                                          getUserProfileData();
+                                        },
+                                        child: Text(
+                                          "Remove",
+                                          style: TextStyle(
+                                            color: whiteColor,
+                                            fontSize: 12,
+                                            letterSpacing: 1,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                            instaId.isEmpty
+                                ? Container()
+                                : const SizedBox(height: 20),
+                            instaId.isEmpty
+                                ? Container()
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            FontAwesomeIcons.instagram,
+                                            color: Colors.pink,
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Text(
+                                            instaId,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                              letterSpacing: 1,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      MaterialButton(
+                                        color: purpleColor,
+                                        onPressed: () {
+                                          FirebaseFirestore.instance
+                                              .collection("users")
+                                              .doc(widget.userNumber)
+                                              .update(
+                                            {
+                                              "instagram_username": "",
+                                              "instagram_followers": "",
+                                            },
+                                          );
+                                          getUserProfileData();
+                                        },
+                                        child: Text(
+                                          "Remove",
+                                          style: TextStyle(
+                                            color: whiteColor,
+                                            fontSize: 12,
+                                            letterSpacing: 1,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                           ],
                         ),
                       ),
@@ -308,32 +530,102 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment:
+                                  idProof.isNotEmpty && accountNumber.isNotEmpty
+                                      ? MainAxisAlignment.end
+                                      : MainAxisAlignment.spaceBetween,
                               children: [
+                                idProof.isNotEmpty && accountNumber.isNotEmpty
+                                    ? Container()
+                                    : Text(
+                                        'INCOMPLETE',
+                                        style: TextStyle(
+                                          color: primeColor,
+                                          fontSize: 10,
+                                          letterSpacing: 1,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                 Text(
-                                  'INCOMPLETE',
+                                  'EDIT',
                                   style: TextStyle(
                                     color: primeColor,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     letterSpacing: 1,
                                     fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: Text(
-                                    'EDIT',
-                                    style: TextStyle(
-                                      color: primeColor,
-                                      fontSize: 12,
-                                      letterSpacing: 1,
-                                      fontWeight: FontWeight.bold,
-                                    ),
                                   ),
                                 ),
                               ],
                             ),
                             headingWidgetMethod('Payments'),
+                            const SizedBox(height: 30),
+                            accountName.isEmpty
+                                ? Container()
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      profileEditInternalWidget(
+                                        'Bank Name',
+                                        accountName,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Account Type",
+                                            style: TextStyle(
+                                              color:
+                                                  Colors.black.withOpacity(0.4),
+                                              fontSize: 12,
+                                              letterSpacing: 1,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 4),
+                                            decoration: BoxDecoration(
+                                              color: purpleColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Text(
+                                              accountType,
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                letterSpacing: 1,
+                                                fontWeight: FontWeight.bold,
+                                                color: whiteColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                            accountName.isEmpty
+                                ? Container()
+                                : const SizedBox(height: 20),
+                            accountHolderName.isEmpty
+                                ? Container()
+                                : profileEditInternalWidget(
+                                    'Account Holder Name', accountHolderName),
+                            accountHolderName.isEmpty
+                                ? Container()
+                                : const SizedBox(height: 20),
+                            accountNumber.isEmpty
+                                ? Container()
+                                : profileEditInternalWidget(
+                                    'Account Number', accountNumber),
+                            accountNumber.isEmpty
+                                ? Container()
+                                : const SizedBox(height: 20),
+                            accountIFSC.isEmpty
+                                ? Container()
+                                : profileEditInternalWidget(
+                                    'IFSC Code', accountIFSC),
                           ],
                         ),
                       ),
@@ -347,6 +639,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         MaterialPageRoute(
                           builder: (context) => EditAddressPage(
                             phoneNumber: widget.userNumber,
+                            pageType: "edit",
                           ),
                         ),
                       );
@@ -369,32 +662,40 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: widget.userAddress.isNotEmpty
+                                  ? MainAxisAlignment.end
+                                  : MainAxisAlignment.spaceBetween,
                               children: [
+                                widget.userAddress.isNotEmpty
+                                    ? Container()
+                                    : Text(
+                                        'INCOMPLETE',
+                                        style: TextStyle(
+                                          color: primeColor,
+                                          fontSize: 10,
+                                          letterSpacing: 1,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                 Text(
-                                  'INCOMPLETE',
+                                  'EDIT',
                                   style: TextStyle(
                                     color: primeColor,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     letterSpacing: 1,
                                     fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: Text(
-                                    'EDIT',
-                                    style: TextStyle(
-                                      color: primeColor,
-                                      fontSize: 12,
-                                      letterSpacing: 1,
-                                      fontWeight: FontWeight.bold,
-                                    ),
                                   ),
                                 ),
                               ],
                             ),
                             headingWidgetMethod('Address'),
+                            const SizedBox(height: 30),
+                            widget.userAddress.isEmpty
+                                ? Container()
+                                : profileEditInternalWidget(
+                                    'Address',
+                                    widget.userAddress,
+                                  ),
                           ],
                         ),
                       ),

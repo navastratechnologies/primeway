@@ -9,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/auth_screens/upload_image.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
+import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 
 class EkycPage extends StatefulWidget {
   final String phoneNumber;
@@ -28,6 +29,7 @@ class _EkycPageState extends State<EkycPage> {
   String accountType = 'Savings';
 
   TextEditingController accountNameController = TextEditingController();
+  TextEditingController bankNameController = TextEditingController();
   TextEditingController accoutnNumberController = TextEditingController();
   TextEditingController confirmAccountNumberController =
       TextEditingController();
@@ -74,31 +76,45 @@ class _EkycPageState extends State<EkycPage> {
       uploadTask = null;
     });
 
-    final path2 = 'documents/${pickedFile2!.name}';
-    final file2 = File(pickedFile2!.path!);
+    String urlDownload2 = '';
 
-    final ref2 = FirebaseStorage.instance.ref().child(path2);
-    setState(() {
-      uploadTask2 = ref2.putFile(file2);
-    });
+    if (documentType == "Aadhar Card") {
+      final path2 = 'documents/${pickedFile2!.name}';
+      final file2 = File(pickedFile2!.path!);
 
-    final snapshot2 = await uploadTask2!.whenComplete(() {});
+      final ref2 = FirebaseStorage.instance.ref().child(path2);
+      setState(() {
+        uploadTask2 = ref2.putFile(file2);
+      });
 
-    final urlDownload2 = await snapshot2.ref.getDownloadURL();
-    log('Download link : $urlDownload2');
+      final snapshot2 = await uploadTask2!.whenComplete(() {});
 
-    setState(() {
-      uploadTask2 = null;
-    });
+      urlDownload2 = await snapshot2.ref.getDownloadURL();
+      log('Download link : $urlDownload2');
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.phoneNumber)
-        .update({
-      'front_document': urlDownload.toString(),
-      'back_document': urlDownload2.toString(),
-      'document_type': documentType,
-    });
+      setState(() {
+        uploadTask2 = null;
+      });
+    }
+
+    if (documentType == "Aadhar Card") {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.phoneNumber)
+          .update({
+        'front_document': urlDownload.toString(),
+        'back_document': urlDownload2.toString(),
+        'document_type': documentType,
+      });
+    } else {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.phoneNumber)
+          .update({
+        'front_document': urlDownload.toString(),
+        'document_type': documentType,
+      });
+    }
   }
 
   Future<void> updateAccount() async {
@@ -106,12 +122,27 @@ class _EkycPageState extends State<EkycPage> {
       FirebaseFirestore.instance
           .collection('wallet')
           .doc(widget.phoneNumber)
-          .update({
-        'account_number': accoutnNumberController.text,
-        'ifsc_code': ifscNumberController.text,
-        'account_holder_name': accountNameController.text,
-        'account_type': accountType,
-      });
+          .update(
+        {
+          'account_number': accoutnNumberController.text,
+          'bank_name': bankNameController.text,
+          'ifsc': ifscNumberController.text,
+          'account_holder_name': accountNameController.text,
+          'account_type': accountType,
+        },
+      );
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.phoneNumber)
+          .update(
+        {
+          'account_number': accoutnNumberController.text,
+          'bank_name': bankNameController.text,
+          'ifsc': ifscNumberController.text,
+          'account_holder_name': accountNameController.text,
+          'account_type': accountType,
+        },
+      );
     } else {
       log('Account number is not match');
     }
@@ -123,453 +154,525 @@ class _EkycPageState extends State<EkycPage> {
       length: 2,
       initialIndex: 0,
       child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.close, color: Colors.black),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Upload KYC",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+        body: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    primeColor,
+                    primeColor.withOpacity(0.6),
+                    primeColor.withOpacity(0.8),
+                  ],
+                ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              const TabBar(
-                indicatorColor: Colors.green,
-                indicatorWeight: 3,
-                indicatorSize: TabBarIndicatorSize.label,
-                tabs: [
-                  Tab(
-                    child: Text(
-                      "Id Proof",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
-                    ),
+              child: AppBar(
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: whiteColor,
                   ),
-                  Tab(
-                    child: Text(
-                      "Bank Detail",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+                title: Text(
+                  "Upload KYC",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: whiteColor,
+                  ),
+                ),
+                actions: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      color: whiteColor,
                     ),
-                  )
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
                 ],
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 1.35,
-                child: TabBarView(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        primeColor,
+                        primeColor.withOpacity(0.6),
+                        primeColor.withOpacity(0.8),
+                      ],
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      TabBar(
+                        indicatorColor: primeColor2,
+                        indicatorWeight: 3,
+                        indicatorSize: TabBarIndicatorSize.label,
+                        tabs: [
+                          Tab(
+                            child: Text(
+                              "Id Proof",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: whiteColor.withOpacity(0.7),
+                              ),
+                            ),
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 10,
-                              spreadRadius: 1,
-                            )
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 20,
+                          Tab(
+                            child: Text(
+                              "Bank Detail",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: whiteColor.withOpacity(0.7),
                               ),
-                              const Text(
-                                "Choose Document Type",
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        showadharColor = true;
-                                        showpanColor = false;
-                                        showvotarColor = false;
-                                        documentType = 'Aadhar Card';
-                                      });
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          3.5,
-                                      decoration: BoxDecoration(
-                                        color: showadharColor
-                                            ? Colors.green
-                                            : Colors.white,
-                                        borderRadius: BorderRadius.circular(25),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.1),
-                                            blurRadius: 10,
-                                            spreadRadius: 1,
-                                          )
-                                        ],
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
-                                          "Aadhar Card",
-                                          style: TextStyle(
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 1.25,
+                  child: TabBarView(
+                    children: [
+                      SingleChildScrollView(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: whiteColor,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                const Text(
+                                  "Choose Document Type",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 30),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          showadharColor = true;
+                                          showpanColor = false;
+                                          showvotarColor = false;
+                                          documentType = 'Aadhar Card';
+                                          pickedFile = null;
+                                          pickedFile2 = null;
+                                        });
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3.5,
+                                        decoration: BoxDecoration(
+                                          color: showadharColor
+                                              ? primeColor2
+                                              : Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.1),
+                                              blurRadius: 10,
+                                              spreadRadius: 1,
+                                            )
+                                          ],
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Text(
+                                            "Aadhar Card",
+                                            style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
                                               color: showadharColor
                                                   ? Colors.white
-                                                  : Colors.black),
-                                          textAlign: TextAlign.center,
+                                                  : Colors.black,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        showadharColor = false;
-                                        showpanColor = true;
-                                        showvotarColor = false;
-                                        documentType = 'Pan Card';
-                                      });
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          3.5,
-                                      decoration: BoxDecoration(
-                                        color: showpanColor
-                                            ? Colors.green
-                                            : Colors.white,
-                                        borderRadius: BorderRadius.circular(25),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.1),
-                                            blurRadius: 10,
-                                            spreadRadius: 1,
-                                          )
-                                        ],
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
-                                          "Pan Card",
-                                          style: TextStyle(
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          showadharColor = false;
+                                          showpanColor = true;
+                                          showvotarColor = false;
+                                          documentType = 'Pan Card';
+                                          pickedFile = null;
+                                          pickedFile2 = null;
+                                        });
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3.5,
+                                        decoration: BoxDecoration(
+                                          color: showpanColor
+                                              ? primeColor2
+                                              : Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.1),
+                                              blurRadius: 10,
+                                              spreadRadius: 1,
+                                            )
+                                          ],
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Text(
+                                            "Pan Card",
+                                            style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
                                               color: showpanColor
                                                   ? Colors.white
-                                                  : Colors.black),
-                                          textAlign: TextAlign.center,
+                                                  : Colors.black,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        showadharColor = false;
-                                        showpanColor = false;
-                                        showvotarColor = true;
-                                        documentType = 'Voter Card';
-                                      });
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          3.5,
-                                      decoration: BoxDecoration(
-                                        color: showvotarColor
-                                            ? Colors.green
-                                            : Colors.white,
-                                        borderRadius: BorderRadius.circular(25),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.1),
-                                            blurRadius: 10,
-                                            spreadRadius: 1,
-                                          )
-                                        ],
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
-                                          "Voter Id",
-                                          style: TextStyle(
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          showadharColor = false;
+                                          showpanColor = false;
+                                          showvotarColor = true;
+                                          documentType = 'Voter Card';
+                                          pickedFile = null;
+                                          pickedFile2 = null;
+                                        });
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3.5,
+                                        decoration: BoxDecoration(
+                                          color: showvotarColor
+                                              ? primeColor2
+                                              : Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.1),
+                                              blurRadius: 10,
+                                              spreadRadius: 1,
+                                            )
+                                          ],
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Text(
+                                            "Voter Id",
+                                            style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
                                               color: showvotarColor
                                                   ? Colors.white
-                                                  : Colors.black),
-                                          textAlign: TextAlign.center,
+                                                  : Colors.black,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              const Text(
-                                "Upload Your Id Proof",
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                height: 50,
-                              ),
-                              showadharColor
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2.5,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: primeColor2
-                                                    .withOpacity(0.3),
-                                                spreadRadius: 1,
-                                                blurRadius: 10,
-                                              )
-                                            ],
-                                          ),
-                                          child: InkWell(
-                                            onTap: () {
-                                              selectFile();
-                                            },
-                                            child: pickedFile == null
-                                                ? Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Column(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.camera,
-                                                          color: Colors.black
-                                                              .withOpacity(0.3),
-                                                          size: 80,
-                                                        ),
-                                                        const Text("Front"),
-                                                      ],
+                                  ],
+                                ),
+                                const SizedBox(height: 50),
+                                const Text(
+                                  "Upload Your Id Proof",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 30),
+                                showadharColor
+                                    ? Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Container(
+                                            height: 220,
+                                            width: displayWidth(context),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: primeColor2
+                                                      .withOpacity(0.3),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 10,
+                                                )
+                                              ],
+                                            ),
+                                            child: InkWell(
+                                              onTap: () {
+                                                selectFile();
+                                              },
+                                              child: pickedFile == null
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.camera,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.3),
+                                                            size: 100,
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 10),
+                                                          Text(
+                                                            "Front Picture",
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.5),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : Container(
+                                                      color: Colors.blue[100],
+                                                      child: Image.file(
+                                                        File(pickedFile!.path!),
+                                                        width: 180,
+                                                        height: 110,
+                                                        fit: BoxFit.fill,
+                                                      ),
                                                     ),
-                                                  )
-                                                : Container(
-                                                    color: Colors.blue[100],
-                                                    child: Image.file(
-                                                      File(pickedFile!.path!),
-                                                      width: 180,
-                                                      height: 110,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2.5,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: primeColor2
-                                                    .withOpacity(0.3),
-                                                spreadRadius: 1,
-                                                blurRadius: 10,
-                                              )
-                                            ],
-                                          ),
-                                          child: InkWell(
-                                            onTap: () {
-                                              selectFile2();
-                                            },
-                                            child: pickedFile2 == null
-                                                ? Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Column(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.camera,
-                                                          color: Colors.black
-                                                              .withOpacity(0.3),
-                                                          size: 80,
-                                                        ),
-                                                        const Text("Back"),
-                                                      ],
+                                          const SizedBox(height: 10),
+                                          Container(
+                                            height: 220,
+                                            width: displayWidth(context),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: primeColor2
+                                                      .withOpacity(0.3),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 10,
+                                                )
+                                              ],
+                                            ),
+                                            child: InkWell(
+                                              onTap: () {
+                                                selectFile2();
+                                              },
+                                              child: pickedFile2 == null
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.camera,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.3),
+                                                            size: 100,
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 10),
+                                                          Text(
+                                                            "Back Picture",
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.5),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : Container(
+                                                      color: Colors.blue[100],
+                                                      child: Image.file(
+                                                        File(
+                                                            pickedFile2!.path!),
+                                                        fit: BoxFit.fill,
+                                                      ),
                                                     ),
-                                                  )
-                                                : Container(
-                                                    color: Colors.blue[100],
-                                                    child: Image.file(
-                                                      File(pickedFile2!.path!),
-                                                      width: 180,
-                                                      height: 110,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2.5,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: primeColor2
-                                                    .withOpacity(0.3),
-                                                spreadRadius: 1,
-                                                blurRadius: 10,
-                                              )
-                                            ],
-                                          ),
-                                          child: InkWell(
-                                            onTap: () {
-                                              selectFile();
-                                            },
-                                            child: pickedFile == null
-                                                ? Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Column(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.camera,
-                                                          color: Colors.black
-                                                              .withOpacity(0.3),
-                                                          size: 80,
-                                                        ),
-                                                        const Text("Front"),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : Container(
-                                                    color: Colors.blue[100],
-                                                    child: Image.file(
-                                                      File(pickedFile!.path!),
-                                                      width: 180,
-                                                      height: 110,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                              const SizedBox(
-                                height: 170,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  uploadFile();
-                                },
-                                child: Container(
-                                  height: 40,
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        spreadRadius: 1,
+                                        ],
                                       )
-                                    ],
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "SAVE",
-                                      style: TextStyle(
+                                    : Container(
+                                        decoration: BoxDecoration(
                                           color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  primeColor2.withOpacity(0.3),
+                                              spreadRadius: 1,
+                                              blurRadius: 10,
+                                            )
+                                          ],
+                                        ),
+                                        child: InkWell(
+                                          onTap: () {
+                                            selectFile();
+                                          },
+                                          child: Container(
+                                            height: 220,
+                                            width: displayWidth(context),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: primeColor2
+                                                      .withOpacity(0.3),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 10,
+                                                )
+                                              ],
+                                            ),
+                                            child: InkWell(
+                                              onTap: () {
+                                                selectFile();
+                                              },
+                                              child: pickedFile == null
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.camera,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.3),
+                                                            size: 100,
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 10),
+                                                          Text(
+                                                            "Front Picture",
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.5),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : Container(
+                                                      color: Colors.blue[100],
+                                                      child: Image.file(
+                                                        File(pickedFile!.path!),
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                    ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                const SizedBox(height: 30),
+                                Center(
+                                  child: MaterialButton(
+                                    minWidth: displayWidth(context) / 1.3,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    color: purpleColor,
+                                    onPressed: uploadFile,
+                                    child: const Text(
+                                      "Save",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 10,
-                              spreadRadius: 1,
-                            )
-                          ],
-                        ),
+                      SingleChildScrollView(
                         child: Padding(
                           padding: const EdgeInsets.all(10),
                           child: Column(
@@ -587,279 +690,335 @@ class _EkycPageState extends State<EkycPage> {
                                 height: 20,
                               ),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   const Text(
                                     "Account Type",
                                     style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w300),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        showSavingsAccount = true;
-                                        showCurrentAccount = false;
-                                        accountType = 'Savings';
-                                      });
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          3.5,
-                                      decoration: BoxDecoration(
-                                        color: showSavingsAccount
-                                            ? Colors.green
-                                            : Colors.white,
-                                        borderRadius: BorderRadius.circular(25),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.1),
-                                            blurRadius: 10,
-                                            spreadRadius: 1,
-                                          )
-                                        ],
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
-                                          "Savings",
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                              color: showSavingsAccount
-                                                  ? Colors.white
-                                                  : Colors.black),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        showSavingsAccount = false;
-                                        showCurrentAccount = true;
-                                        accountType = 'Current';
-                                      });
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          3.5,
-                                      decoration: BoxDecoration(
-                                        color: showCurrentAccount
-                                            ? Colors.green
-                                            : Colors.white,
-                                        borderRadius: BorderRadius.circular(25),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.1),
-                                            blurRadius: 10,
-                                            spreadRadius: 1,
-                                          )
-                                        ],
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
-                                          "Current",
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                              color: showCurrentAccount
-                                                  ? Colors.white
-                                                  : Colors.black),
-                                          textAlign: TextAlign.center,
+                                  const SizedBox(width: 20),
+                                  Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            showSavingsAccount = true;
+                                            showCurrentAccount = false;
+                                            accountType = 'Savings';
+                                          });
+                                        },
+                                        child: Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              3.5,
+                                          decoration: BoxDecoration(
+                                            color: showSavingsAccount
+                                                ? primeColor2
+                                                : Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.1),
+                                                blurRadius: 10,
+                                                spreadRadius: 1,
+                                              )
+                                            ],
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Text(
+                                              "Savings",
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: showSavingsAccount
+                                                      ? Colors.white
+                                                      : Colors.black),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                      const SizedBox(width: 10),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            showSavingsAccount = false;
+                                            showCurrentAccount = true;
+                                            accountType = 'Current';
+                                          });
+                                        },
+                                        child: Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              3.5,
+                                          decoration: BoxDecoration(
+                                            color: showCurrentAccount
+                                                ? primeColor2
+                                                : Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.1),
+                                                blurRadius: 10,
+                                                spreadRadius: 1,
+                                              )
+                                            ],
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Text(
+                                              "Current",
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: showCurrentAccount
+                                                      ? Colors.white
+                                                      : Colors.black),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                               const SizedBox(
                                 height: 20,
                               ),
-                              const Text(
-                                "Name on Account",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 10,
-                                      spreadRadius: 1,
-                                    )
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    controller: accountNameController,
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Bank Name",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black.withOpacity(0.5),
                                     ),
                                   ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              const Text(
-                                "Account Number",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 10,
-                                      spreadRadius: 1,
-                                    )
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    controller: accoutnNumberController,
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 10,
+                                          spreadRadius: 1,
+                                        )
+                                      ],
                                     ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              const Text(
-                                "Confirm Account ",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 10,
-                                      spreadRadius: 1,
-                                    )
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    controller: confirmAccountNumberController,
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              const Text(
-                                "IFSC Code",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 10,
-                                      spreadRadius: 1,
-                                    )
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    controller: ifscNumberController,
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 50,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  updateAccount();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => UplodeImage(
-                                        phoneNumber: widget.phoneNumber,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 2,
+                                      ),
+                                      child: TextField(
+                                        controller: bankNameController,
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                        ),
                                       ),
                                     ),
-                                  );
-                                },
-                                child: Container(
-                                  height: 40,
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        spreadRadius: 1,
-                                      )
-                                    ],
                                   ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "SAVE",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                      textAlign: TextAlign.center,
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "Name on Account",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black.withOpacity(0.5),
                                     ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 10,
+                                          spreadRadius: 1,
+                                        )
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 2,
+                                      ),
+                                      child: TextField(
+                                        controller: accountNameController,
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "Account Number",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black.withOpacity(0.5),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 10,
+                                          spreadRadius: 1,
+                                        )
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 2,
+                                      ),
+                                      child: TextField(
+                                        controller: accoutnNumberController,
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "Confirm Account ",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black.withOpacity(0.5),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 10,
+                                          spreadRadius: 1,
+                                        )
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 2,
+                                      ),
+                                      child: TextField(
+                                        controller:
+                                            confirmAccountNumberController,
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "IFSC Code",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black.withOpacity(0.5),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 10,
+                                          spreadRadius: 1,
+                                        )
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 2,
+                                      ),
+                                      child: TextField(
+                                        controller: ifscNumberController,
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 30),
+                              Center(
+                                child: MaterialButton(
+                                  minWidth: displayWidth(context) / 1.3,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  color: purpleColor,
+                                  onPressed: () {
+                                    updateAccount();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => UplodeImage(
+                                          phoneNumber: widget.phoneNumber,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    "Save",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               ),
@@ -867,12 +1026,12 @@ class _EkycPageState extends State<EkycPage> {
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ),
     );

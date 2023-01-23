@@ -16,16 +16,18 @@ class CollaborationScreen extends StatefulWidget {
   final String userWalletId;
   final String userLanguage;
   final String userFollowers;
-  const CollaborationScreen(
-      {Key? key,
-      required this.userNumber,
-      required this.userName,
-      required this.userAddress,
-      required this.userProfileImage,
-      required this.userPayment,
-      required this.userEmail,
-      required this.userWalletId, required this.userLanguage, required this.userFollowers,})
-      : super(key: key);
+  const CollaborationScreen({
+    Key? key,
+    required this.userNumber,
+    required this.userName,
+    required this.userAddress,
+    required this.userProfileImage,
+    required this.userPayment,
+    required this.userEmail,
+    required this.userWalletId,
+    required this.userLanguage,
+    required this.userFollowers,
+  }) : super(key: key);
 
   @override
   State<CollaborationScreen> createState() => _CollaborationScreenState();
@@ -189,8 +191,6 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                                             'collaboration_type'],
                                         language: documentSnapshot['language'],
                                         titles: documentSnapshot['titles'],
-                                        productCategorey: documentSnapshot[
-                                            'product_categorey'],
                                         userNumber: widget.userNumber,
                                         userAddress: widget.userAddress,
                                         userEmail: widget.userEmail,
@@ -198,7 +198,9 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                                         userPayment: widget.userPayment,
                                         userProfileImage:
                                             widget.userProfileImage,
-                                        userWalletId: widget.userWalletId, userLanguage: widget.userLanguage, userFollowers: widget.userFollowers,
+                                        userWalletId: widget.userWalletId,
+                                        userLanguage: widget.userLanguage,
+                                        userFollowers: widget.userFollowers,
                                       ),
                                     ),
                                   );
