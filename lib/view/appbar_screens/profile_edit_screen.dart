@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/auth_screens/address.dart';
+import 'package:primewayskills_app/view/auth_screens/commercial_page.dart';
 import 'package:primewayskills_app/view/auth_screens/edit_details.dart';
 import 'package:primewayskills_app/view/auth_screens/kyc.dart';
 import 'package:primewayskills_app/view/dashboard/social_account.dart';
@@ -49,6 +50,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   String accountHolderName = '';
   String accountIFSC = '';
   String accountType = '';
+  String instaImagePrice = '';
+  String instaVideoPrice = '';
+  String instaStoryPrice = '';
+  String instaReelsPrice = '';
+  String instaCarouselPrice = '';
+  String youtubeVideoPrice = '';
+  String youtubeShortsPrice = '';
 
   Future<void> getUserProfileData() async {
     FirebaseFirestore.instance
@@ -66,6 +74,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           accountName = value.get('bank_name');
           accountIFSC = value.get('ifsc');
           idProof = value.get('front_document');
+          instaImagePrice = value.get('insta_image_price');
+          instaVideoPrice = value.get('insta_video_price');
+          instaCarouselPrice = value.get('insta_carousel_price');
+          instaStoryPrice = value.get('insta_story_price');
+          instaReelsPrice = value.get('insta_reels_price');
+          youtubeVideoPrice = value.get('youtube_video_price');
+          youtubeShortsPrice = value.get('youtube_short_price');
           log('edit name is $accountNumber $idProof');
         });
       },
@@ -499,7 +514,168 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  editProfileCardWidget('Commercials'),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CommercialPricingPage(
+                            userNumber: widget.userNumber,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                instaCarouselPrice != "0" &&
+                                        instaImagePrice != "0" &&
+                                        instaReelsPrice != "0" &&
+                                        instaStoryPrice != "0" &&
+                                        instaVideoPrice != "0" &&
+                                        youtubeShortsPrice != "0" &&
+                                        youtubeVideoPrice != "0"
+                                    ? Container()
+                                    : Text(
+                                        'INCOMPLETE',
+                                        style: TextStyle(
+                                          color: primeColor,
+                                          fontSize: 10,
+                                          letterSpacing: 1,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                Text(
+                                  'EDIT',
+                                  style: TextStyle(
+                                    color: primeColor,
+                                    fontSize: 12,
+                                    letterSpacing: 1,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            headingWidgetMethod('Commercials'),
+                            const SizedBox(height: 30),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: whiteColor,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: primeColor.withOpacity(0.1),
+                                    blurRadius: 10,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  commercialHeadingWidget(
+                                    'assets/json/instagram-icon.json',
+                                    "Instagram Commercial Charges",
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      profileEditInternalWidget(
+                                        'Insta Image',
+                                        "$rupeeSign$instaImagePrice",
+                                      ),
+                                      profileEditInternalWidget(
+                                        'Insta Reels',
+                                        "$rupeeSign$instaReelsPrice",
+                                      ),
+                                      profileEditInternalWidget(
+                                        'Insta Story',
+                                        "$rupeeSign$instaStoryPrice",
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      profileEditInternalWidget(
+                                        'Insta Video',
+                                        "$rupeeSign$instaVideoPrice",
+                                      ),
+                                      profileEditInternalWidget(
+                                        'Insta Carousel',
+                                        "$rupeeSign$instaCarouselPrice",
+                                      ),
+                                      const SizedBox(width: 60),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: whiteColor,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: primeColor.withOpacity(0.1),
+                                    blurRadius: 10,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  commercialHeadingWidget(
+                                    'assets/json/youtube.json',
+                                    "Youtube Commercial Charges",
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      profileEditInternalWidget(
+                                        'Youtube Video',
+                                        "$rupeeSign$youtubeVideoPrice",
+                                      ),
+                                      profileEditInternalWidget(
+                                        'Youtube Shorts',
+                                        "$rupeeSign$youtubeShortsPrice",
+                                      ),
+                                      const SizedBox(width: 60),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   InkWell(
                     onTap: () {

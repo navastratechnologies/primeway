@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +9,7 @@ import 'package:primewayskills_app/view/auth_screens/address.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import 'dart:math' as math;
+
 import '../../controllers/phone_controller.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -120,6 +121,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'account_type': "",
       'youtube_subscribers': "",
       'youtube_username': "",
+      "insta_image_price": "0",
+      "insta_video_price": "0",
+      "insta_carousel_price": "0",
+      "insta_story_price": "0",
+      "insta_reels_price": "0",
+      "youtube_video_price": "0",
+      "youtube_short_price": "0",
     });
     storage.delete(key: 'referralUserId');
     storage.delete(key: 'referralId');

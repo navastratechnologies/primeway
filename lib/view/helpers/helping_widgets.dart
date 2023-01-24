@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 headingWidgetMethod(heading) {
@@ -56,57 +57,6 @@ sidebarIconWidget(icon) {
   return Icon(
     icon,
     color: whiteColor.withOpacity(0.6),
-  );
-}
-
-editProfileCardWidget(text) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 8),
-    child: Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: whiteColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 10,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'INCOMPLETE',
-                style: TextStyle(
-                  color: primeColor,
-                  fontSize: 10,
-                  letterSpacing: 1,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  'EDIT',
-                  style: TextStyle(
-                    color: primeColor,
-                    fontSize: 12,
-                    letterSpacing: 1,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          headingWidgetMethod(text),
-        ],
-      ),
-    ),
   );
 }
 
@@ -189,5 +139,27 @@ paragraphWidgetMethodForResourcesBoldTitle(heading) {
       fontWeight: FontWeight.bold,
       fontSize: maxSize - 3,
     ),
+  );
+}
+
+commercialHeadingWidget(asset, heading) {
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Lottie.asset(
+        asset,
+        fit: BoxFit.cover,
+        height: 40,
+        width: 40,
+      ),
+      Text(
+        heading,
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+          color: Colors.black.withOpacity(0.6),
+        ),
+      ),
+    ],
   );
 }
