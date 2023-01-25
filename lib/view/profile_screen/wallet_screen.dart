@@ -91,10 +91,13 @@ class _WalletScreenState extends State<WalletScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
-                            Icons.currency_bitcoin_rounded,
-                            // color: whiteColor,
-                            size: 40,
+                          const Text(
+                            "P Coin",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              // color: whiteColor,
+                              fontSize: 28,
+                            ),
                           ),
                           Text(
                             widget.walletBalance,

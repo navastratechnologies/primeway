@@ -203,15 +203,7 @@ class _DashboardState extends State<Dashboard> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ProfileEditScreen(
-                          userAddress: userAddress,
-                          userEmail: userEmail,
-                          userName: userName,
                           userNumber: userNumber,
-                          userPayment: userPayment,
-                          userProfileImage: userProfileImage,
-                          userWalletId: userWalletId,
-                          userProfileCompletionPercentage:
-                              profileCompletionPercentage.toString(),
                         ),
                       ),
                     );

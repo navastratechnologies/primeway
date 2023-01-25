@@ -161,6 +161,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   "${firstNameController.text} ${lastNameController.text}",
             },
           );
+          FirebaseFirestore.instance
+              .collection('wallet')
+              .doc(refferalUserIdController.text)
+              .collection('refferal')
+              .add(
+            {
+              "refferal_point": referralCharges.toString(),
+              "date":
+                  "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year} ${DateTime.now().hour}:${DateTime.now().minute}",
+            },
+          );
           log('total refferal is $totalRefferalEarnings $totalRefferalEarningInc');
         },
       );

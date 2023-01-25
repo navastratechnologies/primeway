@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
@@ -69,138 +70,166 @@ class _CommercialPricingPageState extends State<CommercialPricingPage> {
     super.initState();
   }
 
+  Future<bool> _onWillPop() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProfileEditScreen(
+          userNumber: widget.userNumber,
+        ),
+      ),
+    );
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(
-          color: Colors.black.withOpacity(0.6),
-        ),
-        backgroundColor: whiteColor,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              children: [
-                MaterialButton(
-                  color: purpleColor,
-                  padding: const EdgeInsets.all(10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    'Skip for now',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          iconTheme: IconThemeData(
+            color: Colors.black.withOpacity(0.6),
+          ),
+          leading: IconButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileEditScreen(
+                  userNumber: widget.userNumber,
+                ),
+              ),
+            ),
+            icon: const Icon(
+              Icons.arrow_back,
+            ),
+          ),
+          backgroundColor: whiteColor,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  MaterialButton(
+                    color: purpleColor,
+                    padding: const EdgeInsets.all(10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'Skip for now',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
+                ],
+              ),
+            ),
+          ],
+          title: Text(
+            'Commercials',
+            style: TextStyle(
+              fontSize: maxSize,
+              color: Colors.black.withOpacity(0.6),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Text(
+                  "Share your charges for insta & youtube platform to get more relevant collabs.",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black.withOpacity(0.6),
+                  ),
+                ),
+                const SizedBox(height: 50),
+                commercialHeadingWidget(
+                  'assets/json/instagram-icon.json',
+                  "Connect with Instagram",
+                ),
+                editCommercialsWidget(
+                  "Insta Image",
+                  instaImageController,
+                  'Image',
+                ),
+                editCommercialsWidget(
+                  "Insta Story",
+                  instaStoryController,
+                  'Story',
+                ),
+                editCommercialsWidget(
+                  "Insta Video",
+                  instaVideoController,
+                  'Video',
+                ),
+                editCommercialsWidget(
+                  "Insta Reels",
+                  instaReelsController,
+                  'Reels',
+                ),
+                editCommercialsWidget(
+                  "Insta Carousels",
+                  instaCarouselController,
+                  'Carousel',
+                ),
+                const SizedBox(height: 30),
+                commercialHeadingWidget(
+                  'assets/json/youtube.json',
+                  "Connect with Youtube",
+                ),
+                editCommercialsWidget(
+                  "Youtube Video",
+                  youtubeVideoController,
+                  'Video',
+                ),
+                editCommercialsWidget(
+                  "Youtube Shorts",
+                  youtubeShortsController,
+                  'Shorts',
                 ),
               ],
             ),
           ),
-        ],
-        title: Text(
-          'Commercials',
-          style: TextStyle(
-            fontSize: maxSize,
-            color: Colors.black.withOpacity(0.6),
-            fontWeight: FontWeight.bold,
-          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Text(
-                "Share your charges for insta & youtube platform to get more relevant collabs.",
+        bottomNavigationBar: SizedBox(
+          height: 80,
+          child: Center(
+            child: MaterialButton(
+              minWidth: displayWidth(context) / 1.5,
+              color: primeColor2,
+              padding: const EdgeInsets.all(10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              onPressed: () {
+                setState(() {
+                  const LoaderWidget();
+                  updateCommercialPrice();
+                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Dashboard(),
+                  ),
+                );
+              },
+              child: const Text(
+                'Save',
                 style: TextStyle(
                   fontSize: 18,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black.withOpacity(0.6),
                 ),
-              ),
-              const SizedBox(height: 50),
-              commercialHeadingWidget(
-                'assets/json/instagram-icon.json',
-                "Connect with Instagram",
-              ),
-              editCommercialsWidget(
-                "Insta Image",
-                instaImageController,
-                'Image',
-              ),
-              editCommercialsWidget(
-                "Insta Story",
-                instaStoryController,
-                'Story',
-              ),
-              editCommercialsWidget(
-                "Insta Video",
-                instaVideoController,
-                'Video',
-              ),
-              editCommercialsWidget(
-                "Insta Reels",
-                instaReelsController,
-                'Reels',
-              ),
-              editCommercialsWidget(
-                "Insta Carousels",
-                instaCarouselController,
-                'Carousel',
-              ),
-              const SizedBox(height: 30),
-              commercialHeadingWidget(
-                'assets/json/youtube.json',
-                "Connect with Youtube",
-              ),
-              editCommercialsWidget(
-                "Youtube Video",
-                youtubeVideoController,
-                'Video',
-              ),
-              editCommercialsWidget(
-                "Youtube Shorts",
-                youtubeShortsController,
-                'Shorts',
-              ),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: SizedBox(
-        height: 80,
-        child: Center(
-          child: MaterialButton(
-            minWidth: displayWidth(context) / 1.5,
-            color: primeColor2,
-            padding: const EdgeInsets.all(10),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            onPressed: () {
-              setState(() {
-                const LoaderWidget();
-                updateCommercialPrice();
-              });
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Dashboard(),
-                ),
-              );
-            },
-            child: const Text(
-              'Save',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
               ),
             ),
           ),

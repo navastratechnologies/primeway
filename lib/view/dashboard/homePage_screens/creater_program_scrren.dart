@@ -18,20 +18,20 @@ class CreaterProgramScreen extends StatefulWidget {
   final String userLanguage;
   final String userFollowers;
 
-  const CreaterProgramScreen(
-      {Key? key,
-      required this.titles,
-      required this.categorey,
-      required this.userNumber,
-      required this.userName,
-      required this.userAddress,
-      required this.userProfileImage,
-      required this.userPayment,
-      required this.userEmail,
-      required this.userWalletId,
-      required this.userLanguage,
-      required this.userFollowers})
-      : super(key: key);
+  const CreaterProgramScreen({
+    Key? key,
+    required this.titles,
+    required this.categorey,
+    required this.userNumber,
+    required this.userName,
+    required this.userAddress,
+    required this.userProfileImage,
+    required this.userPayment,
+    required this.userEmail,
+    required this.userWalletId,
+    required this.userLanguage,
+    required this.userFollowers,
+  }) : super(key: key);
 
   @override
   State<CreaterProgramScreen> createState() => _CreaterProgramScreenState();

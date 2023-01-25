@@ -1,11 +1,13 @@
 // ignore_for_file: avoid_print, invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/controllers/deepLink.dart';
-import 'package:primewayskills_app/view/complete_profile_screens/complete_profile_screen.dart';
+import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 
 class CollaborationInternalScreen extends StatefulWidget {
   final String heading,
@@ -26,27 +28,27 @@ class CollaborationInternalScreen extends StatefulWidget {
   final String userWalletId;
   final String userLanguage;
   final String userFollowers;
-  const CollaborationInternalScreen(
-      {Key? key,
-      required this.heading,
-      required this.image,
-      required this.paragraph,
-      required this.followerDetails,
-      required this.brandlogo,
-      required this.categories,
-      required this.language,
-      required this.collaborationtype,
-      required this.titles,
-      required this.userNumber,
-      required this.userName,
-      required this.userAddress,
-      required this.userProfileImage,
-      required this.userPayment,
-      required this.userEmail,
-      required this.userWalletId,
-      required this.userLanguage,
-      required this.userFollowers})
-      : super(key: key);
+  const CollaborationInternalScreen({
+    Key? key,
+    required this.heading,
+    required this.image,
+    required this.paragraph,
+    required this.followerDetails,
+    required this.brandlogo,
+    required this.categories,
+    required this.language,
+    required this.collaborationtype,
+    required this.titles,
+    required this.userNumber,
+    required this.userName,
+    required this.userAddress,
+    required this.userProfileImage,
+    required this.userPayment,
+    required this.userEmail,
+    required this.userWalletId,
+    required this.userLanguage,
+    required this.userFollowers,
+  }) : super(key: key);
 
   @override
   State<CollaborationInternalScreen> createState() =>
@@ -56,6 +58,60 @@ class CollaborationInternalScreen extends StatefulWidget {
 class _CollaborationInternalScreenState
     extends State<CollaborationInternalScreen> {
   String url = 'https://primeway.page.link';
+
+  int profileCompletionPercentage = 0;
+
+  Future getUserDataCompletionPercentage() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userNumber)
+        .get()
+        .then(
+      (value) {
+        setState(
+          () {
+            if (value.get('address') != "") {
+              profileCompletionPercentage = 10;
+            }
+            if (value.get('date_of_brith') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('description') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('email') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('gender') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('instagram_username') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('language') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('name') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('phone_number') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+            if (value.get('profile_pic') != "") {
+              profileCompletionPercentage = profileCompletionPercentage + 10;
+            }
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    getUserDataCompletionPercentage();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -438,55 +494,45 @@ class _CollaborationInternalScreenState
           ],
         ),
       ),
-      bottomNavigationBar: SizedBox(
-        height: 70,
-        width: width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CompleteProfileScreen(
-                        userNumber: widget.userNumber,
-                        userAddress: widget.userAddress,
-                        userEmail: widget.userEmail,
-                        userName: widget.userName,
-                        userPayment: widget.userPayment,
-                        userProfileImage: widget.userProfileImage,
-                        userWalletId: widget.userWalletId),
-                  ),
-                );
-              },
-              child: Container(
-                height: 50,
-                width: width / 1.5,
-                decoration: BoxDecoration(
-                  color: primeColor,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 10,
-                      spreadRadius: 2,
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    'Complete Your Profile To Apply',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: maxSize - 3,
-                      color: whiteColor,
-                    ),
-                  ),
-                ),
-              ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: whiteColor,
+          boxShadow: [
+            BoxShadow(
+              color: primeColor.withOpacity(0.1),
+              blurRadius: 10,
+              spreadRadius: 1,
             ),
           ],
+        ),
+        height: 80,
+        child: Center(
+          child: profileCompletionPercentage == 100
+              ? Container()
+              : MaterialButton(
+                  minWidth: displayWidth(context) / 1.5,
+                  color: primeColor,
+                  padding: const EdgeInsets.all(10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfileEditScreen(
+                        userNumber: widget.userNumber,
+                      ),
+                    ),
+                  ),
+                  child: const Text(
+                    'Complete your profile to continue',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
         ),
       ),
     );
