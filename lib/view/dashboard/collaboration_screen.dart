@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/dashboard/homePage_screens/collaboration_internal_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
+import 'package:primewayskills_app/view/helpers/loader.dart';
 
 class CollaborationScreen extends StatefulWidget {
   final String userNumber;
@@ -344,9 +345,7 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                           },
                         );
                       }
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const LoaderWidget();
                     }),
               ],
             ),

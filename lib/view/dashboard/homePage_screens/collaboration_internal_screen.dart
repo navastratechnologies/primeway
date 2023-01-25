@@ -508,7 +508,30 @@ class _CollaborationInternalScreenState
         height: 80,
         child: Center(
           child: profileCompletionPercentage == 100
-              ? Container()
+              ? MaterialButton(
+                  minWidth: displayWidth(context) / 1.5,
+                  color: primeColor,
+                  padding: const EdgeInsets.all(10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfileEditScreen(
+                        userNumber: widget.userNumber,
+                      ),
+                    ),
+                  ),
+                  child: const Text(
+                    'Apply Now',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
               : MaterialButton(
                   minWidth: displayWidth(context) / 1.5,
                   color: primeColor,
