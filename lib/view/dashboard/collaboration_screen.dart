@@ -178,30 +178,8 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           CollaborationInternalScreen(
-                                        heading: documentSnapshot['brand_logo'],
-                                        image: documentSnapshot['image'],
-                                        paragraph:
-                                            documentSnapshot['descreption'],
-                                        followerDetails: documentSnapshot[
-                                            'required_followers'],
-                                        brandlogo:
-                                            documentSnapshot['brand_logo'],
-                                        categories:
-                                            documentSnapshot['categories'],
-                                        collaborationtype: documentSnapshot[
-                                            'collaboration_type'],
-                                        language: documentSnapshot['language'],
-                                        titles: documentSnapshot['titles'],
+                                        collabId: documentSnapshot.id,
                                         userNumber: widget.userNumber,
-                                        userAddress: widget.userAddress,
-                                        userEmail: widget.userEmail,
-                                        userName: widget.userName,
-                                        userPayment: widget.userPayment,
-                                        userProfileImage:
-                                            widget.userProfileImage,
-                                        userWalletId: widget.userWalletId,
-                                        userLanguage: widget.userLanguage,
-                                        userFollowers: widget.userFollowers,
                                       ),
                                     ),
                                   );

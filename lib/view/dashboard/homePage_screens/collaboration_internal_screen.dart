@@ -10,44 +10,11 @@ import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 
 class CollaborationInternalScreen extends StatefulWidget {
-  final String heading,
-      image,
-      paragraph,
-      followerDetails,
-      brandlogo,
-      categories,
-      collaborationtype,
-      language,
-      titles;
-  final String userNumber;
-  final String userName;
-  final String userAddress;
-  final String userProfileImage;
-  final String userPayment;
-  final String userEmail;
-  final String userWalletId;
-  final String userLanguage;
-  final String userFollowers;
+  final String userNumber, collabId;
   const CollaborationInternalScreen({
     Key? key,
-    required this.heading,
-    required this.image,
-    required this.paragraph,
-    required this.followerDetails,
-    required this.brandlogo,
-    required this.categories,
-    required this.language,
-    required this.collaborationtype,
-    required this.titles,
     required this.userNumber,
-    required this.userName,
-    required this.userAddress,
-    required this.userProfileImage,
-    required this.userPayment,
-    required this.userEmail,
-    required this.userWalletId,
-    required this.userLanguage,
-    required this.userFollowers,
+    required this.collabId,
   }) : super(key: key);
 
   @override
@@ -61,7 +28,26 @@ class _CollaborationInternalScreenState
 
   int profileCompletionPercentage = 0;
 
-  Future getUserDataCompletionPercentage() async {
+  // collab values
+  String title = '';
+  String image = '';
+  String brandLogo = '';
+  int followersFrom = 0;
+  int followersTo = 0;
+  String description = '';
+  String contentLanguage = '';
+  List contentLanguageList = [];
+  String categories = '';
+  List categoriesList = [];
+  String applicationStatus = '';
+  String collabType = '';
+
+  // user values
+  int userFollowers = 0;
+  List userContentLanguage = [];
+  List userContentCategory = [];
+
+  Future getUserData() async {
     FirebaseFirestore.instance
         .collection('users')
         .doc(widget.userNumber)
@@ -100,15 +86,69 @@ class _CollaborationInternalScreenState
             if (value.get('profile_pic') != "") {
               profileCompletionPercentage = profileCompletionPercentage + 10;
             }
+            if (value.get('instagram_followers') != null ||
+                value.get('instagram_followers') != "") {
+              try {
+                userFollowers = int.parse(value.get('instagram_followers'));
+              } catch (e) {
+                print("Invalid number: $e");
+              }
+            }
+            userContentLanguage = value
+                .get('language')
+                .toString()
+                .split(',')
+                .map((e) => e.trim())
+                .toList();
+            userContentCategory = value
+                .get('categories')
+                .toString()
+                .split(',')
+                .map((e) => e.trim())
+                .toList();
           },
         );
       },
     );
   }
 
+  Future getCollabData() async {
+    getUserData();
+    FirebaseFirestore.instance
+        .collection('collaboration')
+        .doc(widget.collabId)
+        .get()
+        .then(
+      (value) {
+        title = value.get('titles');
+        description = value.get('descreption');
+        image = value.get('image');
+        brandLogo = value.get('brand_logo');
+        applicationStatus = value.get('status');
+        collabType = value.get('collaboration_type');
+        try {
+          followersFrom = int.parse(value.get('required_followers_from'));
+        } catch (e) {
+          print("Invalid number: $e");
+        }
+        try {
+          followersTo = int.parse(value.get('required_followers_to'));
+        } catch (e) {
+          print("Invalid number: $e");
+        }
+        categories = value.get('categories');
+        categoriesList = categories.split(',').map((e) => e.trim()).toList();
+        contentLanguage = value.get('language');
+        contentLanguageList =
+            contentLanguage.split(',').map((e) => e.trim()).toList();
+      },
+    );
+  }
+
   @override
   void initState() {
-    getUserDataCompletionPercentage();
+    getCollabData();
+
     super.initState();
   }
 
@@ -124,7 +164,7 @@ class _CollaborationInternalScreenState
         ),
         backgroundColor: whiteColor,
         title: Text(
-          widget.titles,
+          title,
           style: TextStyle(
             fontSize: maxSize,
             color: Colors.black.withOpacity(0.6),
@@ -147,7 +187,7 @@ class _CollaborationInternalScreenState
                 ),
                 image: DecorationImage(
                   image: NetworkImage(
-                    widget.image,
+                    image,
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -161,11 +201,14 @@ class _CollaborationInternalScreenState
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.green,
+                        color:
+                            applicationStatus == "1" ? primeColor2 : primeColor,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
-                        'Applications Open',
+                        applicationStatus == "1"
+                            ? 'Applications Open'
+                            : 'Application Closed',
                         style: TextStyle(
                           color: whiteColor,
                           fontWeight: FontWeight.w600,
@@ -193,49 +236,48 @@ class _CollaborationInternalScreenState
                           ),
                           const SizedBox(width: 10),
                           Text(
-                            widget.followerDetails,
+                            "$followersFrom to ",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            "$followersTo followers",
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
                       ),
-                      InkWell(
-                        onTap: () {
+                      MaterialButton(
+                        padding: EdgeInsets.zero,
+                        height: 0,
+                        minWidth: 0,
+                        onPressed: () {
                           DeepLinkService.instance!.buildDynamicLinks(
                             url,
-                            widget.titles,
+                            title,
                             widget.userNumber,
                           );
                         },
-                        child: SizedBox(
-                          width: 35,
-                          child: FaIcon(
-                            FontAwesomeIcons.shareNodes,
-                            color: primeColor,
-                          ),
+                        child: FaIcon(
+                          FontAwesomeIcons.shareNodes,
+                          color: purpleColor,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    widget.titles,
+                    title,
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.4),
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  // SizedBox(
-                  //     height: 50,
-                  //     width: 100,
-                  //     child: Image.network(
-                  //       widget.heading,
-                  //       fit: BoxFit.cover,
-                  //     )),
                   const SizedBox(height: 20),
                   Text(
-                    widget.paragraph,
+                    description,
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.4),
                       fontWeight: FontWeight.w400,
@@ -265,7 +307,7 @@ class _CollaborationInternalScreenState
                             ),
                             const SizedBox(width: 20),
                             Text(
-                              widget.followerDetails,
+                              "$followersFrom to $followersTo followers",
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w400,
@@ -273,12 +315,12 @@ class _CollaborationInternalScreenState
                             ),
                           ],
                         ),
-                        widget.userFollowers == widget.followerDetails
+                        userFollowers >= followersFrom
                             ? Container(
                                 padding: const EdgeInsets.all(3),
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: Colors.green,
+                                  color: primeColor2,
                                 ),
                                 child: Icon(
                                   Icons.check,
@@ -325,7 +367,7 @@ class _CollaborationInternalScreenState
                               ),
                             ),
                             Text(
-                              widget.categories,
+                              categories,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w400,
@@ -333,18 +375,32 @@ class _CollaborationInternalScreenState
                             ),
                           ],
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: primeColor,
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            color: whiteColor,
-                            size: 11,
-                          ),
-                        ),
+                        userContentCategory.any(
+                                (element) => categoriesList.contains(element))
+                            ? Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: primeColor2,
+                                ),
+                                child: Icon(
+                                  Icons.check,
+                                  color: whiteColor,
+                                  size: 11,
+                                ),
+                              )
+                            : Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: primeColor,
+                                ),
+                                child: Icon(
+                                  Icons.close,
+                                  color: whiteColor,
+                                  size: 11,
+                                ),
+                              ),
                       ],
                     ),
                   ),
@@ -372,7 +428,7 @@ class _CollaborationInternalScreenState
                               ),
                             ),
                             Text(
-                              widget.language,
+                              contentLanguage,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w400,
@@ -380,8 +436,21 @@ class _CollaborationInternalScreenState
                             ),
                           ],
                         ),
-                        widget.userLanguage == widget.language
+                        userContentLanguage.any((element) =>
+                                contentLanguageList.contains(element))
                             ? Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: primeColor2,
+                                ),
+                                child: Icon(
+                                  Icons.check,
+                                  color: whiteColor,
+                                  size: 11,
+                                ),
+                              )
+                            : Container(
                                 padding: const EdgeInsets.all(3),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
@@ -392,40 +461,73 @@ class _CollaborationInternalScreenState
                                   color: whiteColor,
                                   size: 11,
                                 ),
-                              )
-                            : Container(
-                                padding: const EdgeInsets.all(3),
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.green,
-                                ),
-                                child: Icon(
-                                  Icons.check,
-                                  color: whiteColor,
-                                  size: 11,
-                                ),
                               ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 30),
-                  headingWidgetMethod('Additional Requirements'),
-                  const SizedBox(height: 20),
-                  listOrderWidget('Foodie'),
-                  const SizedBox(height: 14),
-                  listOrderWidget('Overseas Students'),
-                  const SizedBox(height: 14),
-                  listOrderWidget('Travel'),
-                  const SizedBox(height: 14),
-                  listOrderWidget('Food Bloggers'),
-                  const SizedBox(height: 14),
-                  listOrderWidget("Recipe's"),
-                  const SizedBox(height: 14),
-                  listOrderWidget('Ready to eat food reviews'),
-                  const SizedBox(height: 14),
-                  listOrderWidget('Food Reviews'),
-                  const SizedBox(height: 14),
-                  listOrderWidget('Should have followers between 1and 307.5M'),
+                  Container(
+                    width: displayWidth(context),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 2,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: purpleColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        paymentTypeWidget(
+                          FontAwesomeIcons.box,
+                          'Barter\nCollaboration',
+                          collabType == "Barter"
+                              ? primeColor2
+                              : whiteColor.withOpacity(0.6),
+                          collabType == "Barter"
+                              ? whiteColor
+                              : whiteColor.withOpacity(0.6),
+                        ),
+                        Container(
+                          width: 2,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: whiteColor.withOpacity(0.4),
+                          ),
+                        ),
+                        paymentTypeWidget(
+                          Icons.currency_rupee_rounded,
+                          'Paid\nCollaboration',
+                          collabType == "Paid"
+                              ? primeColor2
+                              : whiteColor.withOpacity(0.6),
+                          collabType == "Paid"
+                              ? whiteColor
+                              : whiteColor.withOpacity(0.6),
+                        ),
+                        Container(
+                          width: 2,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: whiteColor.withOpacity(0.4),
+                          ),
+                        ),
+                        paymentTypeWidget(
+                          FontAwesomeIcons.bolt,
+                          'Instant\nPayout',
+                          collabType == "Instant Payout"
+                              ? primeColor2
+                              : whiteColor.withOpacity(0.6),
+                          collabType == "Instant Payout"
+                              ? whiteColor
+                              : whiteColor.withOpacity(0.6),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 30),
                   headingWidgetMethod('Help & Support'),
                   const SizedBox(height: 10),
@@ -507,56 +609,107 @@ class _CollaborationInternalScreenState
         ),
         height: 80,
         child: Center(
-          child: profileCompletionPercentage == 100
-              ? MaterialButton(
-                  minWidth: displayWidth(context) / 1.5,
-                  color: primeColor,
-                  padding: const EdgeInsets.all(10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileEditScreen(
-                        userNumber: widget.userNumber,
-                      ),
-                    ),
-                  ),
-                  child: const Text(
-                    'Apply Now',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+          child: applicationStatus == "0"
+              ? Text(
+                  'Application Closed !!!',
+                  style: TextStyle(
+                    color: primeColor,
+                    fontWeight: FontWeight.bold,
                   ),
                 )
-              : MaterialButton(
-                  minWidth: displayWidth(context) / 1.5,
-                  color: primeColor,
-                  padding: const EdgeInsets.all(10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileEditScreen(
-                        userNumber: widget.userNumber,
+              : !userContentLanguage.any(
+                          (element) => contentLanguageList.contains(element)) ||
+                      !userContentCategory
+                          .any((element) => categoriesList.contains(element)) ||
+                      userFollowers < followersFrom
+                  ? Text(
+                      "You profile doesn't meet the application criteria",
+                      style: TextStyle(
+                        color: primeColor,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  ),
-                  child: const Text(
-                    'Complete your profile to continue',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                    )
+                  : profileCompletionPercentage == 100
+                      ? MaterialButton(
+                          minWidth: displayWidth(context) / 1.5,
+                          color: purpleColor,
+                          padding: const EdgeInsets.all(10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileEditScreen(
+                                userNumber: widget.userNumber,
+                              ),
+                            ),
+                          ),
+                          child: const Text(
+                            'Apply Now',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      : profileCompletionPercentage < 10
+                          ? CircularProgressIndicator(
+                              color: primeColor2,
+                              strokeWidth: 5,
+                            )
+                          : MaterialButton(
+                              minWidth: displayWidth(context) / 1.5,
+                              color: primeColor,
+                              padding: const EdgeInsets.all(10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProfileEditScreen(
+                                    userNumber: widget.userNumber,
+                                  ),
+                                ),
+                              ),
+                              child: const Text(
+                                'Complete your profile to continue',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
         ),
+      ),
+    );
+  }
+
+  paymentTypeWidget(icon, heading, iconColor, headingColor) {
+    return SizedBox(
+      width: displayWidth(context) / 3.5,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FaIcon(
+            icon,
+            color: iconColor,
+          ),
+          const SizedBox(height: 5),
+          Text(
+            heading,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+              fontSize: 11,
+              color: headingColor,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
