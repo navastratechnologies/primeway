@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
-// ignore: depend_on_referenced_packages
-import 'package:http/http.dart' as http;
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart' as http;
 
 late AndroidNotificationChannel channel;
 
@@ -27,18 +27,10 @@ void loadFCM() async {
     );
 
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-    /// Create an Android Notification Channel.
-    ///
-    /// We use this channel in the `AndroidManifest.xml` file to override the
-    /// default FCM channel to enable heads up notifications.
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
-
-    /// Update the iOS foreground notification presentation options to allow
-    /// heads up notifications.
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
@@ -69,10 +61,12 @@ void listenFCM() async {
               // styleInformation: StyleInformation,
               priority: Priority.max,
               playSound: true,
-              ongoing: true,
+              // ongoing: true,
               autoCancel: true,
+              // actions: [],
               usesChronometer: false,
             ),
+            iOS: const DarwinNotificationDetails(),
           ),
         );
       }

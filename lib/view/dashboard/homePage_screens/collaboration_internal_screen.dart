@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/controllers/deepLink.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
+import 'package:primewayskills_app/view/collab_apply_screens/view_brief_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
@@ -266,14 +267,6 @@ class _CollaborationInternalScreenState
                         ),
                       ),
                     ],
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: Colors.black.withOpacity(0.4),
-                      fontWeight: FontWeight.w400,
-                    ),
                   ),
                   const SizedBox(height: 20),
                   Text(
@@ -640,7 +633,7 @@ class _CollaborationInternalScreenState
                           onPressed: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProfileEditScreen(
+                              builder: (context) => ViewBriefScreen(
                                 userNumber: widget.userNumber,
                               ),
                             ),

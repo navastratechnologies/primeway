@@ -287,7 +287,7 @@ class _HomescreenState extends State<Homescreen> {
                     width: width,
                     height: 360,
                     child: StreamBuilder(
-                      stream: collaboration.snapshots(),
+                      stream: collaboration.where('status', isEqualTo: '1').snapshots(),
                       builder: (context,
                           AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                         if (streamSnapshot.hasData) {
