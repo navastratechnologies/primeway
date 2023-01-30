@@ -119,103 +119,108 @@ class _HomescreenState extends State<Homescreen> {
                 children: [
                   widget.userProfileCompletionPercentage == "100"
                       ? Container()
-                      : Column(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (contex) => ProfileEditScreen(
-                                      userNumber: widget.userNumber,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                height: 70,
-                                width: width,
-                                decoration: BoxDecoration(
-                                  color: primeColor,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      FaIcon(
-                                        FontAwesomeIcons.user,
-                                        color: whiteColor,
-                                        size: 40,
+                      : int.parse(widget.userProfileCompletionPercentage) < 10
+                          ? Container()
+                          : Column(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (contex) => ProfileEditScreen(
+                                          userNumber: widget.userNumber,
+                                        ),
                                       ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 70,
+                                    width: width,
+                                    decoration: BoxDecoration(
+                                      color: primeColor,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
-                                          Text(
-                                            "Complete Your profile ➪",
-                                            style: TextStyle(
-                                              color: whiteColor,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w400,
-                                            ),
+                                          FaIcon(
+                                            FontAwesomeIcons.user,
+                                            color: whiteColor,
+                                            size: 40,
                                           ),
-                                          const SizedBox(height: 5),
-                                          Row(
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                              Stack(
+                                              Text(
+                                                "Complete Your profile ➪",
+                                                style: TextStyle(
+                                                  color: whiteColor,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Row(
                                                 children: [
-                                                  Container(
-                                                    height: 7,
-                                                    width: 200,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      color: whiteColor
-                                                          .withOpacity(0.4),
-                                                    ),
+                                                  Stack(
+                                                    children: [
+                                                      Container(
+                                                        height: 7,
+                                                        width: 200,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          color: whiteColor
+                                                              .withOpacity(0.4),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        height: 7,
+                                                        width: double.parse(widget
+                                                                .userProfileCompletionPercentage) *
+                                                            2,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          color: whiteColor,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                  Container(
-                                                    height: 7,
-                                                    width: double.parse(widget
-                                                            .userProfileCompletionPercentage) *
-                                                        2,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
+                                                  const SizedBox(width: 10),
+                                                  Text(
+                                                    "${widget.userProfileCompletionPercentage}%",
+                                                    style: TextStyle(
                                                       color: whiteColor,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
                                                 ],
-                                              ),
-                                              const SizedBox(width: 10),
-                                              Text(
-                                                "${widget.userProfileCompletionPercentage}%",
-                                                style: TextStyle(
-                                                  color: whiteColor,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
                                               ),
                                             ],
                                           ),
                                         ],
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
                   const SizedBox(height: 30),
                   headingWidgetMethod('Creator Programs'),
                   const SizedBox(height: 10),
@@ -287,7 +292,9 @@ class _HomescreenState extends State<Homescreen> {
                     width: width,
                     height: 360,
                     child: StreamBuilder(
-                      stream: collaboration.where('status', isEqualTo: '1').snapshots(),
+                      stream: collaboration
+                          .where('status', isEqualTo: '1')
+                          .snapshots(),
                       builder: (context,
                           AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                         if (streamSnapshot.hasData) {

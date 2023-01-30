@@ -1,13 +1,18 @@
 // ignore_for_file: avoid_print, invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:primewayskills_app/controllers/deepLink.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
+import 'package:primewayskills_app/view/collab_apply_screens/task_completion_screen.dart';
 import 'package:primewayskills_app/view/collab_apply_screens/view_brief_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:primewayskills_app/view/helpers/loader.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 
 class CollaborationInternalScreen extends StatefulWidget {
@@ -42,8 +47,14 @@ class _CollaborationInternalScreenState
   List categoriesList = [];
   String applicationStatus = '';
   String collabType = '';
+  String campainDuration = '';
+  String task_uploaded_by_user = '';
+  String task_viewed_by_user = '';
+  String task_verified_for_user = '';
 
   // user values
+  String userName = '';
+  String userProfilePic = '';
   int userFollowers = 0;
   List userContentLanguage = [];
   List userContentCategory = [];
@@ -57,6 +68,8 @@ class _CollaborationInternalScreenState
       (value) {
         setState(
           () {
+            userName = value.get('name');
+            userProfilePic = value.get('profile_pic');
             if (value.get('address') != "") {
               profileCompletionPercentage = 10;
             }
@@ -98,12 +111,14 @@ class _CollaborationInternalScreenState
             userContentLanguage = value
                 .get('language')
                 .toString()
+                .toUpperCase()
                 .split(',')
                 .map((e) => e.trim())
                 .toList();
             userContentCategory = value
                 .get('categories')
                 .toString()
+                .toUpperCase()
                 .split(',')
                 .map((e) => e.trim())
                 .toList();
@@ -113,43 +128,58 @@ class _CollaborationInternalScreenState
     );
   }
 
-  Future getCollabData() async {
-    getUserData();
+  Future applyCollab() async {
+    String formatedTime = DateFormat.jm().format(DateTime.now());
+    String formatedDate =
+        "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
+    log('formatted date is $formatedDate $formatedTime');
     FirebaseFirestore.instance
         .collection('collaboration')
         .doc(widget.collabId)
-        .get()
-        .then(
-      (value) {
-        title = value.get('titles');
-        description = value.get('descreption');
-        image = value.get('image');
-        brandLogo = value.get('brand_logo');
-        applicationStatus = value.get('status');
-        collabType = value.get('collaboration_type');
-        try {
-          followersFrom = int.parse(value.get('required_followers_from'));
-        } catch (e) {
-          print("Invalid number: $e");
-        }
-        try {
-          followersTo = int.parse(value.get('required_followers_to'));
-        } catch (e) {
-          print("Invalid number: $e");
-        }
-        categories = value.get('categories');
-        categoriesList = categories.split(',').map((e) => e.trim()).toList();
-        contentLanguage = value.get('language');
-        contentLanguageList =
-            contentLanguage.split(',').map((e) => e.trim()).toList();
+        .collection('users')
+        .doc(widget.userNumber)
+        .set(
+      {
+        'name': userName,
+        'number': widget.userNumber,
+        'date_time': '$formatedDate $formatedTime',
+        'profile_pic': userProfilePic,
+        'view_brief': 'true',
+        'task_uploaded': 'false',
+        'task_verified': 'false',
+      },
+    ).whenComplete(
+      () {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.userNumber)
+            .collection('myCollabs')
+            .doc(widget.collabId)
+            .set(
+          {
+            'title': title,
+            'date_time': '$formatedDate $formatedTime',
+            'image': image,
+            'brand_logo': brandLogo,
+            'status': 'draft',
+          },
+        ).whenComplete(
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ViewBriefScreen(
+                userNumber: widget.userNumber,
+              ),
+            ),
+          ),
+        );
       },
     );
   }
 
   @override
   void initState() {
-    getCollabData();
-
+    getUserData();
     super.initState();
   }
 
@@ -174,419 +204,733 @@ class _CollaborationInternalScreenState
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: height / 4,
-              width: width,
-              decoration: BoxDecoration(
-                color: primeColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  topRight: Radius.circular(15),
-                ),
-                image: DecorationImage(
-                  image: NetworkImage(
-                    image,
-                  ),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color:
-                            applicationStatus == "1" ? primeColor2 : primeColor,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        applicationStatus == "1"
-                            ? 'Applications Open'
-                            : 'Application Closed',
-                        style: TextStyle(
-                          color: whiteColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          FaIcon(
-                            FontAwesomeIcons.instagram,
-                            color: primeColor,
-                          ),
-                          const SizedBox(width: 10),
-                          Text(
-                            "$followersFrom to ",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            "$followersTo followers",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                      MaterialButton(
-                        padding: EdgeInsets.zero,
-                        height: 0,
-                        minWidth: 0,
-                        onPressed: () {
-                          DeepLinkService.instance!.buildDynamicLinks(
-                            url,
-                            title,
-                            widget.userNumber,
-                          );
-                        },
-                        child: FaIcon(
-                          FontAwesomeIcons.shareNodes,
-                          color: purpleColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    description,
-                    style: TextStyle(
-                      color: Colors.black.withOpacity(0.4),
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  headingWidgetMethod('Application Criteria'),
-                  const SizedBox(height: 20),
-                  Container(
-                    width: width,
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black.withOpacity(0.2),
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('collaboration')
+              .snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+            if (streamSnapshot.hasData) {
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: streamSnapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot documentSnapshot =
+                      streamSnapshot.data!.docs[index];
+                  if (documentSnapshot.id == widget.collabId) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            FaIcon(
-                              FontAwesomeIcons.peopleGroup,
-                              color: Colors.black.withOpacity(0.4),
-                              size: 17,
-                            ),
-                            const SizedBox(width: 20),
-                            Text(
-                              "$followersFrom to $followersTo followers",
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                        userFollowers >= followersFrom
-                            ? Container(
-                                padding: const EdgeInsets.all(3),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: primeColor2,
-                                ),
-                                child: Icon(
-                                  Icons.check,
-                                  color: whiteColor,
-                                  size: 11,
-                                ),
-                              )
-                            : Container(
-                                padding: const EdgeInsets.all(3),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: primeColor,
-                                ),
-                                child: Icon(
-                                  Icons.close,
-                                  color: whiteColor,
-                                  size: 11,
-                                ),
-                              ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    width: width,
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black.withOpacity(0.2),
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 35,
-                              child: FaIcon(
-                                FontAwesomeIcons.person,
-                                color: Colors.black.withOpacity(0.4),
-                                size: 17,
-                              ),
-                            ),
-                            Text(
-                              categories,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                        userContentCategory.any(
-                                (element) => categoriesList.contains(element))
-                            ? Container(
-                                padding: const EdgeInsets.all(3),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: primeColor2,
-                                ),
-                                child: Icon(
-                                  Icons.check,
-                                  color: whiteColor,
-                                  size: 11,
-                                ),
-                              )
-                            : Container(
-                                padding: const EdgeInsets.all(3),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: primeColor,
-                                ),
-                                child: Icon(
-                                  Icons.close,
-                                  color: whiteColor,
-                                  size: 11,
-                                ),
-                              ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    width: width,
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black.withOpacity(0.2),
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 35,
-                              child: FaIcon(
-                                FontAwesomeIcons.language,
-                                color: Colors.black.withOpacity(0.4),
-                                size: 17,
-                              ),
-                            ),
-                            Text(
-                              contentLanguage,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                        userContentLanguage.any((element) =>
-                                contentLanguageList.contains(element))
-                            ? Container(
-                                padding: const EdgeInsets.all(3),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: primeColor2,
-                                ),
-                                child: Icon(
-                                  Icons.check,
-                                  color: whiteColor,
-                                  size: 11,
-                                ),
-                              )
-                            : Container(
-                                padding: const EdgeInsets.all(3),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: primeColor,
-                                ),
-                                child: Icon(
-                                  Icons.close,
-                                  color: whiteColor,
-                                  size: 11,
-                                ),
-                              ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Container(
-                    width: displayWidth(context),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 2,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: purpleColor,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        paymentTypeWidget(
-                          FontAwesomeIcons.box,
-                          'Barter\nCollaboration',
-                          collabType == "Barter"
-                              ? primeColor2
-                              : whiteColor.withOpacity(0.6),
-                          collabType == "Barter"
-                              ? whiteColor
-                              : whiteColor.withOpacity(0.6),
-                        ),
                         Container(
-                          width: 2,
-                          height: 50,
+                          height: height / 4,
+                          width: width,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: whiteColor.withOpacity(0.4),
+                            color: primeColor,
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                documentSnapshot['image'],
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: documentSnapshot['status'] == "1"
+                                        ? primeColor2
+                                        : primeColor,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                    documentSnapshot['status'] == "1"
+                                        ? 'Applications Open'
+                                        : 'Application Closed',
+                                    style: TextStyle(
+                                      color: whiteColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        paymentTypeWidget(
-                          Icons.currency_rupee_rounded,
-                          'Paid\nCollaboration',
-                          collabType == "Paid"
-                              ? primeColor2
-                              : whiteColor.withOpacity(0.6),
-                          collabType == "Paid"
-                              ? whiteColor
-                              : whiteColor.withOpacity(0.6),
-                        ),
-                        Container(
-                          width: 2,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: whiteColor.withOpacity(0.4),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      FaIcon(
+                                        FontAwesomeIcons.instagram,
+                                        color: primeColor,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        "${documentSnapshot['required_followers_from']} to ",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        "${documentSnapshot['required_followers_to']} followers",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  MaterialButton(
+                                    padding: EdgeInsets.zero,
+                                    height: 0,
+                                    minWidth: 0,
+                                    onPressed: () {
+                                      DeepLinkService.instance!
+                                          .buildDynamicLinks(
+                                        url,
+                                        title,
+                                        widget.userNumber,
+                                      );
+                                    },
+                                    child: FaIcon(
+                                      FontAwesomeIcons.shareNodes,
+                                      color: purpleColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              headingWidgetMethod(documentSnapshot['titles']),
+                              const SizedBox(height: 20),
+                              Text(
+                                documentSnapshot['descreption'],
+                                style: TextStyle(
+                                  color: Colors.black.withOpacity(0.4),
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: 0.2,
+                                ),
+                              ),
+                              const SizedBox(height: 30),
+                              StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection('collaboration')
+                                    .doc(widget.collabId)
+                                    .collection('users')
+                                    .where('number',
+                                        isEqualTo: widget.userNumber)
+                                    .snapshots(),
+                                builder: (context,
+                                    AsyncSnapshot<QuerySnapshot>
+                                        streamSnapshot) {
+                                  if (streamSnapshot.hasData) {
+                                    if (streamSnapshot.data!.docs.isNotEmpty) {
+                                      log('stream data is ${streamSnapshot.data!.docs.length}');
+                                      return ListView.builder(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount:
+                                            streamSnapshot.data!.docs.length,
+                                        itemBuilder: (context, index) {
+                                          DocumentSnapshot documentSnapshot1 =
+                                              streamSnapshot.data!.docs[index];
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              headingWidgetMethod(
+                                                  'Steps For Completion'),
+                                              const SizedBox(height: 20),
+                                              collabTextWidget(
+                                                'Collaboration Duration',
+                                                documentSnapshot['duration'],
+                                              ),
+                                              const SizedBox(height: 10),
+                                              collabTextWidget(
+                                                'Note',
+                                                'Please read full description very carefully for schedules and task completions steps.',
+                                              ),
+                                              const SizedBox(height: 20),
+                                              Container(
+                                                width: displayWidth(context),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 2,
+                                                  vertical: 10,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: purpleColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () =>
+                                                          Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ViewBriefScreen(
+                                                            userNumber: widget
+                                                                .userNumber,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      child: paymentTypeWidget(
+                                                        FontAwesomeIcons
+                                                            .checkDouble,
+                                                        'Tasks\nViewed',
+                                                        documentSnapshot1[
+                                                                    'view_brief'] ==
+                                                                "true"
+                                                            ? primeColor2
+                                                            : whiteColor
+                                                                .withOpacity(
+                                                                    0.6),
+                                                        documentSnapshot1[
+                                                                    'view_brief'] ==
+                                                                "true"
+                                                            ? whiteColor
+                                                            : whiteColor
+                                                                .withOpacity(
+                                                                    0.6),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      width: 2,
+                                                      height: 50,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: whiteColor
+                                                            .withOpacity(0.4),
+                                                      ),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () =>
+                                                          Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              TaskCompletionScreen(
+                                                            userNumber: widget
+                                                                .userNumber,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      child: paymentTypeWidget(
+                                                        FontAwesomeIcons
+                                                            .checkDouble,
+                                                        'Tasks\nCompleted',
+                                                        documentSnapshot1[
+                                                                    'task_uploaded'] ==
+                                                                "true"
+                                                            ? primeColor2
+                                                            : whiteColor
+                                                                .withOpacity(
+                                                                    0.6),
+                                                        documentSnapshot1[
+                                                                    'task_uploaded'] ==
+                                                                "true"
+                                                            ? whiteColor
+                                                            : whiteColor
+                                                                .withOpacity(
+                                                                    0.6),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      width: 2,
+                                                      height: 50,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: whiteColor
+                                                            .withOpacity(0.4),
+                                                      ),
+                                                    ),
+                                                    paymentTypeWidget(
+                                                      documentSnapshot1[
+                                                                  'task_verified'] ==
+                                                              "rejected"
+                                                          ? FontAwesomeIcons
+                                                              .xmark
+                                                          : FontAwesomeIcons
+                                                              .checkDouble,
+                                                      'Tasks\nVerified',
+                                                      documentSnapshot1[
+                                                                  'task_verified'] ==
+                                                              "true"
+                                                          ? primeColor2
+                                                          : documentSnapshot1[
+                                                                      'task_verified'] ==
+                                                                  "rejected"
+                                                              ? primeColor
+                                                              : whiteColor
+                                                                  .withOpacity(
+                                                                      0.6),
+                                                      documentSnapshot1[
+                                                                  'task_verified'] ==
+                                                              "true"
+                                                          ? whiteColor
+                                                          : whiteColor
+                                                              .withOpacity(0.6),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          headingWidgetMethod(
+                                              'Application Criteria'),
+                                          const SizedBox(height: 20),
+                                          Container(
+                                            width: width,
+                                            padding: const EdgeInsets.all(14),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.black
+                                                    .withOpacity(0.2),
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    FaIcon(
+                                                      FontAwesomeIcons
+                                                          .peopleGroup,
+                                                      color: Colors.black
+                                                          .withOpacity(0.4),
+                                                      size: 17,
+                                                    ),
+                                                    const SizedBox(width: 20),
+                                                    Text(
+                                                      "${documentSnapshot['required_followers_from']} to ${documentSnapshot['required_followers_to']} followers",
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                userFollowers >=
+                                                        int.parse(documentSnapshot[
+                                                            'required_followers_from'])
+                                                    ? Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(3),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: primeColor2,
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.check,
+                                                          color: whiteColor,
+                                                          size: 11,
+                                                        ),
+                                                      )
+                                                    : Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(3),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: primeColor,
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.close,
+                                                          color: whiteColor,
+                                                          size: 11,
+                                                        ),
+                                                      ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16),
+                                          Container(
+                                            width: width,
+                                            padding: const EdgeInsets.all(14),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.black
+                                                    .withOpacity(0.2),
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 35,
+                                                      child: FaIcon(
+                                                        FontAwesomeIcons.person,
+                                                        color: Colors.black
+                                                            .withOpacity(0.4),
+                                                        size: 17,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      documentSnapshot[
+                                                          'categories'],
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                userContentCategory.any(
+                                                  (element) => documentSnapshot[
+                                                          'categories']
+                                                      .toString()
+                                                      .toUpperCase()
+                                                      .split(',')
+                                                      .map((e) => e.trim())
+                                                      .toList()
+                                                      .contains(element),
+                                                )
+                                                    ? Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(3),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: primeColor2,
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.check,
+                                                          color: whiteColor,
+                                                          size: 11,
+                                                        ),
+                                                      )
+                                                    : Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(3),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: primeColor,
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.close,
+                                                          color: whiteColor,
+                                                          size: 11,
+                                                        ),
+                                                      ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16),
+                                          Container(
+                                            width: width,
+                                            padding: const EdgeInsets.all(14),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.black
+                                                    .withOpacity(0.2),
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 35,
+                                                      child: FaIcon(
+                                                        FontAwesomeIcons
+                                                            .language,
+                                                        color: Colors.black
+                                                            .withOpacity(0.4),
+                                                        size: 17,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      documentSnapshot[
+                                                          'language'],
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                userContentLanguage.any(
+                                                  (element) => documentSnapshot[
+                                                          'language']
+                                                      .toString()
+                                                      .toUpperCase()
+                                                      .split(',')
+                                                      .map((e) => e.trim())
+                                                      .toList()
+                                                      .contains(element),
+                                                )
+                                                    ? Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(3),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: primeColor2,
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.check,
+                                                          color: whiteColor,
+                                                          size: 11,
+                                                        ),
+                                                      )
+                                                    : Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(3),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: primeColor,
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.close,
+                                                          color: whiteColor,
+                                                          size: 11,
+                                                        ),
+                                                      ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 30),
+                                          Container(
+                                            width: displayWidth(context),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 2,
+                                              vertical: 10,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: purpleColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                paymentTypeWidget(
+                                                  FontAwesomeIcons.box,
+                                                  'Barter\nCollaboration',
+                                                  documentSnapshot[
+                                                                  'collaboration_type']
+                                                              .toString()
+                                                              .toUpperCase() ==
+                                                          "BARTER"
+                                                      ? primeColor2
+                                                      : whiteColor
+                                                          .withOpacity(0.6),
+                                                  documentSnapshot[
+                                                                  'collaboration_type']
+                                                              .toString()
+                                                              .toUpperCase() ==
+                                                          "BARTER"
+                                                      ? whiteColor
+                                                      : whiteColor
+                                                          .withOpacity(0.6),
+                                                ),
+                                                Container(
+                                                  width: 2,
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color: whiteColor
+                                                        .withOpacity(0.4),
+                                                  ),
+                                                ),
+                                                paymentTypeWidget(
+                                                  Icons.currency_rupee_rounded,
+                                                  'Paid\nCollaboration',
+                                                  documentSnapshot[
+                                                                  'collaboration_type']
+                                                              .toString()
+                                                              .toUpperCase() ==
+                                                          "PAID"
+                                                      ? primeColor2
+                                                      : whiteColor
+                                                          .withOpacity(0.6),
+                                                  documentSnapshot[
+                                                                  'collaboration_type']
+                                                              .toString()
+                                                              .toUpperCase() ==
+                                                          "PAID"
+                                                      ? whiteColor
+                                                      : whiteColor
+                                                          .withOpacity(0.6),
+                                                ),
+                                                Container(
+                                                  width: 2,
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color: whiteColor
+                                                        .withOpacity(0.4),
+                                                  ),
+                                                ),
+                                                paymentTypeWidget(
+                                                  FontAwesomeIcons.bolt,
+                                                  'Instant\nPayout',
+                                                  documentSnapshot[
+                                                                  'collaboration_type']
+                                                              .toString()
+                                                              .toUpperCase() ==
+                                                          "INSTANT PAYOUT"
+                                                      ? primeColor2
+                                                      : whiteColor
+                                                          .withOpacity(0.6),
+                                                  documentSnapshot[
+                                                                  'collaboration_type']
+                                                              .toString()
+                                                              .toUpperCase() ==
+                                                          "INSTANT PAYOUT"
+                                                      ? whiteColor
+                                                      : whiteColor
+                                                          .withOpacity(0.6),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                  }
+                                  return Container();
+                                },
+                              ),
+                              const SizedBox(height: 30),
+                              headingWidgetMethod('Help & Support'),
+                              const SizedBox(height: 10),
+                              Text(
+                                'In case of any queries, checkout the FAQs or contact us',
+                                style: TextStyle(
+                                  color: Colors.black.withOpacity(0.4),
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              const SizedBox(height: 30),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    children: [
+                                      FaIcon(
+                                        FontAwesomeIcons.envelope,
+                                        color: primeColor,
+                                        size: maxSize,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        'Email',
+                                        style: TextStyle(
+                                          color: primeColor,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Container(
+                                    height: 20,
+                                    width: 2,
+                                    color: primeColor,
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.contact_support_outlined,
+                                        color: primeColor,
+                                        size: maxSize,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        'FAQs',
+                                        style: TextStyle(
+                                          color: primeColor,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        paymentTypeWidget(
-                          FontAwesomeIcons.bolt,
-                          'Instant\nPayout',
-                          collabType == "Instant Payout"
-                              ? primeColor2
-                              : whiteColor.withOpacity(0.6),
-                          collabType == "Instant Payout"
-                              ? whiteColor
-                              : whiteColor.withOpacity(0.6),
-                        ),
+                        const SizedBox(height: 30),
                       ],
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  headingWidgetMethod('Help & Support'),
-                  const SizedBox(height: 10),
-                  Text(
-                    'In case of any queries, checkout the FAQs or contact us',
-                    style: TextStyle(
-                      color: Colors.black.withOpacity(0.4),
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          FaIcon(
-                            FontAwesomeIcons.envelope,
-                            color: primeColor,
-                            size: maxSize,
-                          ),
-                          const SizedBox(width: 10),
-                          Text(
-                            'Email',
-                            style: TextStyle(
-                              color: primeColor,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 20),
-                      Container(
-                        height: 20,
-                        width: 2,
-                        color: primeColor,
-                      ),
-                      const SizedBox(width: 20),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.contact_support_outlined,
-                            color: primeColor,
-                            size: maxSize,
-                          ),
-                          const SizedBox(width: 10),
-                          Text(
-                            'FAQs',
-                            style: TextStyle(
-                              color: primeColor,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
-          ],
+                    );
+                  }
+                  return Container();
+                },
+              );
+            }
+            return const LoaderWidget();
+          },
         ),
       ),
       bottomNavigationBar: Container(
@@ -600,82 +944,111 @@ class _CollaborationInternalScreenState
             ),
           ],
         ),
-        height: 80,
-        child: Center(
-          child: applicationStatus == "0"
-              ? Text(
-                  'Application Closed !!!',
-                  style: TextStyle(
-                    color: primeColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              : !userContentLanguage.any(
-                          (element) => contentLanguageList.contains(element)) ||
-                      !userContentCategory
-                          .any((element) => categoriesList.contains(element)) ||
-                      userFollowers < followersFrom
-                  ? Text(
-                      "You profile doesn't meet the application criteria",
-                      style: TextStyle(
-                        color: primeColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  : profileCompletionPercentage == 100
-                      ? MaterialButton(
-                          minWidth: displayWidth(context) / 1.5,
-                          color: purpleColor,
-                          padding: const EdgeInsets.all(10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ViewBriefScreen(
-                                userNumber: widget.userNumber,
+        height: 65,
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('collaboration')
+              .snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+            if (streamSnapshot.hasData) {
+              return ListView.builder(
+                itemCount: streamSnapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot documentSnapshot =
+                      streamSnapshot.data!.docs[index];
+                  if (documentSnapshot.id == widget.collabId) {
+                    return Center(
+                      child: documentSnapshot['status'] == "0"
+                          ? Text(
+                              'Application Closed !!!',
+                              style: TextStyle(
+                                color: primeColor,
+                                fontWeight: FontWeight.bold,
                               ),
-                            ),
-                          ),
-                          child: const Text(
-                            'Apply Now',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        )
-                      : profileCompletionPercentage < 10
-                          ? CircularProgressIndicator(
-                              color: primeColor2,
-                              strokeWidth: 5,
                             )
-                          : MaterialButton(
-                              minWidth: displayWidth(context) / 1.5,
-                              color: primeColor,
-                              padding: const EdgeInsets.all(10),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProfileEditScreen(
-                                    userNumber: widget.userNumber,
+                          : !userContentLanguage.any((element) =>
+                                      documentSnapshot['language']
+                                          .toString()
+                                          .toUpperCase()
+                                          .split(',')
+                                          .map((e) => e.trim())
+                                          .toList()
+                                          .contains(element)) ||
+                                  !userContentCategory.any((element) =>
+                                      documentSnapshot['categories']
+                                          .toString()
+                                          .toUpperCase()
+                                          .split(',')
+                                          .map((e) => e.trim())
+                                          .toList()
+                                          .contains(element)) ||
+                                  userFollowers <
+                                      int.parse(documentSnapshot[
+                                          'required_followers_from'])
+                              ? Text(
+                                  "You profile doesn't meet the application criteria",
+                                  style: TextStyle(
+                                    color: primeColor,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ),
-                              ),
-                              child: const Text(
-                                'Complete your profile to continue',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
+                                )
+                              : profileCompletionPercentage == 100
+                                  ? MaterialButton(
+                                      minWidth: displayWidth(context) / 1.5,
+                                      color: purpleColor,
+                                      padding: const EdgeInsets.all(10),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      onPressed: applyCollab,
+                                      child: const Text(
+                                        'Apply Now',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    )
+                                  : profileCompletionPercentage < 10
+                                      ? CircularProgressIndicator(
+                                          color: primeColor2,
+                                          strokeWidth: 5,
+                                        )
+                                      : MaterialButton(
+                                          minWidth: displayWidth(context) / 1.5,
+                                          color: primeColor,
+                                          padding: const EdgeInsets.all(10),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          onPressed: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProfileEditScreen(
+                                                userNumber: widget.userNumber,
+                                              ),
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            'Complete your profile to continue',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                    );
+                  }
+                  return Container();
+                },
+              );
+            }
+            return Container();
+          },
         ),
       ),
     );
@@ -704,6 +1077,31 @@ class _CollaborationInternalScreenState
           ),
         ],
       ),
+    );
+  }
+
+  collabTextWidget(head, subhead) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          head,
+          style: TextStyle(
+            color: Colors.black.withOpacity(0.4),
+            fontSize: 12,
+            letterSpacing: 1,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          subhead,
+          style: const TextStyle(
+            fontSize: 12,
+            letterSpacing: 1,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }

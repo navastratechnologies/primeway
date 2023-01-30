@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:primewayskills_app/view/collab_apply_screens/task_completion_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/loader.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
@@ -186,7 +187,7 @@ class _ViewBriefScreenState extends State<ViewBriefScreen> {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ViewBriefScreen(
+                      builder: (context) => TaskCompletionScreen(
                         userNumber: widget.userNumber,
                       ),
                     ),
