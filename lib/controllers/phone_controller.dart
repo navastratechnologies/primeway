@@ -4,10 +4,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:primewayskills_app/view/auth_screens/otpLoginScreen.dart';
 import 'package:primewayskills_app/view/auth_screens/signup.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
@@ -219,88 +216,154 @@ class AuthClass {
     }
   }
 
-  Future<UserCredential> signInWithGoogle(context) async {
-    // Trigger the authentication flow
+  // Future<UserCredential> signInWithGoogle(context) async {
+  //   // Trigger the authentication flow
 
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  //   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+  //   // Obtain the auth details from the request
+  //   final GoogleSignInAuthentication? googleAuth =
+  //       await googleUser?.authentication;
 
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+  //   // Create a new credential
+  //   final credential = GoogleAuthProvider.credential(
+  //     accessToken: googleAuth?.accessToken,
+  //     idToken: googleAuth?.idToken,
+  //   );
 
-    // Once signed in, return the UserCredential
-    UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
+  //   // Once signed in, return the UserCredential
+  //   UserCredential userCredential =
+  //       await FirebaseAuth.instance.signInWithCredential(credential);
 
-    User? user = userCredential.user;
-    if (userCredential.additionalUserInfo!.isNewUser) {
-      Fluttertoast.showToast(
-        msg: "your are new user",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 100,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-      log('if is new');
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const Dashboard(),
-        ),
-      );
-      log('else is old');
-    }
+  //   User? user = userCredential.user;
+  //   FirebaseFirestore.instance
+  //       .collection('users')
+  //       .where('email', isEqualTo: userCredential.user!.email)
+  //       .get()
+  //       .then(
+  //     (value) {
+  //       if (value.docs.isNotEmpty) {
+  //         log('user is old');
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => const Dashboard(),
+  //           ),
+  //         );
+  //       } else {
+  //         log('user is new');
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => const SignUpScreen(
+  //               phone: 'phoneNumber',
+  //               verId: 'verificationId',
+  //             ),
+  //           ),
+  //         );
+  //       }
+  //     },
+  //   );
+  //   if (userCredential.additionalUserInfo!.isNewUser) {
+  //     Fluttertoast.showToast(
+  //       msg: "your are new user",
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.BOTTOM,
+  //       timeInSecForIosWeb: 100,
+  //       backgroundColor: Colors.red,
+  //       textColor: Colors.white,
+  //       fontSize: 16.0,
+  //     );
+  //     log('if is new');
+  //   } else {
+  //     log('else is old');
+  //   }
 
-    log('user is $userCredential');
-    return FirebaseAuth.instance.signInWithCredential(credential);
-  }
+  //   // log('user is $userCredential');
+  //   return FirebaseAuth.instance.signInWithCredential(credential);
+  // }
 
-  Future<UserCredential> signInWithFacebook(context) async {
-    // Trigger the sign-in flow
+  // Future<UserCredential> signInWithFacebook(context) async {
+  //   // Trigger the sign-in flow
 
-    final LoginResult loginResult = await FacebookAuth.instance.login();
+  //   final LoginResult loginResult = await FacebookAuth.instance.login();
 
-    // Create a credential from the access token
-    final OAuthCredential facebookAuthCredential =
-        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+  //   // Create a credential from the access token
+  //   final OAuthCredential facebookAuthCredential =
+  //       FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
-    // Once signed in, return the UserCredential
-    UserCredential userCredential = await FirebaseAuth.instance
-        .signInWithCredential(facebookAuthCredential);
+  //   // Once signed in, return the UserCredential
+  //   UserCredential userCredential = await FirebaseAuth.instance
+  //       .signInWithCredential(facebookAuthCredential);
 
-    User? user = userCredential.user;
-    if (userCredential.additionalUserInfo!.isNewUser) {
-      // Fluttertoast.showToast(
-      //   msg: "your are new user",
-      //   toastLength: Toast.LENGTH_SHORT,
-      //   gravity: ToastGravity.BOTTOM,
-      //   timeInSecForIosWeb: 100,
-      //   backgroundColor: Colors.red,
-      //   textColor: Colors.white,
-      //   fontSize: 16.0,
-      // );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const Dashboard(),
-        ),
-      );
-    }
+  //   User? user = userCredential.user;
+  //   if (userCredential.additionalUserInfo!.isNewUser) {
+  //     // Fluttertoast.showToast(
+  //     //   msg: "your are new user",
+  //     //   toastLength: Toast.LENGTH_SHORT,
+  //     //   gravity: ToastGravity.BOTTOM,
+  //     //   timeInSecForIosWeb: 100,
+  //     //   backgroundColor: Colors.red,
+  //     //   textColor: Colors.white,
+  //     //   fontSize: 16.0,
+  //     // );
+  //   } else {
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => const Dashboard(),
+  //       ),
+  //     );
+  //   }
 
-    log('user is $userCredential');
+  //   log('user is $userCredential');
 
-    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-  }
+  //   return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  // }
+
+  // String generateNonce([int length = 32]) {
+  //   const charset =
+  //       '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+  //   final random = math.Random.secure();
+  //   return List.generate(length, (_) => charset[random.nextInt(charset.length)])
+  //       .join();
+  // }
+
+  // /// Returns the sha256 hash of [input] in hex notation.
+  // String sha256ofString(String input) {
+  //   final bytes = utf8.encode(input);
+  //   final digest = sha256.convert(bytes);
+  //   return digest.toString();
+  // }
+
+  // Future<UserCredential> signInWithApple(BuildContext context) async {
+  //   // To prevent replay attacks with the credential returned from Apple, we
+  //   // include a nonce in the credential request. When signing in with
+  //   // Firebase, the nonce in the id token returned by Apple, is expected to
+  //   // match the sha256 hash of `rawNonce`.
+  //   final rawNonce = generateNonce();
+  //   final nonce = sha256ofString(rawNonce);
+
+  //   // Request credential for the currently signed in Apple account.
+  //   final appleCredential = await SignInWithApple.getAppleIDCredential(
+  //     scopes: [
+  //       AppleIDAuthorizationScopes.email,
+  //       AppleIDAuthorizationScopes.fullName,
+  //     ],
+  //     nonce: nonce,
+  //   );
+
+  //   // Create an `OAuthCredential` from the credential returned by Apple.
+  //   final oauthCredential = OAuthProvider("apple.com").credential(
+  //     idToken: appleCredential.identityToken,
+  //     rawNonce: rawNonce,
+  //   );
+
+  //   // Sign in the user with Firebase. If the nonce we generated earlier does
+  //   // not match the nonce in `appleCredential.identityToken`, sign in will fail.
+  //   return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+  // }
+
 }
 
 void storeTokenAndData(username) async {

@@ -38,19 +38,17 @@ class _CollaborationInternalScreenState
   String title = '';
   String image = '';
   String brandLogo = '';
-  int followersFrom = 0;
-  int followersTo = 0;
+  String followersFrom = '';
+  String followersTo = '';
   String description = '';
   String contentLanguage = '';
+  String requirementType = '';
   List contentLanguageList = [];
   String categories = '';
   List categoriesList = [];
   String applicationStatus = '';
   String collabType = '';
   String campainDuration = '';
-  String task_uploaded_by_user = '';
-  String task_viewed_by_user = '';
-  String task_verified_for_user = '';
 
   // user values
   String userName = '';
@@ -157,11 +155,15 @@ class _CollaborationInternalScreenState
             .doc(widget.collabId)
             .set(
           {
-            'title': title,
+            'titles': title,
             'date_time': '$formatedDate $formatedTime',
             'image': image,
             'brand_logo': brandLogo,
-            'status': 'draft',
+            'status': '1',
+            'required_followers_from': followersFrom,
+            'required_followers_to': followersTo,
+            'requirement_type': requirementType,
+            'collaboration_type': collabType,
           },
         ).whenComplete(
           () => Navigator.push(
@@ -218,6 +220,13 @@ class _CollaborationInternalScreenState
                   DocumentSnapshot documentSnapshot =
                       streamSnapshot.data!.docs[index];
                   if (documentSnapshot.id == widget.collabId) {
+                    title = documentSnapshot['titles'];
+                    followersFrom = documentSnapshot['required_followers_from'];
+                    followersTo = documentSnapshot['required_followers_to'];
+                    image = documentSnapshot['image'];
+                    brandLogo = documentSnapshot['brand_logo'];
+                    requirementType = documentSnapshot['requirement_type'];
+                    collabType = documentSnapshot['collaboration_type'];
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -273,20 +282,21 @@ class _CollaborationInternalScreenState
                                   Row(
                                     children: [
                                       FaIcon(
-                                        FontAwesomeIcons.instagram,
+                                        documentSnapshot['requirement_type'] ==
+                                                "insta"
+                                            ? FontAwesomeIcons.instagram
+                                            : FontAwesomeIcons.youtube,
                                         color: primeColor,
                                       ),
                                       const SizedBox(width: 10),
                                       Text(
-                                        "${documentSnapshot['required_followers_from']} to ",
+                                        documentSnapshot['requirement_type'] ==
+                                                "insta"
+                                            ? "${documentSnapshot['required_followers_from']} to ${documentSnapshot['required_followers_to']} followers"
+                                            : "${documentSnapshot['required_followers_from']} to ${documentSnapshot['required_followers_to']} subscribers",
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${documentSnapshot['required_followers_to']} followers",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
+                                          letterSpacing: 0.2,
                                         ),
                                       ),
                                     ],
@@ -533,11 +543,17 @@ class _CollaborationInternalScreenState
                                                     ),
                                                     const SizedBox(width: 20),
                                                     Text(
-                                                      "${documentSnapshot['required_followers_from']} to ${documentSnapshot['required_followers_to']} followers",
-                                                      style: const TextStyle(
-                                                        color: Colors.black,
+                                                      documentSnapshot[
+                                                                  'requirement_type'] ==
+                                                              "insta"
+                                                          ? "${documentSnapshot['required_followers_from']} to ${documentSnapshot['required_followers_to']} followers"
+                                                          : "${documentSnapshot['required_followers_from']} to ${documentSnapshot['required_followers_to']} subscribers",
+                                                      style: TextStyle(
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                            FontWeight.w500,
+                                                        letterSpacing: 0.2,
+                                                        color: Colors.black
+                                                            .withOpacity(0.6),
                                                       ),
                                                     ),
                                                   ],
@@ -611,10 +627,12 @@ class _CollaborationInternalScreenState
                                                     Text(
                                                       documentSnapshot[
                                                           'categories'],
-                                                      style: const TextStyle(
-                                                        color: Colors.black,
+                                                      style: TextStyle(
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                            FontWeight.w500,
+                                                        letterSpacing: 0.2,
+                                                        color: Colors.black
+                                                            .withOpacity(0.6),
                                                       ),
                                                     ),
                                                   ],
@@ -696,10 +714,12 @@ class _CollaborationInternalScreenState
                                                     Text(
                                                       documentSnapshot[
                                                           'language'],
-                                                      style: const TextStyle(
-                                                        color: Colors.black,
+                                                      style: TextStyle(
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                            FontWeight.w500,
+                                                        letterSpacing: 0.2,
+                                                        color: Colors.black
+                                                            .withOpacity(0.6),
                                                       ),
                                                     ),
                                                   ],
@@ -959,11 +979,14 @@ class _CollaborationInternalScreenState
                   if (documentSnapshot.id == widget.collabId) {
                     return Center(
                       child: documentSnapshot['status'] == "0"
-                          ? Text(
-                              'Application Closed !!!',
-                              style: TextStyle(
-                                color: primeColor,
-                                fontWeight: FontWeight.bold,
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Text(
+                                'Application Closed !!!',
+                                style: TextStyle(
+                                  color: primeColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             )
                           : !userContentLanguage.any((element) =>
@@ -985,11 +1008,14 @@ class _CollaborationInternalScreenState
                                   userFollowers <
                                       int.parse(documentSnapshot[
                                           'required_followers_from'])
-                              ? Text(
-                                  "You profile doesn't meet the application criteria",
-                                  style: TextStyle(
-                                    color: primeColor,
-                                    fontWeight: FontWeight.bold,
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 20),
+                                  child: Text(
+                                    "You profile doesn't meet the application criteria",
+                                    style: TextStyle(
+                                      color: primeColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 )
                               : profileCompletionPercentage == 100

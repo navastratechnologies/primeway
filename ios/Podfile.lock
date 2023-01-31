@@ -873,6 +873,8 @@ PODS:
   - SDWebImage/Core (5.14.2)
   - share (0.0.1):
     - Flutter
+  - sign_in_with_apple (0.0.1):
+    - Flutter
   - sms_autofill (0.0.1):
     - Flutter
   - SwiftyGif (5.4.3)
@@ -904,6 +906,7 @@ DEPENDENCIES:
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - razorpay_flutter (from `.symlinks/plugins/razorpay_flutter/ios`)
   - share (from `.symlinks/plugins/share/ios`)
+  - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - sms_autofill (from `.symlinks/plugins/sms_autofill/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
@@ -988,6 +991,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/razorpay_flutter/ios"
   share:
     :path: ".symlinks/plugins/share/ios"
+  sign_in_with_apple:
+    :path: ".symlinks/plugins/sign_in_with_apple/ios"
   sms_autofill:
     :path: ".symlinks/plugins/sms_autofill/ios"
   url_launcher_ios:
@@ -1052,6 +1057,7 @@ SPEC CHECKSUMS:
   razorpay_flutter: 84b3bfd206ae9c9c2a9ba585524a1b3d8102b6c1
   SDWebImage: b9a731e1d6307f44ca703b3976d18c24ca561e84
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
+  sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
   sms_autofill: c461043483362c3f1709ee76eaae6eb570b31686
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196

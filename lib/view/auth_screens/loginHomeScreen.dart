@@ -1,9 +1,9 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/auth_screens/phoneLoginScreen.dart';
+import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class LoginHomeScreen extends StatefulWidget {
   final String? userId, referralId;
@@ -193,36 +193,51 @@ class _HomePageState extends State<LoginHomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          MaterialButton(
-                            color: Colors.blue[900],
-                            padding: const EdgeInsets.all(5),
-                            shape: const CircleBorder(),
-                            onPressed: () {
-                              authClass.signInWithFacebook(context);
-                            },
-                            child: const FaIcon(
-                              FontAwesomeIcons.facebookF,
-                              color: Colors.white,
-                            ),
-                          ),
-                          MaterialButton(
-                            color: Colors.white,
-                            padding: const EdgeInsets.all(2),
-                            shape: const CircleBorder(),
-                            onPressed: () {
-                              authClass.signInWithGoogle(context);
-                            },
-                            child: Image.asset(
-                              'assets/google.png',
-                              height: 26,
-                              width: 26,
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      //     MaterialButton(
+                      //       color: Colors.blue[900],
+                      //       padding: const EdgeInsets.all(5),
+                      //       shape: const CircleBorder(),
+                      //       onPressed: () {
+                      //         authClass.signInWithFacebook(context);
+                      //       },
+                      //       child: const FaIcon(
+                      //         FontAwesomeIcons.facebookF,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //     MaterialButton(
+                      //       color: Colors.white,
+                      //       padding: const EdgeInsets.all(2),
+                      //       shape: const CircleBorder(),
+                      //       onPressed: () {
+                      //         authClass.signInWithGoogle(context);
+                      //       },
+                      //       child: Image.asset(
+                      //         'assets/google.png',
+                      //         height: 26,
+                      //         width: 26,
+                      //       ),
+                      //     ),
+                      //     MaterialButton(
+                      //       color: Colors.black,
+                      //       padding: const EdgeInsets.all(5),
+                      //       shape: const CircleBorder(),
+                      //       onPressed: () {
+                      //         authClass.signInWithApple(context);
+                      //       },
+                      //       child: const FaIcon(
+                      //         FontAwesomeIcons.apple,
+                      //         size: 30,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+
                       const SizedBox(height: 30),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -230,7 +245,7 @@ class _HomePageState extends State<LoginHomeScreen> {
                           Container(
                             padding: const EdgeInsets.all(2),
                             decoration: BoxDecoration(
-                              color: Colors.red[900],
+                              color: primeColor2,
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(

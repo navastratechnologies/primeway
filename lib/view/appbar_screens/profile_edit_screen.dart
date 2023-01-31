@@ -54,6 +54,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   String gender = '';
   String secondaryNumber = '';
   String userProfileImage = '';
+  String category = '';
   int profileCompletionPercentage = 0;
 
   Future<void> getUserProfileData() async {
@@ -85,6 +86,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           youtubeShortsPrice = value.get('youtube_short_price');
           dob = value.get('date_of_brith');
           language = value.get('language');
+          category = value.get('categories');
           description = value.get('description');
           gender = value.get('gender');
           secondaryNumber = value.get('secondry_phone_number');
@@ -390,6 +392,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                       'Date of Birth', dob),
                                   profileEditInternalWidget(
                                       'Secondary Number', secondaryNumber),
+                                  profileEditInternalWidget(
+                                      'Content Category', category),
                                   profileEditInternalWidget(
                                       'Description (Bio)', description),
                                 ],

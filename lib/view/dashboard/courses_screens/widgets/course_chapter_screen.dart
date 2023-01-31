@@ -2,6 +2,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_file_downloader/flutter_file_downloader.dart';
+import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_document_screen.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_video_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/loader.dart';
@@ -84,8 +86,7 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                             .snapshots(),
                         builder: (context,
                             AsyncSnapshot<QuerySnapshot> streamSnapshot1) {
-                          if (streamSnapshot.hasData &&
-                              streamSnapshot1.data!.docs.isNotEmpty) {
+                          if (streamSnapshot.hasData) {
                             return ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -96,29 +97,70 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                                 return Padding(
                                   padding: const EdgeInsets.all(14),
                                   child: InkWell(
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CourseVideoScreen(
-                                          videoId: documentSnapshot1.id,
-                                          videoUrl: documentSnapshot1['url'],
-                                          videoTitle:
-                                              documentSnapshot1['title'],
-                                          videoDescription:
-                                              documentSnapshot1['description'],
-                                          courseId: widget.courseId,
-                                          courseName: widget.courseName,
-                                          userAddress: widget.userAddress,
-                                          userEmail: widget.userEmail,
-                                          userName: widget.userName,
-                                          userNumber: widget.userNumber,
-                                          userPayment: widget.userPayment,
-                                          userProfileImage:
-                                              widget.userProfileImage,
-                                          userWalletId: widget.userWalletId,
-                                        ),
-                                      ),
-                                    ),
+                                    onTap: () => documentSnapshot1['url']
+                                                .toString()
+                                                .contains('pdf') ||
+                                            documentSnapshot1['url']
+                                                .toString()
+                                                .contains('doc') ||
+                                            documentSnapshot1['url']
+                                                .toString()
+                                                .contains('docx')
+                                        ? Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CourseDocumentScreen(
+                                                documentId:
+                                                    documentSnapshot1.id,
+                                                documentUrl:
+                                                    '<iframe src="${documentSnapshot1['url']}" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                                                documentTitle:
+                                                    documentSnapshot1['title'],
+                                                documentDescription:
+                                                    documentSnapshot1[
+                                                        'description'],
+                                                courseId: widget.courseId,
+                                                courseName: widget.courseName,
+                                                userAddress: widget.userAddress,
+                                                userEmail: widget.userEmail,
+                                                userName: widget.userName,
+                                                userNumber: widget.userNumber,
+                                                userPayment: widget.userPayment,
+                                                userProfileImage:
+                                                    widget.userProfileImage,
+                                                userWalletId:
+                                                    widget.userWalletId,
+                                              ),
+                                            ),
+                                          )
+                                        : Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CourseVideoScreen(
+                                                videoId: documentSnapshot1.id,
+                                                videoUrl:
+                                                    documentSnapshot1['url'],
+                                                videoTitle:
+                                                    documentSnapshot1['title'],
+                                                videoDescription:
+                                                    documentSnapshot1[
+                                                        'description'],
+                                                courseId: widget.courseId,
+                                                courseName: widget.courseName,
+                                                userAddress: widget.userAddress,
+                                                userEmail: widget.userEmail,
+                                                userName: widget.userName,
+                                                userNumber: widget.userNumber,
+                                                userPayment: widget.userPayment,
+                                                userProfileImage:
+                                                    widget.userProfileImage,
+                                                userWalletId:
+                                                    widget.userWalletId,
+                                              ),
+                                            ),
+                                          ),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -132,8 +174,47 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                                                 color: Colors.black
                                                     .withOpacity(0.2),
                                               ),
-                                              child: const Icon(
-                                                Icons.play_arrow,
+                                              child: Icon(
+                                                documentSnapshot1['url']
+                                                            .toString()
+                                                            .contains('png') ||
+                                                        documentSnapshot1['url']
+                                                            .toString()
+                                                            .contains('jpg') ||
+                                                        documentSnapshot1['url']
+                                                            .toString()
+                                                            .contains('jpeg')
+                                                    ? Icons.image
+                                                    : documentSnapshot1['url']
+                                                                .toString()
+                                                                .contains(
+                                                                    'pdf') ||
+                                                            documentSnapshot1['url']
+                                                                .toString()
+                                                                .contains(
+                                                                    'doc') ||
+                                                            documentSnapshot1['url']
+                                                                .toString()
+                                                                .contains(
+                                                                    'docx')
+                                                        ? Icons
+                                                            .description_rounded
+                                                        : documentSnapshot1['url'].toString().contains('mp3') ||
+                                                                documentSnapshot1['url']
+                                                                    .toString()
+                                                                    .contains(
+                                                                        'wav') ||
+                                                                documentSnapshot1['url']
+                                                                    .toString()
+                                                                    .contains(
+                                                                        'aac') ||
+                                                                documentSnapshot1[
+                                                                        'url']
+                                                                    .toString()
+                                                                    .contains(
+                                                                        'flac')
+                                                            ? Icons.audiotrack_rounded
+                                                            : Icons.play_arrow,
                                                 size: 16,
                                               ),
                                             ),
@@ -165,9 +246,22 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                                             ),
                                           ],
                                         ),
-                                        Icon(
-                                          Icons.downloading_rounded,
-                                          color: Colors.black.withOpacity(0.2),
+                                        InkWell(
+                                          onTap: () {
+                                            // FileDownloader.downloadFile(
+                                            //     url:
+                                            //         "https://tinypng.com/images/social/website.jpg",
+                                            //     name: "PANDA",
+                                            //     onDownloadCompleted: (path) {
+                                            //       final File file = File(path);
+                                            //       //This will be the path of the downloaded file
+                                            //     });
+                                          },
+                                          child: Icon(
+                                            Icons.download_rounded,
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                          ),
                                         ),
                                       ],
                                     ),

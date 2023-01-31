@@ -32,6 +32,7 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
   bool showFemale = false;
 
   List languageType = [];
+  List categoryType = [];
 
   DateTime dateOfBirth = DateTime.now();
 
@@ -46,6 +47,8 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
         'date_of_brith': dobController.text,
         'language':
             languageType.toString().replaceAll('[', '').replaceAll(']', ''),
+        'categories':
+            categoryType.toString().replaceAll('[', '').replaceAll(']', ''),
         'secondry_phone_number': secondaryNumberController.text,
         'description': descriptionController.text,
         'gender': genderController.text,
@@ -65,13 +68,19 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
         .get()
         .then(
       (value) {
-        log('language get is ${value.get('language').toString().split(",")}');
         setState(() {
           emailController.text = value.get('email');
           fullNameController.text = value.get('name');
           dobController.text = value.get('date_of_brith');
           dateOfBirth = DateTime.parse(dobController.text);
-          languageType = value.get('language').toString().split(",");
+          if (value.get('language').toString().isNotEmpty) {
+            languageType = value.get('language').toString().split(",");
+          }
+          log('language is user : $languageType');
+          if (value.get('categories').toString().isNotEmpty) {
+            categoryType = value.get('categories').toString().split(",");
+          }
+          log('category is user : $categoryType');
           descriptionController.text = value.get('description');
           genderController.text = value.get('gender');
           if (genderController.text == "male") {
@@ -378,7 +387,9 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
                               } else {
                                 if (languageType.length < 3) {
                                   setState(() {
-                                    languageType.add(languageModel[index]);
+                                    languageType.add(languageModel[index]
+                                        .toString()
+                                        .replaceAll(',', ''));
                                   });
                                 }
                               }
@@ -418,7 +429,103 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Content Category',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black.withOpacity(0.4),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Select upto 3 categories in which you create content',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black.withOpacity(0.2),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('creator_program_category')
+                          .snapshots(),
+                      builder: (context,
+                          AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                        if (streamSnapshot.hasData) {
+                          return ResponsiveGridList(
+                            listViewBuilderOptions: ListViewBuilderOptions(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                            ),
+                            minItemWidth: 80,
+                            minItemsPerRow: 3,
+                            children: List.generate(
+                              streamSnapshot.data!.docs.length,
+                              (index) {
+                                DocumentSnapshot documentSnapshot =
+                                    streamSnapshot.data!.docs[index];
+                                return Center(
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (categoryType.contains(
+                                          documentSnapshot['category'])) {
+                                        setState(() {
+                                          categoryType.remove(
+                                              documentSnapshot['category']);
+                                        });
+                                      } else {
+                                        if (categoryType.length < 3) {
+                                          setState(() {
+                                            categoryType.add(
+                                                documentSnapshot['category']);
+                                          });
+                                        }
+                                      }
+                                      log('category is : $categoryType');
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 10),
+                                      decoration: BoxDecoration(
+                                        color: categoryType.contains(
+                                                documentSnapshot['category'])
+                                            ? primeColor2
+                                            : whiteColor,
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: primeColor.withOpacity(0.1),
+                                            blurRadius: 10,
+                                            spreadRadius: 1,
+                                          ),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        documentSnapshot['category'],
+                                        style: TextStyle(
+                                          color: categoryType.contains(
+                                                  documentSnapshot['category'])
+                                              ? whiteColor
+                                              : Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

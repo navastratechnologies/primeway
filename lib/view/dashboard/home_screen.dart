@@ -250,18 +250,7 @@ class _HomescreenState extends State<Homescreen> {
                                       builder: (context) =>
                                           CreaterProgramScreen(
                                         categorey: documentSnapshot['category'],
-                                        titles: "Creator Programs",
                                         userNumber: widget.userNumber,
-                                        userAddress: widget.userAddress,
-                                        userEmail: widget.userEmail,
-                                        userName: widget.userName,
-                                        userPayment: widget.userPayment,
-                                        userProfileImage:
-                                            widget.userProfileImage,
-                                        userWalletId: widget.userWalletId,
-                                        userLanguage:
-                                            widget.userLanguage.toString(),
-                                        userFollowers: widget.userFollowers,
                                       ),
                                     ),
                                   );
@@ -290,7 +279,7 @@ class _HomescreenState extends State<Homescreen> {
                   const SizedBox(height: 10),
                   SizedBox(
                     width: width,
-                    height: 360,
+                    height: 325,
                     child: StreamBuilder(
                       stream: collaboration
                           .where('status', isEqualTo: '1')
@@ -325,7 +314,7 @@ class _HomescreenState extends State<Homescreen> {
                                       color: whiteColor,
                                       borderRadius: BorderRadius.circular(15),
                                       border: Border.all(
-                                        color: Colors.black.withOpacity(0.2),
+                                        color: primeColor2.withOpacity(0.1),
                                       ),
                                     ),
                                     child: Column(
@@ -347,6 +336,44 @@ class _HomescreenState extends State<Homescreen> {
                                               fit: BoxFit.cover,
                                             ),
                                           ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10),
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    color: documentSnapshot[
+                                                                'status'] ==
+                                                            "1"
+                                                        ? primeColor2
+                                                        : primeColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  child: Text(
+                                                    documentSnapshot[
+                                                                'status'] ==
+                                                            "1"
+                                                        ? 'Applications Open'
+                                                        : 'Application Closed',
+                                                    style: TextStyle(
+                                                      color: whiteColor,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(14),
@@ -359,16 +386,76 @@ class _HomescreenState extends State<Homescreen> {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Row(
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
-                                                      const FaIcon(
-                                                          FontAwesomeIcons
-                                                              .instagram),
-                                                      const SizedBox(width: 5),
+                                                      Row(
+                                                        children: [
+                                                          FaIcon(
+                                                            documentSnapshot[
+                                                                        'requirement_type'] ==
+                                                                    "insta"
+                                                                ? FontAwesomeIcons
+                                                                    .instagram
+                                                                : FontAwesomeIcons
+                                                                    .youtube,
+                                                            color: primeColor,
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 5),
+                                                          Container(
+                                                            height: 10,
+                                                            width: 1.5,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.2),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 5),
+                                                          Text(
+                                                            documentSnapshot[
+                                                                        'collaboration_type']
+                                                                    .toString()[
+                                                                        0]
+                                                                    .toUpperCase() +
+                                                                documentSnapshot[
+                                                                        'collaboration_type']
+                                                                    .toString()
+                                                                    .substring(
+                                                                        1),
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              letterSpacing:
+                                                                  0.3,
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.4),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const SizedBox(height: 5),
                                                       Text(
-                                                          "${documentSnapshot['required_followers_from']} to "),
-                                                      Text(
-                                                          "${documentSnapshot['required_followers_to']} followers"),
+                                                        documentSnapshot[
+                                                                    'requirement_type'] ==
+                                                                "insta"
+                                                            ? "${documentSnapshot['required_followers_from']} to ${documentSnapshot['required_followers_to']} followers"
+                                                            : "${documentSnapshot['required_followers_from']} to ${documentSnapshot['required_followers_to']} subscribers",
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          letterSpacing: 0.2,
+                                                        ),
+                                                      ),
                                                     ],
                                                   ),
                                                   SizedBox(
@@ -381,7 +468,7 @@ class _HomescreenState extends State<Homescreen> {
                                                       )),
                                                 ],
                                               ),
-                                              const SizedBox(height: 10),
+                                              const SizedBox(height: 20),
                                               headingWidgetMethod(
                                                 documentSnapshot['titles'],
                                               ),
@@ -392,6 +479,8 @@ class _HomescreenState extends State<Homescreen> {
                                                   color: Colors.black
                                                       .withOpacity(0.4),
                                                   fontWeight: FontWeight.w500,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             ],
