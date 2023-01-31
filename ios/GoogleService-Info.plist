@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>836225855666-vsccoghovh72glto7d37grtgp3i4s1fg.apps.googleusercontent.com</string>
+	<string>836225855666-u4a1oumo8mbab16ftaf0266hoit0f4l7.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.836225855666-vsccoghovh72glto7d37grtgp3i4s1fg</string>
+	<string>com.googleusercontent.apps.836225855666-u4a1oumo8mbab16ftaf0266hoit0f4l7</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>836225855666-d3tm2ohqjll3nt5b381dj5qjhflakjer.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.primeway.app</string>
+	<string>com.primewaycollab.app</string>
 	<key>PROJECT_ID</key>
 	<string>primeway-e0f3f</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:836225855666:ios:4a42cd1fa3a96127a3d9ab</string>
+	<string>1:836225855666:ios:020475fc3fbdc140a3d9ab</string>
 </dict>
 </plist>
