@@ -74,11 +74,16 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
           dobController.text = value.get('date_of_brith');
           dateOfBirth = DateTime.parse(dobController.text);
           if (value.get('language').toString().isNotEmpty) {
-            languageType = value.get('language').toString().split(",");
+            languageType =
+                value.get('language').toString().replaceAll(' ', '').split(",");
           }
           log('language is user : $languageType');
           if (value.get('categories').toString().isNotEmpty) {
-            categoryType = value.get('categories').toString().split(",");
+            categoryType = value
+                .get('categories')
+                .toString()
+                .replaceAll(' ', '')
+                .split(",");
           }
           log('category is user : $categoryType');
           descriptionController.text = value.get('description');

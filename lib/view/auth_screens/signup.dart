@@ -117,6 +117,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'account_number': "0",
       'bank_name': "",
       'ifsc': "",
+      "categories": "",
       'account_holder_name': "",
       'account_type': "",
       'youtube_subscribers': "0",

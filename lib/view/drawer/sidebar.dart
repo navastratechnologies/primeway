@@ -10,12 +10,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
 import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
-import 'package:primewayskills_app/view/dashboard/courses_screens/affiliate_course_screen.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/drawer/about_us.dart';
 import 'package:primewayskills_app/view/drawer/feedback.dart';
 import 'package:primewayskills_app/view/drawer/resources/resources.dart';
 import 'package:primewayskills_app/view/drawer/setting/setting.dart';
+import 'package:primewayskills_app/view/helpers/alert_deialogs.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -93,7 +93,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             height: MediaQuery.of(context).size.height,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 SafeArea(
                   child: Column(
@@ -267,27 +266,122 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                                     ),
                                   ),
                                   onTap: () {
-                                    FirebaseFirestore.instance
-                                        .collection('affilate_dashboard')
-                                        .doc('NkcdMPSuI3SSIpJ2uLuv')
-                                        .collection('affiliate_users')
-                                        .doc(widget.userNumber)
-                                        .set(
-                                      {
-                                        'approved_affiliate': '0',
-                                        'complete_affiliate': '0',
-                                        'pending_affiliate': '0',
-                                        'successful_affiliate': '0',
-                                        'today_earning': '0',
-                                        'total_affiliate': '0',
-                                        'user_Id': widget.userNumber,
-                                      },
-                                    ).then(
-                                      (value) {
-                                        setState(
-                                          () {
-                                            checkCollection();
-                                          },
+                                    Navigator.pop(context);
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          title: Text(
+                                            'Become Partner',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: primeColor2,
+                                              letterSpacing: 1,
+                                            ),
+                                          ),
+                                          content: Container(
+                                            height: 120,
+                                            decoration: BoxDecoration(
+                                              color: whiteColor,
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  'Do you really want to become our affiliate partner and earn from our programs?',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black
+                                                        .withOpacity(0.4),
+                                                    fontSize: 12,
+                                                    letterSpacing: 1,
+                                                  ),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    MaterialButton(
+                                                      color: primeColor2,
+                                                      onPressed: () {
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                                'affilate_dashboard')
+                                                            .doc(
+                                                                'NkcdMPSuI3SSIpJ2uLuv')
+                                                            .collection(
+                                                                'affiliate_users')
+                                                            .doc(widget
+                                                                .userNumber)
+                                                            .set(
+                                                          {
+                                                            'approved_affiliate':
+                                                                '0',
+                                                            'complete_affiliate':
+                                                                '0',
+                                                            'pending_affiliate':
+                                                                '0',
+                                                            'successful_affiliate':
+                                                                '0',
+                                                            'today_earning':
+                                                                '0',
+                                                            'total_affiliate':
+                                                                '0',
+                                                            'user_Id': widget
+                                                                .userNumber,
+                                                          },
+                                                        ).then(
+                                                          (value) {
+                                                            alertDialogWidget(
+                                                              context,
+                                                              primeColor2,
+                                                              'Affiliate registration successful',
+                                                            );
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        );
+                                                      },
+                                                      child: Text(
+                                                        'Yes',
+                                                        style: TextStyle(
+                                                          color: whiteColor,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          letterSpacing: 1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    MaterialButton(
+                                                      color: primeColor,
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              context),
+                                                      child: Text(
+                                                        'No',
+                                                        style: TextStyle(
+                                                          color: whiteColor,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          letterSpacing: 1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         );
                                       },
                                     );
@@ -387,37 +481,12 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                               size: 18,
                             ),
                           ),
-                          ListTile(
-                            leading: sidebarIconWidget(Icons.quiz_rounded),
-                            title: Text(
-                              "Affiliate",
-                              style: TextStyle(
-                                color: whiteColor,
-                              ),
-                            ),
-                            onTap: () => {
-                              Navigator.pop(context),
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      AffiliateCourseDetailScreen(
-                                    userNumber: widget.userNumber,
-                                    courseId: "18cN7p2fOGbCO0DdHeUd",
-                                  ),
-                                ),
-                              ),
-                            },
-                            trailing: FaIcon(
-                              FontAwesomeIcons.chevronRight,
-                              color: whiteColor.withOpacity(0.6),
-                              size: 18,
-                            ),
-                          ),
                         ],
                       ),
                     ],
                   ),
                 ),
+                const SizedBox(height: 10),
                 Column(
                   children: [
                     ListTile(
