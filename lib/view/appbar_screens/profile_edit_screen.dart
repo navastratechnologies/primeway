@@ -8,6 +8,7 @@ import 'package:primewayskills_app/view/auth_screens/address.dart';
 import 'package:primewayskills_app/view/auth_screens/commercial_page.dart';
 import 'package:primewayskills_app/view/auth_screens/edit_details.dart';
 import 'package:primewayskills_app/view/auth_screens/kyc.dart';
+import 'package:primewayskills_app/view/auth_screens/upload_image.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/dashboard/social_account.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
@@ -186,59 +187,110 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  userProfileImage.isNotEmpty
-                      ? Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: whiteColor,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: primeColor.withOpacity(0.1),
-                                blurRadius: 10,
-                                spreadRadius: 1,
-                              ),
-                            ],
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                userProfileImage,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        )
-                      : InkWell(
-                          child: Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: whiteColor,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: primeColor.withOpacity(0.4),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: primeColor.withOpacity(0.1),
-                                  blurRadius: 10,
-                                  spreadRadius: 1,
+                  SizedBox(
+                    width: 80,
+                    child: Stack(
+                      children: [
+                        userProfileImage.isNotEmpty
+                            ? InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => UplodeImage(
+                                        phoneNumber: widget.userNumber,
+                                        pageType: 'edit',
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    color: whiteColor,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: primeColor.withOpacity(0.1),
+                                        blurRadius: 10,
+                                        spreadRadius: 1,
+                                      ),
+                                    ],
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        userProfileImage,
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Text(
-                                username.length > 1
-                                    ? username.substring(0, 1)
-                                    : username,
-                                style: TextStyle(
-                                  fontSize: maxSize,
-                                  fontWeight: FontWeight.bold,
+                              )
+                            : InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => UplodeImage(
+                                        phoneNumber: widget.userNumber,
+                                        pageType: 'edit',
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    color: whiteColor,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: primeColor.withOpacity(0.4),
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: primeColor.withOpacity(0.1),
+                                        blurRadius: 10,
+                                        spreadRadius: 1,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      username.length > 1
+                                          ? username.substring(0, 1)
+                                          : username,
+                                      style: TextStyle(
+                                        fontSize: maxSize,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UplodeImage(
+                                    phoneNumber: widget.userNumber,
+                                    pageType: 'edit',
+                                  ),
+                                ),
+                              );
+                            },
+                            child: FaIcon(
+                              FontAwesomeIcons.pencil,
+                              color: primeColor2,
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(width: 20),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

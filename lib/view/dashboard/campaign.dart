@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 
 import '../helpers/colors.dart';
 
@@ -37,11 +38,12 @@ class _CampaingnScreenState extends State<CampaingnScreen> {
               const SizedBox(
                 height: 40,
               ),
-              const Text(
-                "Campaigns Unlocked",
+              Text(
+                "Campaigns Unlocked!!!",
                 style: TextStyle(
-                  fontSize: 26,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: purpleColor,
                 ),
               ),
               const SizedBox(
@@ -70,21 +72,29 @@ class _CampaingnScreenState extends State<CampaingnScreen> {
               ),
             ],
           ),
-          Container(
-            padding: const EdgeInsets.all(10),
-            width: MediaQuery.of(context).size.width / 1.3,
-            decoration: BoxDecoration(
-              color: primeColor2,
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: const Text(
-              "View Campaign's",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
+          InkWell(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Dashboard(),
               ),
-              textAlign: TextAlign.center,
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width / 1.3,
+              decoration: BoxDecoration(
+                color: primeColor2,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: const Text(
+                "Go to Dashboard",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         ],

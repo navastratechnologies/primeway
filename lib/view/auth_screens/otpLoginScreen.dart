@@ -1,10 +1,16 @@
 // ignore_for_file: unnecessary_null_comparison, file_names
 
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/auth_screens/phoneLoginScreen.dart';
+import 'package:primewayskills_app/view/auth_screens/signup.dart';
+import 'package:primewayskills_app/view/dashboard/dashboard.dart';
+import 'package:primewayskills_app/view/helpers/alert_deialogs.dart';
+import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/loader.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
@@ -30,6 +36,90 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
 
   _listenSmsCode() async {
     await SmsAutoFill().listenForCode();
+  }
+
+  Future<void> signInwithPhoneNumber(String phoneNumber, String verificationId,
+      String smsCode, BuildContext context) async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: verificationId, smsCode: smsCode);
+
+      UserCredential userCredential =
+          await auth.signInWithCredential(credential);
+      // showSnackBar(context, "logged In");
+      User? user = userCredential.user;
+      if (userCredential.additionalUserInfo!.isNewUser) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SignUpScreen(
+              phone: phoneNumber,
+              verId: verificationId,
+            ),
+          ),
+        );
+      } else {
+        storeTokenAndData(phoneNumber);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Dashboard(),
+          ),
+        );
+      }
+      log('user is $userCredential');
+    } catch (e) {
+      alertDialogWidget(
+        context,
+        primeColor,
+        e.toString(),
+      );
+      setState(() {
+        showLoader = false;
+      });
+    }
+  }
+
+  Future<void> verifyPhoneNumber(String phoneNumber, String onlyPhone,
+      BuildContext context, Function setData) async {
+    verificationCompleted(PhoneAuthCredential phoneAuthCredential) async {
+      // showSnackBar(context, "Verification Completed");
+    }
+
+    verificationFailed(FirebaseAuthException exception) {
+      alertDialogWidget(context, primeColor, exception.toString());
+    }
+
+    codeSent(String verificationID, [int? forceResnedingtoken]) {
+      alertDialogWidget(
+        context,
+        primeColor2,
+        "Verification Code sent on +91$phoneNumber",
+      );
+      setData(verificationID);
+
+      setState(() {
+        showLoader = false;
+      });
+    }
+
+    codeAutoRetrievalTimeout(String verificationID) {}
+    try {
+      await auth.verifyPhoneNumber(
+        timeout: const Duration(seconds: 120),
+        phoneNumber: phoneNumber,
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+      );
+    } catch (e) {
+      alertDialogWidget(
+        context,
+        primeColor,
+        e.toString(),
+      );
+    }
   }
 
   @override
@@ -130,13 +220,45 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                             lineHeight: 2,
-                            lineStrokeCap: StrokeCap.square,
+                            lineStrokeCap: StrokeCap.round,
                             bgColorBuilder: PinListenColorBuilder(
-                              Colors.grey.shade200,
-                              Colors.grey.shade200,
+                              Colors.grey.shade100,
+                              Colors.grey.shade100,
                             ),
                             colorBuilder: const FixedColorBuilder(
                               Colors.transparent,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: MaterialButton(
+                            color: primeColor2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            onPressed: () {
+                              if (widget.phone != "") {
+                                var phonenumber = '+91${widget.phone}';
+                                setState(() {
+                                  showLoader = true;
+                                });
+                                authClass.verifyPhoneNumber(
+                                  phonenumber,
+                                  widget.phone!,
+                                  context,
+                                  setData,
+                                );
+                              }
+                            },
+                            child: Text(
+                              'Resend Code',
+                              style: TextStyle(
+                                color: whiteColor,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -157,8 +279,8 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                             setState(() {
                               showLoader = true;
                             });
-                            authClass.signInwithPhoneNumber(widget.phone!,
-                                widget.verId!, otpController.text, context);
+                            signInwithPhoneNumber(widget.phone!, widget.verId!,
+                                otpController.text, context);
                           } else {}
                         },
                         child: Row(

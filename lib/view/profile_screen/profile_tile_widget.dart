@@ -49,8 +49,8 @@ class ProfileTileWidget extends StatelessWidget {
                       'Go Next',
                     ),
                     Icon(
-                      Icons.arrow_forward_rounded,
-                      color: Colors.black.withOpacity(0.4),
+                      Icons.keyboard_arrow_right_rounded,
+                      color: purpleColor,
                       size: 18,
                     ),
                   ],
@@ -59,7 +59,7 @@ class ProfileTileWidget extends StatelessWidget {
             ),
             FaIcon(
               icons,
-              color: Colors.black,
+              color: primeColor2,
               size: 30,
             ),
           ],

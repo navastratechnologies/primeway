@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
 import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/affiliate_course_screen.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
@@ -97,65 +98,76 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                 SafeArea(
                   child: Column(
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: primeColor,
-                          border: Border(
-                            bottom: BorderSide(
-                              color: whiteColor.withOpacity(0.6),
-                              width: 2,
+                      InkWell(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfileEditScreen(
+                              userNumber: widget.userNumber,
                             ),
                           ),
                         ),
-                        padding: const EdgeInsets.all(20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                InkWell(
-                                  child: Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: whiteColor,
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                            widget.userProfileImage),
-                                        fit: BoxFit.cover,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: primeColor,
+                            border: Border(
+                              bottom: BorderSide(
+                                color: whiteColor.withOpacity(0.6),
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  InkWell(
+                                    child: Container(
+                                      width: 50,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: whiteColor,
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                              widget.userProfileImage),
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(width: 12),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      widget.userName,
-                                      style: TextStyle(
-                                        color: whiteColor,
-                                        fontSize: maxSize,
-                                        fontWeight: FontWeight.bold,
+                                  const SizedBox(width: 12),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        widget.userName,
+                                        style: TextStyle(
+                                          color: whiteColor,
+                                          fontSize: maxSize,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      widget.userEmail,
-                                      style: TextStyle(
-                                        color: whiteColor.withOpacity(0.6),
-                                        fontWeight: FontWeight.w500,
+                                      Text(
+                                        widget.userEmail,
+                                        style: TextStyle(
+                                          color: whiteColor.withOpacity(0.6),
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Icon(
-                              Icons.edit,
-                              color: whiteColor.withOpacity(0.6),
-                            ),
-                          ],
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Icon(
+                                Icons.edit,
+                                color: whiteColor.withOpacity(0.6),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -260,18 +272,25 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                                         .doc('NkcdMPSuI3SSIpJ2uLuv')
                                         .collection('affiliate_users')
                                         .doc(widget.userNumber)
-                                        .set({
-                                          'approved_affiliate': '',
-                                          'complete_affiliate': '',
-                                          'pending_affiliate': '',
-                                          'successful_affiliate': '',
-                                          'today_earning': '',
-                                          'total_affiliate': '',
-                                          'user_Id': widget.userNumber,
-                                        })
-                                        .then((value) => print("User Added"))
-                                        .catchError((error) => print(
-                                            "Failed to add user: $error"));
+                                        .set(
+                                      {
+                                        'approved_affiliate': '0',
+                                        'complete_affiliate': '0',
+                                        'pending_affiliate': '0',
+                                        'successful_affiliate': '0',
+                                        'today_earning': '0',
+                                        'total_affiliate': '0',
+                                        'user_Id': widget.userNumber,
+                                      },
+                                    ).then(
+                                      (value) {
+                                        setState(
+                                          () {
+                                            checkCollection();
+                                          },
+                                        );
+                                      },
+                                    );
                                   },
                                   trailing: FaIcon(
                                     FontAwesomeIcons.chevronRight,

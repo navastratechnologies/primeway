@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/cart_screen.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_chapter_screen.dart';
-import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_discussion_screen.dart';
 import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/profile_screen/congrats_screen.dart';
@@ -119,6 +118,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         .then(
       (value) {
         gst = value.get("gst_rate");
+        isLive = value.get('islive');
         baseAmount = value.get("base_ammount");
         var total = double.parse(gst) + double.parse(baseAmount);
         totalAmount = total.toString();
@@ -134,6 +134,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     );
   }
 
+  String isLive = '';
   String walletBalance = '';
   String gst = '';
   String baseAmount = '';
@@ -217,62 +218,154 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      initialIndex: 0,
-      child: Scaffold(
-        backgroundColor: whiteColor,
-        drawer: NavigationDrawer(
-          userAddress: widget.userAddress,
-          userEmail: widget.userEmail,
-          userName: widget.userName,
-          userNumber: widget.userNumber,
-          userPayment: widget.userPayment,
-          userProfileImage: widget.userProfileImage,
-          userWalletId: widget.userWalletId,
+    return Scaffold(
+      backgroundColor: whiteColor,
+      drawer: NavigationDrawer(
+        userAddress: widget.userAddress,
+        userEmail: widget.userEmail,
+        userName: widget.userName,
+        userNumber: widget.userNumber,
+        userPayment: widget.userPayment,
+        userProfileImage: widget.userProfileImage,
+        userWalletId: widget.userWalletId,
+      ),
+      appBar: AppBar(
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.black.withOpacity(0.6),
         ),
-        appBar: AppBar(
-          elevation: 0,
-          iconTheme: IconThemeData(
+        backgroundColor: whiteColor,
+        title: Text(
+          widget.courseName,
+          style: TextStyle(
+            fontSize: maxSize,
             color: Colors.black.withOpacity(0.6),
+            fontWeight: FontWeight.bold,
           ),
-          backgroundColor: whiteColor,
-          title: Text(
-            widget.courseName,
-            style: TextStyle(
-              fontSize: maxSize,
-              color: Colors.black.withOpacity(0.6),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          actions: [
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CartScreen(
-                      userAddress: widget.userAddress,
-                      userEmail: widget.userEmail,
-                      userName: widget.userName,
-                      userNumber: widget.userNumber,
-                      userPayment: widget.userPayment,
-                      userProfileImage: widget.userProfileImage,
-                      userWalletId: widget.userWalletId,
-                      courseName: widget.courseName,
-                      courseId: widget.courseId,
+        ),
+        actions: [
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CartScreen(
+                    userAddress: widget.userAddress,
+                    userEmail: widget.userEmail,
+                    userName: widget.userName,
+                    userNumber: widget.userNumber,
+                    userPayment: widget.userPayment,
+                    userProfileImage: widget.userProfileImage,
+                    userWalletId: widget.userWalletId,
+                    courseName: widget.courseName,
+                    courseId: widget.courseId,
+                  ),
+                ),
+              );
+            },
+            child: SizedBox(
+              width: 40,
+              height: 100,
+              child: Stack(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CartScreen(
+                            userAddress: widget.userAddress,
+                            userEmail: widget.userEmail,
+                            userName: widget.userName,
+                            userNumber: widget.userNumber,
+                            userPayment: widget.userPayment,
+                            userProfileImage: widget.userProfileImage,
+                            userWalletId: widget.userWalletId,
+                            courseName: widget.courseName,
+                            courseId: widget.courseId,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.shopping_cart_rounded,
                     ),
                   ),
-                );
-              },
-              child: SizedBox(
-                width: 40,
-                height: 100,
-                child: Stack(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5, right: 5),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: primeColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          cartCount,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: CourseChapterScreen(
+        courseId: widget.courseId,
+        courseName: widget.courseName,
+        userAddress: widget.userAddress,
+        userEmail: widget.userEmail,
+        userName: widget.userName,
+        userNumber: widget.userNumber,
+        userPayment: widget.userPayment,
+        userProfileImage: widget.userProfileImage,
+        userWalletId: widget.userWalletId,
+        pageType: widget.pageType,
+        isLive: isLive,
+      ),
+      bottomNavigationBar: widget.pageType == "my_course"
+          ? null
+          : Container(
+              width: MediaQuery.of(context).size.width,
+              height: 70,
+              decoration: BoxDecoration(
+                color: whiteColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: primeColor.withOpacity(0.1),
+                    blurRadius: 10,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  MaterialButton(
+                    color: purpleColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    onPressed: () {
+                      FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(widget.userNumber)
+                          .collection('mycart')
+                          .add({
+                        'author_name': widget.courseAuthor,
+                        'courses_id': widget.courseId,
+                        'image': widget.courseImage,
+                        'name': widget.courseName,
+                        'base_ammount': widget.courseAmount,
+                      }).whenComplete(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => CartScreen(
@@ -287,370 +380,242 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                               courseId: widget.courseId,
                             ),
                           ),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.shopping_cart_rounded,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, right: 5),
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: primeColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            cartCount,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10,
-                            ),
-                          ),
                         ),
+                      );
+                    },
+                    child: Text(
+                      'Add To Cart',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: whiteColor,
+                        fontSize: 16,
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-          bottom: TabBar(
-            indicatorColor: primeColor,
-            indicatorSize: TabBarIndicatorSize.label,
-            indicatorWeight: 3,
-            labelStyle: const TextStyle(
-              fontWeight: FontWeight.w500,
-            ),
-            labelColor: Colors.black.withOpacity(0.5),
-            tabs: const [
-              Tab(
-                text: 'Chapters',
-              ),
-              Tab(
-                text: 'Discussions',
-              ),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            CourseChapterScreen(
-              courseId: widget.courseId,
-              courseName: widget.courseName,
-              userAddress: widget.userAddress,
-              userEmail: widget.userEmail,
-              userName: widget.userName,
-              userNumber: widget.userNumber,
-              userPayment: widget.userPayment,
-              userProfileImage: widget.userProfileImage,
-              userWalletId: widget.userWalletId,
-            ),
-            CourseDiscussionScreen(
-              courseId: widget.courseId,
-              courseName: widget.courseName,
-              userAddress: widget.userAddress,
-              userEmail: widget.userEmail,
-              userName: widget.userName,
-              userNumber: widget.userNumber,
-              userPayment: widget.userPayment,
-              userProfileImage: widget.userProfileImage,
-              userWalletId: widget.userWalletId,
-            ),
-          ],
-        ),
-        bottomNavigationBar: widget.pageType == "my_course"
-            ? null
-            : Container(
-                width: MediaQuery.of(context).size.width,
-                height: 70,
-                decoration: BoxDecoration(
-                  color: whiteColor,
-                  boxShadow: [
-                    BoxShadow(
-                      color: primeColor.withOpacity(0.1),
-                      blurRadius: 10,
-                      spreadRadius: 1,
+                  ),
+                  MaterialButton(
+                    color: primeColor2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    MaterialButton(
-                      color: purpleColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      onPressed: () {
-                        FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(widget.userNumber)
-                            .collection('mycart')
-                            .add({
-                          'author_name': widget.courseAuthor,
-                          'courses_id': widget.courseId,
-                          'image': widget.courseImage,
-                          'name': widget.courseName,
-                          'base_ammount': widget.courseAmount,
-                        }).whenComplete(
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CartScreen(
-                                userAddress: widget.userAddress,
-                                userEmail: widget.userEmail,
-                                userName: widget.userName,
-                                userNumber: widget.userNumber,
-                                userPayment: widget.userPayment,
-                                userProfileImage: widget.userProfileImage,
-                                userWalletId: widget.userWalletId,
-                                courseName: widget.courseName,
-                                courseId: widget.courseId,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        'Add To Cart',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: whiteColor,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    MaterialButton(
-                      color: primeColor2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      onPressed: () {
-                        if (double.parse(walletBalance) <=
-                            double.parse(totalAmount)) {
-                          setState(() {
-                            exactTotalToPay = double.parse(totalAmount) -
-                                double.parse(walletBalance);
-                          });
-                        } else if (double.parse(walletBalance) == 0.0) {
-                          setState(() {
-                            exactTotalToPay = double.parse(totalAmount);
-                          });
-                        } else if (double.parse(walletBalance) >
-                            double.parse(totalAmount)) {
-                          setState(() {
-                            exactWalletBalanceAfterDeduction =
-                                double.parse(walletBalance) -
-                                    double.parse(totalAmount);
-                          });
-                        }
-                        log('wallet exact is $exactTotalToPay $exactWalletBalanceAfterDeduction');
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Container(
-                              height: 240,
-                              width: MediaQuery.of(context).size.width,
-                              color: whiteColor,
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Image.asset(
-                                            'assets/icons/wallet.png',
-                                            height: 40,
-                                            width: 60,
-                                          ),
-                                          const Text(
-                                            'Wallet Balance',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        "Rs.$walletBalance",
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black.withOpacity(0.5),
+                    onPressed: () {
+                      if (double.parse(walletBalance) <=
+                          double.parse(totalAmount)) {
+                        setState(() {
+                          exactTotalToPay = double.parse(totalAmount) -
+                              double.parse(walletBalance);
+                        });
+                      } else if (double.parse(walletBalance) == 0.0) {
+                        setState(() {
+                          exactTotalToPay = double.parse(totalAmount);
+                        });
+                      } else if (double.parse(walletBalance) >
+                          double.parse(totalAmount)) {
+                        setState(() {
+                          exactWalletBalanceAfterDeduction =
+                              double.parse(walletBalance) -
+                                  double.parse(totalAmount);
+                        });
+                      }
+                      log('wallet exact is $exactTotalToPay $exactWalletBalanceAfterDeduction');
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: 240,
+                            width: MediaQuery.of(context).size.width,
+                            color: whiteColor,
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/icons/wallet.png',
+                                          height: 40,
+                                          width: 60,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Expanded(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        color: whiteColor,
-                                        border: Border.all(
-                                          color: primeColor,
-                                        ),
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: primeColor.withOpacity(0.2),
-                                            blurRadius: 10,
-                                            spreadRadius: 1,
-                                          ),
-                                        ],
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Base Amount :',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black
-                                                      .withOpacity(0.5),
-                                                ),
-                                              ),
-                                              Text(
-                                                baseAmount,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'GST :',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black
-                                                      .withOpacity(0.5),
-                                                ),
-                                              ),
-                                              Text(
-                                                gst,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Text(
-                                                'Total :',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                              Text(
-                                                totalAmount,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            exactTotalToPay.toString(),
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          Text(
-                                            'You have to pay',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 10,
-                                              color: primeColor2,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      MaterialButton(
-                                        color: primeColor2,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        onPressed: () {
-                                          if (double.parse(walletBalance) >=
-                                              double.parse(totalAmount)) {
-                                            updateUserWalletbalance(
-                                              exactWalletBalanceAfterDeduction
-                                                  .toString(),
-                                            );
-                                          } else {
-                                            openCheckout(
-                                              exactTotalToPay * 100,
-                                            );
-                                          }
-                                        },
-                                        child: Text(
-                                          'Buy Now',
+                                        const Text(
+                                          'Wallet Balance',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: whiteColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      "Rs.$walletBalance",
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black.withOpacity(0.5),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: whiteColor,
+                                      border: Border.all(
+                                        color: primeColor,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: primeColor.withOpacity(0.2),
+                                          blurRadius: 10,
+                                          spreadRadius: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Base Amount :',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black
+                                                    .withOpacity(0.5),
+                                              ),
+                                            ),
+                                            Text(
+                                              baseAmount,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'GST :',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black
+                                                    .withOpacity(0.5),
+                                              ),
+                                            ),
+                                            Text(
+                                              gst,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text(
+                                              'Total :',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                            Text(
+                                              totalAmount,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          exactTotalToPay.toString(),
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
                                             fontSize: 16,
                                           ),
                                         ),
+                                        Text(
+                                          'You have to pay',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 10,
+                                            color: primeColor2,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    MaterialButton(
+                                      color: primeColor2,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Text(
-                        'Buy Now',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: whiteColor,
-                          fontSize: 16,
-                        ),
+                                      onPressed: () {
+                                        if (double.parse(walletBalance) >=
+                                            double.parse(totalAmount)) {
+                                          updateUserWalletbalance(
+                                            exactWalletBalanceAfterDeduction
+                                                .toString(),
+                                          );
+                                        } else {
+                                          openCheckout(
+                                            exactTotalToPay * 100,
+                                          );
+                                        }
+                                      },
+                                      child: Text(
+                                        'Buy Now',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: whiteColor,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Text(
+                      'Buy Now',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: whiteColor,
+                        fontSize: 16,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-      ),
+            ),
     );
   }
 }

@@ -57,8 +57,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       // showSnackBar(context, "logged In");
       User? user = userCredential.user;
       createUserCollection();
-      createUserChapterCollection();
-      createUserRefferalCollection();
+      // createUserChapterCollection();
+      // createUserRefferalCollection();
       createWalletCollection();
       Navigator.push(
         context,
@@ -114,12 +114,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'instagram_image': '',
       'instagram_following': '',
       'referrel_id': "PWCT$randomString",
-      'account_number': "",
+      'account_number': "0",
       'bank_name': "",
       'ifsc': "",
       'account_holder_name': "",
       'account_type': "",
-      'youtube_subscribers': "",
+      'youtube_subscribers': "0",
       'youtube_username': "",
       "insta_image_price": "0",
       "insta_video_price": "0",
@@ -183,22 +183,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  Future<void> createUserChapterCollection() async {
-    users.doc(widget.phone).collection('courses').doc().set({
-      'author_name': '',
-      'courses_id': '',
-      'image': '',
-      'name': '',
-    });
-  }
+  // Future<void> createUserChapterCollection() async {
+  //   users.doc(widget.phone).collection('courses').doc().set({
+  //     'author_name': '',
+  //     'courses_id': '',
+  //     'image': '',
+  //     'name': '',
+  //   });
+  // }
 
-  Future<void> createUserRefferalCollection() async {
-    users.doc(widget.phone).collection('refferal').doc().set({
-      'user_id': '',
-      'user_name': '',
-      'refferal_point': '',
-    });
-  }
+  // Future<void> createUserRefferalCollection() async {
+  //   users.doc(widget.phone).collection('refferal').doc().set({
+  //     'user_id': '',
+  //     'user_name': '',
+  //     'refferal_point': '',
+  //   });
+  // }
 
   Future<void> createWalletCollection() async {
     FirebaseFirestore.instance.collection('wallet').doc(widget.phone).set({
@@ -208,11 +208,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'earned_pcoins': '',
       'ifsc_code': '',
       'status': '',
-      'total_withdrawal': '',
+      'total_withdrawal': '0',
       'user_id': widget.phone,
       'user_name': "${firstNameController.text} ${lastNameController.text}",
-      'wallet_balance': '',
-      'withdrawal_req': '',
+      'wallet_balance': '0',
+      'withdrawal_req': '0',
       'account_type': '',
     });
   }

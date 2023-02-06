@@ -8,6 +8,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:primewayskills_app/view/auth_screens/otpLoginScreen.dart';
 import 'package:primewayskills_app/view/auth_screens/signup.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
+import 'package:primewayskills_app/view/helpers/alert_deialogs.dart';
+import 'package:primewayskills_app/view/helpers/colors.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -21,11 +23,15 @@ class AuthClass {
     }
 
     verificationFailed(FirebaseAuthException exception) {
-      showSnackBar(context, exception.toString());
+      alertDialogWidget(context, primeColor, exception.toString());
     }
 
     codeSent(String verificationID, [int? forceResnedingtoken]) {
-      showSnackBar(context, "Verification Code sent on the phone number");
+      alertDialogWidget(
+        context,
+        primeColor2,
+        "Verification Code sent on the phone number",
+      );
       setData(verificationID);
 
       if (verificationID != null) {
@@ -64,7 +70,11 @@ class AuthClass {
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      alertDialogWidget(
+        context,
+        primeColor,
+        e.toString(),
+      );
     }
   }
 
@@ -75,11 +85,19 @@ class AuthClass {
     }
 
     verificationFailed(FirebaseAuthException exception) {
-      showSnackBar(context, exception.toString());
+      alertDialogWidget(
+        context,
+        primeColor,
+        exception.toString(),
+      );
     }
 
     codeSent(String verificationID, [int? forceResnedingtoken]) {
-      showSnackBar(context, "Verification Code sent on the phone number");
+      alertDialogWidget(
+        context,
+        primeColor2,
+        "Verification Code sent on Verification Code sent on +91$phoneNumber",
+      );
       setData(verificationID);
 
       if (verificationID != null) {
@@ -154,7 +172,11 @@ class AuthClass {
       }
       log('user is $userCredential');
     } catch (e) {
-      showSnackBar(context, e.toString());
+      alertDialogWidget(
+        context,
+        primeColor,
+        e.toString(),
+      );
     }
   }
 
@@ -210,9 +232,17 @@ class AuthClass {
     try {
       await auth.signOut();
       await storage.delete(key: "phoneuserid");
+      alertDialogWidget(
+        context,
+        purpleColor,
+        'Sign Out Successfully',
+      );
     } catch (e) {
-      final snackBar = SnackBar(content: Text(e.toString()));
-      ScaffoldMessenger.of(context!).showSnackBar(snackBar);
+      alertDialogWidget(
+        context,
+        primeColor,
+        e.toString(),
+      );
     }
   }
 

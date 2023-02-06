@@ -3,9 +3,8 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
-import 'package:primewayskills_app/view/dashboard/dashboard.dart';
+import 'package:primewayskills_app/view/auth_screens/upload_image.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
-import 'package:primewayskills_app/view/helpers/loader.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 
 class EditAddressPage extends StatefulWidget {
@@ -39,7 +38,10 @@ class _EditAddressPageState extends State<EditAddressPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const Dashboard(),
+          builder: (context) => UplodeImage(
+            pageType: 'new',
+            phoneNumber: widget.phoneNumber,
+          ),
         ),
       );
     } else {
@@ -110,7 +112,17 @@ class _EditAddressPageState extends State<EditAddressPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => widget.pageType == "new"
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UplodeImage(
+                                pageType: 'new',
+                                phoneNumber: widget.phoneNumber,
+                              ),
+                            ),
+                          )
+                        : Navigator.pop(context),
                     child: const Text(
                       'Skip for now',
                       style: TextStyle(
@@ -190,11 +202,7 @@ class _EditAddressPageState extends State<EditAddressPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     onPressed: () {
-                      setState(() {
-                        const LoaderWidget();
-                        updateAddress();
-                      });
-                      Navigator.pop(context);
+                      updateAddress();
                     },
                     child: const Text(
                       'Save',

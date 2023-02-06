@@ -8,6 +8,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
+import 'package:primewayskills_app/view/helpers/alert_deialogs.dart';
+import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/loader.dart';
 
 class PhoneLoginScreen extends StatefulWidget {
@@ -204,11 +206,19 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                           borderRadius: BorderRadius.circular(40),
                         ),
                         onPressed: () {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          setState(() {
-                            showLoader = true;
-                          });
-                          checkNumber();
+                          if (phoneController.text.isNotEmpty) {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            setState(() {
+                              showLoader = true;
+                            });
+                            checkNumber();
+                          } else {
+                            alertDialogWidget(
+                              context,
+                              primeColor,
+                              'Please enter phone number to continue',
+                            );
+                          }
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

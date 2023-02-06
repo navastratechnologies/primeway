@@ -1,11 +1,16 @@
 import 'dart:developer';
 import 'dart:math' as math;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/controllers/referrel_controller.dart';
+import 'package:primewayskills_app/view/helpers/alert_deialogs.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
+import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 
 class ReferAndEarnScreen extends StatefulWidget {
   final String userNumber;
@@ -122,47 +127,55 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 30),
-                    Container(
-                      width: 150,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: whiteColor,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: primeColor.withOpacity(0.1),
-                            blurRadius: 10,
-                            spreadRadius: 1,
+                    InkWell(
+                      onTap: () {
+                        Clipboard.setData(
+                          ClipboardData(
+                            text: referralId,
                           ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            referralId.toUpperCase(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                        ).then(
+                          (_) {
+                            alertDialogWidget(
+                              context,
+                              primeColor2,
+                              "Referral code copied to clipboard",
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        width: 150,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: primeColor.withOpacity(0.1),
+                              blurRadius: 10,
+                              spreadRadius: 1,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              buidDynamicLinkForReferral(
-                                referralId,
-                                widget.userNumber,
-                                "copy",
-                                context,
-                              );
-                            },
-                            child: SizedBox(
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              referralId.toUpperCase(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(width: 10),
+                            SizedBox(
                               width: 25,
                               height: 25,
                               child: Image.asset('assets/copy.png'),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -170,25 +183,131 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                       thickness: 1,
                     ),
                     const SizedBox(height: 20),
-                    Text(
-                      "To understand how referrel works.",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.black.withOpacity(0.2),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 5),
                     InkWell(
-                      child: Text(
-                        "View Invitation Rules",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: primeColor2,
-                        ),
-                        textAlign: TextAlign.center,
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              padding: const EdgeInsets.all(10),
+                              height: displayHeight(context) / 2.1,
+                              width: displayWidth(context),
+                              decoration: BoxDecoration(
+                                color: whiteColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: primeColor.withOpacity(0.2),
+                                    blurRadius: 10,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      headingWidgetMethod('Invitation Rules'),
+                                      MaterialButton(
+                                        shape: const CircleBorder(),
+                                        color: purpleColor,
+                                        onPressed: () => Navigator.pop(context),
+                                        child: FaIcon(
+                                          FontAwesomeIcons.xmark,
+                                          color: whiteColor,
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Divider(
+                                    thickness: 1.2,
+                                    color: Colors.blueGrey.withOpacity(0.1),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Lottie.asset(
+                                        'assets/json/share.json',
+                                        height: 80,
+                                        width: 80,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      referalTextWidget(
+                                        'Invite Friends',
+                                        'Share your unique refferal link',
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Lottie.asset(
+                                        'assets/json/register.json',
+                                        height: 80,
+                                        width: 80,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      referalTextWidget(
+                                        'Friend Register',
+                                        'Friend register from your link or use your refferal code.',
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Lottie.asset(
+                                        'assets/json/refer.json',
+                                        height: 80,
+                                        width: 80,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      referalTextWidget(
+                                        'Refferal Reward',
+                                        'You will get refferal reward from us in your wallet.',
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Text(
+                            "To understand how referrel works.",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: Colors.black.withOpacity(0.2),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 5),
+                          InkWell(
+                            child: Text(
+                              "View Invitation Rules",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: primeColor2,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -305,6 +424,34 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  referalTextWidget(head, subhead) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          head,
+          style: TextStyle(
+            color: Colors.black.withOpacity(0.4),
+            fontSize: 12,
+            letterSpacing: 1,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(
+          width: displayWidth(context) / 1.5,
+          child: Text(
+            subhead,
+            style: const TextStyle(
+              fontSize: 12,
+              letterSpacing: 1,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_discussion_screen.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_landscape_video_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:video_player/video_player.dart';
@@ -282,55 +281,34 @@ class _CourseVideoScreenState extends State<CourseVideoScreen> {
                     const EdgeInsets.symmetric(vertical: 18, horizontal: 10),
                 child: Text(
                   widget.videoTitle,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
+                    color: Colors.black.withOpacity(0.5),
                   ),
                 ),
               ),
-              DefaultTabController(
-                length: 2,
-                initialIndex: 0,
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height / 1.6,
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    children: [
-                      TabBar(
-                        indicatorColor: primeColor,
-                        labelColor: Colors.black,
-                        tabs: const [
-                          Tab(
-                            text: 'Discussions',
-                          ),
-                          Tab(
-                            text: 'Description',
-                          ),
-                        ],
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Description',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
                       ),
-                      Expanded(
-                        child: TabBarView(
-                          children: [
-                            CourseDiscussionScreen(
-                              courseId: widget.courseId,
-                              courseName: widget.courseName,
-                              userAddress: widget.userAddress,
-                              userEmail: widget.userEmail,
-                              userName: widget.userName,
-                              userNumber: widget.userNumber,
-                              userPayment: widget.userPayment,
-                              userProfileImage: widget.userProfileImage,
-                              userWalletId: widget.userWalletId,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Text(widget.videoDescription),
-                            ),
-                          ],
-                        ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      widget.videoDescription,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0.2,
+                        color: Colors.black.withOpacity(0.4),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],

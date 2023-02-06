@@ -115,7 +115,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
         body: TabBarView(
           children: [
             StreamBuilder(
-                stream: course.snapshots(),
+                stream: course.where('islive', isEqualTo: 'true').snapshots(),
                 builder:
                     (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                   if (streamSnapshot.hasData) {
@@ -177,16 +177,26 @@ class _CoursesScreenState extends State<CoursesScreen> {
                                         children: [
                                           Container(
                                             padding: const EdgeInsets.all(2),
-                                            decoration: const BoxDecoration(
+                                            decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              color: Colors.green,
+                                              color:
+                                                  documentSnapshot['islive'] ==
+                                                          "true"
+                                                      ? Colors.green
+                                                      : primeColor,
                                             ),
                                           ),
                                           const SizedBox(width: 5),
-                                          const Text(
-                                            'LIVE NOW',
+                                          Text(
+                                            documentSnapshot['islive'] == "true"
+                                                ? 'LIVE NOW'
+                                                : 'NOT LIVE',
                                             style: TextStyle(
-                                              color: Colors.green,
+                                              color:
+                                                  documentSnapshot['islive'] ==
+                                                          "true"
+                                                      ? Colors.green
+                                                      : primeColor,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 12,
                                             ),
@@ -282,8 +292,6 @@ class _CoursesScreenState extends State<CoursesScreen> {
                     .collection('users')
                     .doc(widget.userNumber)
                     .collection('courses')
-                    // .doc()
-                    // .collection('chapters')
                     .snapshots(),
                 builder:
                     (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -361,25 +369,99 @@ class _CoursesScreenState extends State<CoursesScreen> {
                                         ),
                                       ),
                                       const SizedBox(width: 10),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.all(2),
-                                            decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.green,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 5),
-                                          const Text(
-                                            'LIVE NOW',
-                                            style: TextStyle(
-                                              color: Colors.green,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
+                                      SizedBox(
+                                        height: 20,
+                                        width: 100,
+                                        child: StreamBuilder(
+                                            stream: course
+                                                .where('course_id',
+                                                    isEqualTo:
+                                                        documentSnapshot.id)
+                                                .snapshots(),
+                                            builder: (context,
+                                                AsyncSnapshot<QuerySnapshot>
+                                                    checkLiveStreamSnapshot) {
+                                              if (checkLiveStreamSnapshot
+                                                  .hasData) {
+                                                return ListView.builder(
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  itemCount:
+                                                      checkLiveStreamSnapshot
+                                                          .data!.docs.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    DocumentSnapshot
+                                                        checkListDocumentSnapshot =
+                                                        checkLiveStreamSnapshot
+                                                            .data!.docs[index];
+                                                    if (checkListDocumentSnapshot[
+                                                            'islive'] ==
+                                                        "true") {
+                                                      return Row(
+                                                        children: [
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(2),
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color:
+                                                                  Colors.green,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 5),
+                                                          const Text(
+                                                            'LIVE NOW',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.green,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 12,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    } else {
+                                                      return Row(
+                                                        children: [
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(2),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color: primeColor,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 5),
+                                                          Text(
+                                                            'NOT LIVE',
+                                                            style: TextStyle(
+                                                              color: primeColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 12,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    }
+                                                  },
+                                                );
+                                              }
+                                              return Container();
+                                            }),
                                       ),
                                     ],
                                   ),

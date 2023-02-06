@@ -8,7 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
-import 'package:primewayskills_app/view/auth_screens/upload_image.dart';
+import 'package:primewayskills_app/view/helpers/alert_deialogs.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 
@@ -1158,32 +1158,16 @@ class _EkycPageState extends State<EkycPage> {
                                       ifscNumberController.text.isNotEmpty &&
                                       accountType.isNotEmpty) {
                                     updateAccount();
-                                    Navigator.push(
+                                    alertDialogWidget(
                                       context,
-                                      MaterialPageRoute(
-                                        builder: (context) => UplodeImage(
-                                          phoneNumber: widget.phoneNumber,
-                                        ),
-                                      ),
+                                      primeColor2,
+                                      'Bank details updated successfully',
                                     );
                                   } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        backgroundColor: primeColor,
-                                        behavior: SnackBarBehavior.floating,
-                                        width: displayWidth(context) / 1.5,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        content: Text(
-                                          'Please fill all fields to continue',
-                                          style: TextStyle(
-                                            color: whiteColor,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
+                                    alertDialogWidget(
+                                      context,
+                                      primeColor,
+                                      'Please fill all fields to continue',
                                     );
                                   }
                                 },
