@@ -62,7 +62,7 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavigationDrawer(
+      drawer: NavigationsDrawer(
         userAddress: widget.userAddress,
         userEmail: widget.userEmail,
         userName: widget.userName,

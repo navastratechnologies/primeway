@@ -24,7 +24,7 @@ class ToolsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavigationDrawer(
+      drawer: NavigationsDrawer(
         userAddress: userAddress,
         userEmail: userEmail,
         userName: userName,

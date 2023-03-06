@@ -8,7 +8,8 @@ import 'package:primewayskills_app/controllers/notification_controller.dart';
 import 'package:primewayskills_app/view/auth_screens/address.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
-import 'package:sms_autofill/sms_autofill.dart';
+
+// import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../controllers/phone_controller.dart';
 
@@ -236,13 +237,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  _listenSmsCode() async {
-    await SmsAutoFill().listenForCode();
-  }
+  // _listenSmsCode() async {
+  //   await SmsAutoFill().listenForCode();
+  // }
 
   @override
   void initState() {
-    _listenSmsCode();
+    // _listenSmsCode();
     checkRefferalData();
     getReferalCharge();
     super.initState();
@@ -250,7 +251,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
-    SmsAutoFill().unregisterListener();
+    // SmsAutoFill().unregisterListener();
     super.dispose();
   }
 

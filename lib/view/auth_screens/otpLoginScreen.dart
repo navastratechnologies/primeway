@@ -1,10 +1,12 @@
 // ignore_for_file: unnecessary_null_comparison, file_names
 
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/auth_screens/phoneLoginScreen.dart';
 import 'package:primewayskills_app/view/auth_screens/signup.dart';
@@ -12,7 +14,8 @@ import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/helpers/alert_deialogs.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/loader.dart';
-import 'package:sms_autofill/sms_autofill.dart';
+import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
+// import 'package:sms_autofill/sms_autofill.dart';
 
 class OtpLoginScreen extends StatefulWidget {
   final String? phone, verId;
@@ -34,9 +37,9 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
 
   bool showLoader = false;
 
-  _listenSmsCode() async {
-    await SmsAutoFill().listenForCode();
-  }
+  StreamController<ErrorAnimationType> errorController =
+      StreamController<ErrorAnimationType>();
+  String currentText = '';
 
   Future<void> signInwithPhoneNumber(String phoneNumber, String verificationId,
       String smsCode, BuildContext context) async {
@@ -123,18 +126,6 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
   }
 
   @override
-  void initState() {
-    _listenSmsCode();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    SmsAutoFill().unregisterListener();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -210,26 +201,73 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 40),
-                        PinFieldAutoFill(
-                          controller: otpController,
-                          codeLength: 6,
-                          autoFocus: true,
-                          decoration: UnderlineDecoration(
-                            textStyle: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
+                        // PinFieldAutoFill(
+                        //   controller: otpController,
+                        //   codeLength: 6,
+                        //   autoFocus: true,
+                        //   decoration: UnderlineDecoration(
+                        //     textStyle:   TextStyle(
+                        //       color: Colors.black,
+                        //       fontWeight: FontWeight.bold,
+                        //     ),
+                        //     lineHeight: 2,
+                        //     lineStrokeCap: StrokeCap.round,
+                        //     bgColorBuilder: PinListenColorBuilder(
+                        //       Colors.grey.shade100,
+                        //       Colors.grey.shade100,
+                        //     ),
+                        //     colorBuilder:   FixedColorBuilder(
+                        //       Colors.transparent,
+                        //     ),
+                        //   ),
+                        // ),
+                        SizedBox(
+                          width: displayWidth(context) / 1.3,
+                          child: PinCodeTextField(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please Fill OTP";
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.number,
+                            length: 6,
+                            obscureText: false,
+                            animationType: AnimationType.fade,
+                            cursorColor: Colors.black,
+                            pinTheme: PinTheme(
+                              shape: PinCodeFieldShape.box,
+                              borderRadius: BorderRadius.circular(5),
+                              fieldHeight: 45,
+                              fieldWidth: 40,
+                              activeFillColor: Colors.white,
+                              inactiveFillColor: Colors.grey,
+                              borderWidth: 0,
+                              selectedFillColor: Colors.grey.withOpacity(0.3),
                             ),
-                            lineHeight: 2,
-                            lineStrokeCap: StrokeCap.round,
-                            bgColorBuilder: PinListenColorBuilder(
-                              Colors.grey.shade100,
-                              Colors.grey.shade100,
-                            ),
-                            colorBuilder: const FixedColorBuilder(
-                              Colors.transparent,
-                            ),
+                            animationDuration:
+                                const Duration(milliseconds: 300),
+                            // backgroundColor: Colors.blue.shade50,
+                            enableActiveFill: true,
+                            errorAnimationController: errorController,
+                            controller: otpController,
+                            onCompleted: (v) {
+                              print("Completed");
+                            },
+                            onChanged: (value) {
+                              print(value);
+                              setState(() {
+                                currentText = value;
+                              });
+                            },
+                            beforeTextPaste: (text) {
+                              print("Allowing to paste $text");
+                              return true;
+                            },
+                            appContext: context,
                           ),
                         ),
+
                         const SizedBox(height: 5),
                         Align(
                           alignment: Alignment.topRight,

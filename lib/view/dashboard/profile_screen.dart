@@ -76,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
-      drawer: NavigationDrawer(
+      drawer: NavigationsDrawer(
         userAddress: widget.userAddress,
         userEmail: widget.userEmail,
         userName: widget.userName,

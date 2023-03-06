@@ -20,7 +20,7 @@ import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class NavigationDrawer extends StatefulWidget {
+class NavigationsDrawer extends StatefulWidget {
   final String userNumber;
   final String userName;
   final String userAddress;
@@ -28,7 +28,7 @@ class NavigationDrawer extends StatefulWidget {
   final String userPayment;
   final String userEmail;
   final String userWalletId;
-  const NavigationDrawer(
+  const NavigationsDrawer(
       {Key? key,
       required this.userNumber,
       required this.userName,
@@ -40,10 +40,10 @@ class NavigationDrawer extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<NavigationDrawer> createState() => _NavigationDrawerState();
+  State<NavigationsDrawer> createState() => _NavigationsDrawerState();
 }
 
-class _NavigationDrawerState extends State<NavigationDrawer> {
+class _NavigationsDrawerState extends State<NavigationsDrawer> {
   FlutterSecureStorage storage = const FlutterSecureStorage();
 
   bool showPartenerPage = false;
@@ -394,7 +394,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                                 )
                               : Container(),
                           ListTile(
-                            leading: sidebarIconWidget(Icons.whatsapp),
+                            leading: sidebarIconWidget(FontAwesomeIcons.whatsapp),
                             title: Text(
                               "Chat With Us",
                               style: TextStyle(

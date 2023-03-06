@@ -220,7 +220,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
-      drawer: NavigationDrawer(
+      drawer: NavigationsDrawer(
         userAddress: widget.userAddress,
         userEmail: widget.userEmail,
         userName: widget.userName,
