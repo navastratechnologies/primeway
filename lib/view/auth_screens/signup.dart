@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:primewayskills_app/controllers/notification_controller.dart';
 import 'package:primewayskills_app/view/auth_screens/address.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
@@ -72,7 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
       log('user is $userCredential');
     } catch (e) {
-      // showSnackBar(context, e.toString());
+      log("reg error is ${e.toString()}");
     }
   }
 
@@ -497,6 +498,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   child: TextField(
                     controller: otpController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(6),
+                    ],
                     decoration: InputDecoration(
                       labelText: 'Enter 6 digit OTP',
                       border: InputBorder.none,
