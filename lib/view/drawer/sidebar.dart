@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -18,6 +19,7 @@ import 'package:primewayskills_app/view/drawer/setting/setting.dart';
 import 'package:primewayskills_app/view/helpers/alert_deialogs.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NavigationsDrawer extends StatefulWidget {
@@ -123,16 +125,37 @@ class _NavigationsDrawerState extends State<NavigationsDrawer> {
                               Row(
                                 children: [
                                   InkWell(
-                                    child: Container(
+                                    child: SizedBox(
                                       width: 50,
                                       height: 50,
-                                      decoration: BoxDecoration(
-                                        color: whiteColor,
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                              widget.userProfileImage),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: FastCachedImage(
+                                          url: widget.userProfileImage,
                                           fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, exception, stacktrace) {
+                                            log('image error is ${stacktrace.toString()}');
+                                            return Text(
+                                              stacktrace.toString(),
+                                            );
+                                          },
+                                          loadingBuilder: (context, progress) {
+                                            return Shimmer.fromColors(
+                                              baseColor: Colors.grey.shade200,
+                                              highlightColor:
+                                                  Colors.grey.shade300,
+                                              direction: ShimmerDirection.ttb,
+                                              child: Container(
+                                                width: 60,
+                                                height: 60,
+                                                decoration: BoxDecoration(
+                                                  color: primeColor2,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ),
@@ -394,7 +417,8 @@ class _NavigationsDrawerState extends State<NavigationsDrawer> {
                                 )
                               : Container(),
                           ListTile(
-                            leading: sidebarIconWidget(FontAwesomeIcons.whatsapp),
+                            leading:
+                                sidebarIconWidget(FontAwesomeIcons.whatsapp),
                             title: Text(
                               "Chat With Us",
                               style: TextStyle(

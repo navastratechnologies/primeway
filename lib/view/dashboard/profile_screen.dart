@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
@@ -15,6 +16,7 @@ import 'package:primewayskills_app/view/profile_screen/profile_tile_widget.dart'
 import 'package:primewayskills_app/view/profile_screen/purchase_history_screen.dart';
 import 'package:primewayskills_app/view/profile_screen/refer_and_earn_screen.dart';
 import 'package:primewayskills_app/view/profile_screen/wallet_screen.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String userNumber;
@@ -149,24 +151,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                                 padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 60,
-                                      height: 60,
-                                      decoration: BoxDecoration(
-                                        color: primeColor,
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                              documentSnapshot['profile_pic']),
-                                          fit: BoxFit.cover,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: FastCachedImage(
+                                    url: documentSnapshot['profile_pic'],
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, exception, stacktrace) {
+                                      log('image error is ${stacktrace.toString()}');
+                                      return Text(
+                                        stacktrace.toString(),
+                                      );
+                                    },
+                                    loadingBuilder: (context, progress) {
+                                      return Shimmer.fromColors(
+                                        baseColor: Colors.grey.shade200,
+                                        highlightColor: Colors.grey.shade300,
+                                        direction: ShimmerDirection.ttb,
+                                        child: Container(
+                                          width: 60,
+                                          height: 60,
+                                          decoration: BoxDecoration(
+                                            color: primeColor2,
+                                            shape: BoxShape.circle,
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ],
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ),

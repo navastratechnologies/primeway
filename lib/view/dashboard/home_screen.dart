@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
@@ -7,6 +8,7 @@ import 'package:primewayskills_app/view/dashboard/homePage_screens/collaboration
 import 'package:primewayskills_app/view/dashboard/homePage_screens/creater_program_scrren.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Homescreen extends StatefulWidget {
   final String userNumber;
@@ -74,18 +76,38 @@ class _HomescreenState extends State<Homescreen> {
                       return CarouselSlider.builder(
                         itemCount: streamSnapshot.data!.docs.length,
                         itemBuilder: (context, index, realIndex) {
-                          final DocumentSnapshot documentSnapshot =
+                          DocumentSnapshot documentSnapshot =
                               streamSnapshot.data!.docs[index];
-                          return Container(
+                          FastCachedImageConfig.isCached(
+                            imageUrl: documentSnapshot['Banner_image'],
+                          );
+                          return SizedBox(
                             width: MediaQuery.of(context).size.width / 1.1,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  documentSnapshot['Banner_image'],
-                                ),
-                                fit: BoxFit.cover,
-                              ),
+                            child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
+                              child: FastCachedImage(
+                                url: documentSnapshot['Banner_image'],
+                                fit: BoxFit.cover,
+                                fadeInDuration: const Duration(seconds: 1),
+                                errorBuilder: (context, exception, stacktrace) {
+                                  return Text(stacktrace.toString());
+                                },
+                                loadingBuilder: (context, progress) {
+                                  return Shimmer.fromColors(
+                                    baseColor: Colors.grey.shade200,
+                                    highlightColor: Colors.grey.shade300,
+                                    direction: ShimmerDirection.ttb,
+                                    child: Container(
+                                      height: 160,
+                                      width: MediaQuery.of(context).size.width /
+                                          1.1,
+                                      decoration: BoxDecoration(
+                                        color: primeColor2,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           );
                         },
@@ -255,15 +277,28 @@ class _HomescreenState extends State<Homescreen> {
                                     ),
                                   );
                                 },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: primeColor,
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          documentSnapshot['image']),
-                                      fit: BoxFit.cover,
-                                    ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: FastCachedImage(
+                                    url: documentSnapshot['image'],
+                                    fit: BoxFit.cover,
+                                    loadingBuilder: (context, progress) {
+                                      return Shimmer.fromColors(
+                                        baseColor: Colors.grey.shade200,
+                                        highlightColor: Colors.grey.shade300,
+                                        direction: ShimmerDirection.ttb,
+                                        child: Container(
+                                          height: 160,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              1.1,
+                                          decoration: BoxDecoration(
+                                            color: primeColor2,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               );
@@ -319,58 +354,81 @@ class _HomescreenState extends State<Homescreen> {
                                     ),
                                     child: Column(
                                       children: [
-                                        Container(
+                                        SizedBox(
                                           height: 175,
-                                          width: width / 1.11,
-                                          decoration: BoxDecoration(
-                                            color: primeColor,
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                              topLeft: Radius.circular(15),
-                                              topRight: Radius.circular(15),
-                                            ),
-                                            image: DecorationImage(
-                                              image: NetworkImage(
-                                                documentSnapshot['image'],
-                                              ),
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
+                                          width: width,
+                                          child: Stack(
                                             children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(10),
-                                                child: Container(
-                                                  padding:
-                                                      const EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                    color: documentSnapshot[
-                                                                'status'] ==
-                                                            "1"
-                                                        ? primeColor2
-                                                        : primeColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
+                                              ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  topLeft: Radius.circular(10),
+                                                  topRight: Radius.circular(10),
+                                                ),
+                                                child: FastCachedImage(
+                                                  url:
+                                                      documentSnapshot['image'],
+                                                  fit: BoxFit.cover,
+                                                  loadingBuilder:
+                                                      (context, progress) {
+                                                    return Shimmer.fromColors(
+                                                      baseColor:
+                                                          Colors.grey.shade200,
+                                                      highlightColor:
+                                                          Colors.grey.shade300,
+                                                      direction:
+                                                          ShimmerDirection.ttb,
+                                                      child: Container(
+                                                        height: 160,
+                                                        width: width,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: primeColor2,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
                                                             10),
-                                                  ),
-                                                  child: Text(
-                                                    documentSnapshot[
-                                                                'status'] ==
-                                                            "1"
-                                                        ? 'Applications Open'
-                                                        : 'Application Closed',
-                                                    style: TextStyle(
-                                                      color: whiteColor,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              10),
+                                                      decoration: BoxDecoration(
+                                                        color: documentSnapshot[
+                                                                    'status'] ==
+                                                                "1"
+                                                            ? primeColor2
+                                                            : primeColor,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      child: Text(
+                                                        documentSnapshot[
+                                                                    'status'] ==
+                                                                "1"
+                                                            ? 'Applications Open'
+                                                            : 'Application Closed',
+                                                        style: TextStyle(
+                                                          color: whiteColor,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
+                                                ],
                                               ),
                                             ],
                                           ),
@@ -461,10 +519,34 @@ class _HomescreenState extends State<Homescreen> {
                                                   SizedBox(
                                                       height: 50,
                                                       width: 100,
-                                                      child: Image.network(
-                                                        documentSnapshot[
+                                                      child: FastCachedImage(
+                                                        url: documentSnapshot[
                                                             'brand_logo'],
                                                         fit: BoxFit.cover,
+                                                        loadingBuilder:
+                                                            (context,
+                                                                progress) {
+                                                          return Shimmer
+                                                              .fromColors(
+                                                            baseColor: Colors
+                                                                .grey.shade200,
+                                                            highlightColor:
+                                                                Colors.grey
+                                                                    .shade300,
+                                                            direction:
+                                                                ShimmerDirection
+                                                                    .ttb,
+                                                            child: Container(
+                                                              height: 160,
+                                                              width: width,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color:
+                                                                    primeColor2,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
                                                       )),
                                                 ],
                                               ),

@@ -2,6 +2,7 @@ import 'dart:core';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/auth_screens/address.dart';
@@ -15,6 +16,7 @@ import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   final String userNumber;
@@ -217,11 +219,34 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         spreadRadius: 1,
                                       ),
                                     ],
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        userProfileImage,
-                                      ),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: FastCachedImage(
+                                      url: userProfileImage,
                                       fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, exception, stacktrace) {
+                                        log('image error is ${stacktrace.toString()}');
+                                        return Text(
+                                          stacktrace.toString(),
+                                        );
+                                      },
+                                      loadingBuilder: (context, progress) {
+                                        return Shimmer.fromColors(
+                                          baseColor: Colors.grey.shade200,
+                                          highlightColor: Colors.grey.shade300,
+                                          direction: ShimmerDirection.ttb,
+                                          child: Container(
+                                            width: 60,
+                                            height: 60,
+                                            decoration: BoxDecoration(
+                                              color: primeColor2,
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),

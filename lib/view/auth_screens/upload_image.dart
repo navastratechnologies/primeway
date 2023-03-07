@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
 import 'package:primewayskills_app/view/helpers/loader.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
@@ -32,6 +33,7 @@ class _UplodeImageState extends State<UplodeImage> {
   bool showLoader = false;
   UploadTask? uploadTask;
   File? image;
+  String originalImageName = '';
 
   Future pickImage(ImageSource source) async {
     try {
@@ -39,8 +41,14 @@ class _UplodeImageState extends State<UplodeImage> {
       if (image == null) return;
 
       final imageTemporary = File(image.path);
+      final imageName = path.basenameWithoutExtension(imageTemporary.path);
+      final newFile = await imageTemporary
+          .rename('${imageTemporary.parent.path}/$imageName.png');
+      log('picked image is $newFile ${imageTemporary.parent.path}');
+
       setState(() {
-        this.image = imageTemporary;
+        this.image = newFile;
+        originalImageName = "$imageName.png";
       });
     } on PlatformException catch (e) {
       log('Failed to pick image: $e');
@@ -48,7 +56,7 @@ class _UplodeImageState extends State<UplodeImage> {
   }
 
   Future uploadFile() async {
-    final path = 'users/${widget.phoneNumber}/$image';
+    final path = 'users/${widget.phoneNumber}/$originalImageName';
     final file = File(image!.path);
 
     final ref = FirebaseStorage.instance.ref().child(path);

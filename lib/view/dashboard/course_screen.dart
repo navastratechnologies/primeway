@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/course_detail_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CoursesScreen extends StatefulWidget {
   final String userNumber;
@@ -266,11 +268,32 @@ class _CoursesScreenState extends State<CoursesScreen> {
                                           color: primeColor,
                                           borderRadius:
                                               BorderRadius.circular(5),
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                                documentSnapshot['image']),
-                                            fit: BoxFit.cover,
-                                          ),
+                                        ),
+                                        child: FastCachedImage(
+                                          url: documentSnapshot['image'],
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, exception, stacktrace) {
+                                            log('image error is ${stacktrace.toString()}');
+                                            return Text(
+                                              stacktrace.toString(),
+                                            );
+                                          },
+                                          loadingBuilder: (context, progress) {
+                                            return Shimmer.fromColors(
+                                              baseColor: Colors.grey.shade200,
+                                              highlightColor:
+                                                  Colors.grey.shade300,
+                                              direction: ShimmerDirection.ttb,
+                                              child: Container(
+                                                width: 60,
+                                                height: 60,
+                                                decoration: BoxDecoration(
+                                                  color: primeColor2,
+                                                ),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ],
@@ -517,11 +540,32 @@ class _CoursesScreenState extends State<CoursesScreen> {
                                           color: primeColor,
                                           borderRadius:
                                               BorderRadius.circular(5),
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                                documentSnapshot['image']),
-                                            fit: BoxFit.cover,
-                                          ),
+                                        ),
+                                        child: FastCachedImage(
+                                          url: documentSnapshot['image'],
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, exception, stacktrace) {
+                                            log('image error is ${stacktrace.toString()}');
+                                            return Text(
+                                              stacktrace.toString(),
+                                            );
+                                          },
+                                          loadingBuilder: (context, progress) {
+                                            return Shimmer.fromColors(
+                                              baseColor: Colors.grey.shade200,
+                                              highlightColor:
+                                                  Colors.grey.shade300,
+                                              direction: ShimmerDirection.ttb,
+                                              child: Container(
+                                                width: 60,
+                                                height: 60,
+                                                decoration: BoxDecoration(
+                                                  color: primeColor2,
+                                                ),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ],

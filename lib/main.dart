@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  await FastCachedImageConfig.init(
+    clearCacheAfter: const Duration(
+      days: 15,
+    ),
+  );
   runApp(
     const MyApp(),
   );

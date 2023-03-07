@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -13,8 +14,8 @@ import 'package:primewayskills_app/view/collab_apply_screens/view_brief_screen.d
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
-import 'package:primewayskills_app/view/helpers/loader.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CollaborationInternalScreen extends StatefulWidget {
   final String userNumber, collabId;
@@ -285,42 +286,63 @@ class _CollaborationInternalScreenState
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             height: height / 4,
                             width: width,
-                            decoration: BoxDecoration(
-                              color: primeColor,
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  documentSnapshot['image'],
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                            child: Stack(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: documentSnapshot['status'] == "1"
-                                          ? primeColor2
-                                          : primeColor,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Text(
-                                      documentSnapshot['status'] == "1"
-                                          ? 'Applications Open'
-                                          : 'Application Closed',
-                                      style: TextStyle(
-                                        color: whiteColor,
-                                        fontWeight: FontWeight.w600,
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                  ),
+                                  child: FastCachedImage(
+                                    url: documentSnapshot['image'],
+                                    fit: BoxFit.cover,
+                                    loadingBuilder: (context, progress) {
+                                      return Shimmer.fromColors(
+                                        baseColor: Colors.grey.shade200,
+                                        highlightColor: Colors.grey.shade300,
+                                        direction: ShimmerDirection.ttb,
+                                        child: Container(
+                                          height: 160,
+                                          width: width,
+                                          decoration: BoxDecoration(
+                                            color: primeColor2,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color:
+                                              documentSnapshot['status'] == "1"
+                                                  ? primeColor2
+                                                  : primeColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Text(
+                                          documentSnapshot['status'] == "1"
+                                              ? 'Applications Open'
+                                              : 'Application Closed',
+                                          style: TextStyle(
+                                            color: whiteColor,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -1042,7 +1064,18 @@ class _CollaborationInternalScreenState
                   },
                 );
               }
-              return const LoaderWidget();
+              return Shimmer.fromColors(
+                baseColor: Colors.grey.shade200,
+                highlightColor: Colors.grey.shade300,
+                direction: ShimmerDirection.ttb,
+                child: Container(
+                  height: 160,
+                  width: width,
+                  decoration: BoxDecoration(
+                    color: primeColor2,
+                  ),
+                ),
+              );
             },
           ),
         ),
