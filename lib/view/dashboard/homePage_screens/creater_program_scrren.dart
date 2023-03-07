@@ -1,10 +1,13 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/dashboard/homePage_screens/collaboration_internal_screen.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
-import 'package:primewayskills_app/view/helpers/loader.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CreaterProgramScreen extends StatefulWidget {
   final String categorey;
@@ -224,11 +227,36 @@ class _CreaterProgramScreenState extends State<CreaterProgramScreen> {
                                                         .withOpacity(0.2),
                                                   ),
                                                 ),
-                                                child: Image(
-                                                  image: NetworkImage(
-                                                    documentSnapshot['image'],
-                                                  ),
+                                                child: FastCachedImage(
+                                                  url:
+                                                      documentSnapshot['image'],
                                                   fit: BoxFit.cover,
+                                                  errorBuilder: (context,
+                                                      exception, stacktrace) {
+                                                    log('image error is ${stacktrace.toString()}');
+                                                    return Text(
+                                                      stacktrace.toString(),
+                                                    );
+                                                  },
+                                                  loadingBuilder:
+                                                      (context, progress) {
+                                                    return Shimmer.fromColors(
+                                                      baseColor:
+                                                          Colors.grey.shade200,
+                                                      highlightColor:
+                                                          Colors.grey.shade300,
+                                                      direction:
+                                                          ShimmerDirection.ttb,
+                                                      child: Container(
+                                                        width: 60,
+                                                        height: 60,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: primeColor2,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                 ),
                                               ),
                                               Column(
@@ -404,7 +432,18 @@ class _CreaterProgramScreenState extends State<CreaterProgramScreen> {
                           },
                         );
                       }
-                      return const LoaderWidget();
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey.shade200,
+                        highlightColor: Colors.grey.shade300,
+                        direction: ShimmerDirection.ttb,
+                        child: Container(
+                          height: 160,
+                          width: width,
+                          decoration: BoxDecoration(
+                            color: primeColor2,
+                          ),
+                        ),
+                      );
                     }),
               ],
             ),
