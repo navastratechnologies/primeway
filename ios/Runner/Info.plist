@@ -63,6 +63,8 @@
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs access to your photo library to allow you to select a profile picture.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs access to your camera to allow you to click profile picture.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app needs access to your microphone to record audio for a podcast.</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
