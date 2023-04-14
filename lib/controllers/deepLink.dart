@@ -36,14 +36,14 @@ class DeepLinkService {
   }
 
   // String docId = '1234567890';
-  String url = 'https://prime.page.link';
+  String urlId = 'https://primewaycollab.page.link';
 
   buildDynamicLinks(String url, String titles, String docId) async {
     final dynamicLinkParams = DynamicLinkParameters(
-      link: Uri.parse("https://primeway.page.link/$docId"),
-      uriPrefix: "https://primeway.page.link/QYkB",
+      link: Uri.parse("$urlId/$docId"),
+      uriPrefix: urlId,
       androidParameters:
-          const AndroidParameters(packageName: "com.example.primeway"),
+          const AndroidParameters(packageName: "com.primeway.app"),
       socialMetaTagParameters: const SocialMetaTagParameters(
         title: 'REFER A FRIEND & EARN',
         description: 'Earn 1,500 P-Coins on every referral',

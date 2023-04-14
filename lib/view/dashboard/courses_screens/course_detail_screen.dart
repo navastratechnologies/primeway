@@ -105,7 +105,11 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         .get()
         .then(
       (value) {
-        walletBalance = value.get("wallet_balance");
+        setState(() {
+          var demoWallet = double.parse(value.get("wallet_balance"));
+          walletBalance = demoWallet.toStringAsPrecision(3);
+          log('wallet balance is $walletBalance');
+        });
       },
     );
   }
@@ -120,7 +124,10 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         gst = value.get("gst_rate");
         isLive = value.get('islive');
         baseAmount = value.get("base_ammount");
-        var total = double.parse(gst) + double.parse(baseAmount);
+        var totalGST =
+            int.parse(baseAmount) * int.parse(gst.replaceAll('%', '')) / 100;
+        var total =
+            double.parse(totalGST.toString()) + double.parse(baseAmount);
         totalAmount = total.toString();
 
         log('total amount is $totalAmount');

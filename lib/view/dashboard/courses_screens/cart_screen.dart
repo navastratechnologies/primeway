@@ -299,25 +299,35 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                         Align(
                           alignment: Alignment.bottomRight,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              color: primeColor,
-                              borderRadius: const BorderRadius.only(
-                                bottomRight: Radius.circular(10),
-                                topLeft: Radius.circular(10),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: primeColor2.withOpacity(0.3),
-                                  blurRadius: 10,
-                                  spreadRadius: 1,
+                          child: InkWell(
+                            onTap: () {
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(widget.userNumber)
+                                  .collection('mycart')
+                                  .doc(documentSnapshot.id)
+                                  .delete();
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: primeColor,
+                                borderRadius: const BorderRadius.only(
+                                  bottomRight: Radius.circular(10),
+                                  topLeft: Radius.circular(10),
                                 ),
-                              ],
-                            ),
-                            child: Icon(
-                              Icons.delete_forever_rounded,
-                              color: whiteColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: primeColor2.withOpacity(0.3),
+                                    blurRadius: 10,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                Icons.delete_forever_rounded,
+                                color: whiteColor,
+                              ),
                             ),
                           ),
                         ),
@@ -328,7 +338,6 @@ class _CartScreenState extends State<CartScreen> {
               },
             );
           } else if (streamSnapshot.data!.docs.isEmpty) {
-            cartIsEmpty = true;
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
