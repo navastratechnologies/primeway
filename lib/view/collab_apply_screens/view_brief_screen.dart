@@ -205,10 +205,15 @@ class _ViewBriefScreenState extends State<ViewBriefScreen> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: HtmlWidget(
-                      data,
+                  SizedBox(
+                    height: displayHeight(context) / 1.41,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: HtmlWidget(
+                          data,
+                        ),
+                      ),
                     ),
                   ),
                 ],

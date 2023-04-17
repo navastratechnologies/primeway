@@ -297,6 +297,7 @@ class _CollaborationInternalScreenState
                                     topRight: Radius.circular(10),
                                   ),
                                   child: FastCachedImage(
+                                    width: width,
                                     url: documentSnapshot['image'],
                                     fit: BoxFit.cover,
                                     loadingBuilder: (context, progress) {

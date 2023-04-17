@@ -812,6 +812,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           .collection('wallet')
                           .doc(widget.userNumber)
                           .collection('transactions')
+                          .orderBy('date_time', descending: true)
                           .snapshots(),
                       builder: (context,
                           AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -838,17 +839,22 @@ class _WalletScreenState extends State<WalletScreen> {
                                       ),
                                     ],
                                   ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Container(
-                                            padding: const EdgeInsets.all(5),
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  documentSnapshot['status'] ==
+                                          Row(
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                  color: documentSnapshot[
+                                                              'status'] ==
                                                           "false"
                                                       ? Colors.amber
                                                       : documentSnapshot[
@@ -856,107 +862,139 @@ class _WalletScreenState extends State<WalletScreen> {
                                                               "true"
                                                           ? primeColor2
                                                           : primeColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Icon(
-                                              documentSnapshot['type'] ==
-                                                      "withdrawal"
-                                                  ? Icons.arrow_downward_rounded
-                                                  : Icons.arrow_upward_rounded,
-                                              color: whiteColor,
-                                            ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Icon(
+                                                  documentSnapshot['type'] ==
+                                                          "withdrawal"
+                                                      ? Icons
+                                                          .arrow_downward_rounded
+                                                      : Icons
+                                                          .arrow_upward_rounded,
+                                                  color: whiteColor,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      paragraphWidgetMethodForResourcesBoldTitle(
+                                                        documentSnapshot[
+                                                                    'type'] ==
+                                                                "withdrawal"
+                                                            ? 'Withdrawal Request'
+                                                            : documentSnapshot[
+                                                                        'type'] ==
+                                                                    "added"
+                                                                ? 'P Coins Added'
+                                                                : 'P Coins Received',
+                                                      ),
+                                                      const SizedBox(width: 5),
+                                                      Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          horizontal: 4,
+                                                          vertical: 2,
+                                                        ),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          color: documentSnapshot[
+                                                                      'status'] ==
+                                                                  "false"
+                                                              ? Colors.amber
+                                                              : documentSnapshot[
+                                                                          'status'] ==
+                                                                      "true"
+                                                                  ? primeColor2
+                                                                  : primeColor,
+                                                        ),
+                                                        child: Text(
+                                                          documentSnapshot[
+                                                                      'status'] ==
+                                                                  "false"
+                                                              ? 'pending'
+                                                              : documentSnapshot[
+                                                                          'status'] ==
+                                                                      "true"
+                                                                  ? 'success'
+                                                                  : 'rejected',
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 10,
+                                                            color: whiteColor,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 3),
+                                                  headingWidgetMethodForResources(
+                                                    documentSnapshot[
+                                                        'date_time'],
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
-                                          const SizedBox(width: 10),
                                           Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Row(
-                                                children: [
-                                                  paragraphWidgetMethodForResourcesBoldTitle(
-                                                    documentSnapshot['type'] ==
-                                                            "withdrawal"
-                                                        ? 'Withdrawal Request'
-                                                        : documentSnapshot[
-                                                                    'type'] ==
-                                                                "added"
-                                                            ? 'P Coins Added'
-                                                            : 'P Coins Received',
-                                                  ),
-                                                  const SizedBox(width: 5),
-                                                  Container(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                      horizontal: 4,
-                                                      vertical: 2,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      color: documentSnapshot[
+                                              Text(
+                                                "${double.parse(documentSnapshot['coins']).roundToDouble()}",
+                                                style: TextStyle(
+                                                  color: documentSnapshot[
+                                                              'status'] ==
+                                                          "false"
+                                                      ? Colors.amber
+                                                      : documentSnapshot[
                                                                   'status'] ==
-                                                              "false"
-                                                          ? Colors.amber
-                                                          : documentSnapshot[
-                                                                      'status'] ==
-                                                                  "true"
-                                                              ? primeColor2
-                                                              : primeColor,
-                                                    ),
-                                                    child: Text(
-                                                      documentSnapshot[
-                                                                  'status'] ==
-                                                              "false"
-                                                          ? 'pending'
-                                                          : documentSnapshot[
-                                                                      'status'] ==
-                                                                  "true"
-                                                              ? 'success'
-                                                              : 'rejected',
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 10,
-                                                        color: whiteColor,
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
+                                                              "true"
+                                                          ? primeColor2
+                                                          : primeColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20,
+                                                ),
                                               ),
-                                              const SizedBox(height: 3),
                                               headingWidgetMethodForResources(
-                                                documentSnapshot['date_time'],
-                                              ),
+                                                  'P Coins'),
                                             ],
                                           ),
                                         ],
                                       ),
+                                      const SizedBox(height: 14),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "${double.parse(documentSnapshot['coins']).roundToDouble()}",
+                                            'Reason:',
                                             style: TextStyle(
-                                              color:
-                                                  documentSnapshot['status'] ==
-                                                          "false"
-                                                      ? Colors.amber
-                                                      : documentSnapshot[
-                                                                  'status'] ==
-                                                              "true"
-                                                          ? primeColor2
-                                                          : primeColor,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 20,
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
                                             ),
                                           ),
-                                          headingWidgetMethodForResources(
-                                              'P Coins'),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            documentSnapshot['reason'],
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  Colors.black.withOpacity(0.4),
+                                            ),
+                                          ),
                                         ],
-                                      ),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -1031,35 +1069,49 @@ class _WalletScreenState extends State<WalletScreen> {
   var formatter = DateFormat('MM/dd/yyyy hh:mm a');
 
   withdrawBalance(String bal) {
-    Navigator.pop(context);
-    FirebaseFirestore.instance
-        .collection('wallet')
-        .doc(widget.userNumber)
-        .collection('transactions')
-        .add(
-      {
-        'status': 'false',
-        'date_time': formatter.format(DateTime.now()).toString(),
-        'type': 'withdrawal',
-        'coins': withdrawController.text,
-      },
-    );
-    FirebaseFirestore.instance
-        .collection('wallet')
-        .doc(widget.userNumber)
-        .update(
-      {
-        'wallet_balance': bal,
-      },
-    );
-    alertDialogWidget(
-      context,
-      purpleColor,
-      'withdraw request send successfully',
-    );
-    setState(() {
-      withdrawController.clear();
-    });
+    if (int.parse(withdrawController.text) >= 1000) {
+      Navigator.pop(context);
+      FirebaseFirestore.instance
+          .collection('wallet')
+          .doc(widget.userNumber)
+          .collection('transactions')
+          .add(
+        {
+          'status': 'false',
+          'date_time': formatter.format(DateTime.now()).toString(),
+          'type': 'withdrawal',
+          'coins': withdrawController.text,
+          'reason':
+              'Your request has been submitted successfully. Please wait 24hrs.'
+        },
+      );
+      FirebaseFirestore.instance
+          .collection('wallet')
+          .doc(widget.userNumber)
+          .update(
+        {
+          'wallet_balance': bal,
+        },
+      );
+      alertDialogWidget(
+        context,
+        purpleColor,
+        'withdraw request send successfully',
+      );
+      setState(() {
+        withdrawController.clear();
+      });
+    } else {
+      Navigator.pop(context);
+      setState(() {
+        withdrawController.clear();
+      });
+      alertDialogWidget(
+        context,
+        primeColor,
+        'Minimum 1000 P Coins required to withdraw',
+      );
+    }
   }
 
   addBalance(String bal) async {
@@ -1073,6 +1125,7 @@ class _WalletScreenState extends State<WalletScreen> {
         'date_time': formatter.format(DateTime.now()).toString(),
         'type': 'added',
         'coins': addController.text,
+        'reason': 'added by you',
       },
     );
     FirebaseFirestore.instance
