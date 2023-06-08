@@ -3,12 +3,16 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
 import 'package:primewayskills_app/view/drawer/setting/privacypolicy.dart';
 import 'package:primewayskills_app/view/drawer/setting/termofservice.dart';
 import 'package:primewayskills_app/view/drawer/setting/version.dart';
 import 'package:primewayskills_app/view/drawer/sidebar.dart';
+import 'package:primewayskills_app/view/helpers/alert_deialogs.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 
@@ -36,6 +40,8 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  FlutterSecureStorage storage = const FlutterSecureStorage();
+
   bool isSwitched = false;
   String appVersion = '';
 
@@ -216,6 +222,89 @@ class _SettingScreenState extends State<SettingScreen> {
                 const Divider(),
               ],
             ),
+            const SizedBox(height: 20),
+            InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      title: const Text('Delete Account'),
+                      content: Text(
+                        'Do you really want to delete your account?',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
+                      ),
+                      actions: [
+                        MaterialButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          color: primeColor2,
+                          onPressed: () {
+                            FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(widget.userNumber)
+                                .delete();
+                            FirebaseFirestore.instance
+                                .collection('affilate_dashboard')
+                                .doc('NkcdMPSuI3SSIpJ2uLuv')
+                                .collection('affiliate_users')
+                                .doc(widget.userNumber)
+                                .delete();
+                            Navigator.pop(context);
+                            FirebaseAuth.instance.signOut();
+                            storage.delete(key: 'token');
+
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const LoginHomeScreen(),
+                              ),
+                            );
+                            alertDialogWidget(
+                              context,
+                              primeColor2,
+                              'Your account is deleted successfuly from our database',
+                            );
+                          },
+                          child: Text(
+                            'Yes',
+                            style: TextStyle(color: whiteColor),
+                          ),
+                        ),
+                        MaterialButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          color: primeColor,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'No',
+                            style: TextStyle(color: whiteColor),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  headingWidgetMethod('Delete My Account'),
+                  const SizedBox(height: 20),
+                  const Divider(),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
