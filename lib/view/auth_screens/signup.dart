@@ -180,7 +180,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
       sendPushMessage(
         reffererToken,
-        "${firstNameController.text} joined Primeway from your link. You have received $referralCharges PrimeCoins in your wallet",
+        "${firstNameController.text} joined Primeway Plus from your link. You have received $referralCharges PrimeCoins in your wallet",
         "Congrats!!!",
       );
     }
@@ -299,7 +299,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 15, top: 10),
                       child: Text(
-                        "Welcome to PrimeWaySkills",
+                        "Welcome to PrimeWay Plus",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,

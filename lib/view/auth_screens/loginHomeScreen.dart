@@ -144,9 +144,9 @@ class _HomePageState extends State<LoginHomeScreen> {
                           ),
                         ),
                         child: const Padding(
-                          padding: EdgeInsets.only(top: 60),
+                          padding: EdgeInsets.only(top: 120),
                           child: Text(
-                            'Primeway',
+                            'Primeway Plus',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
