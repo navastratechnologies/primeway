@@ -165,10 +165,11 @@ class _WalletScreenState extends State<WalletScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const CircleAvatar(
+                              CircleAvatar(
                                 maxRadius: 14,
+                                backgroundColor: whiteColor,
                                 backgroundImage: AssetImage(
-                                  'assets/play_store_icon.png',
+                                  'assets/playstore.png',
                                 ),
                               ),
                               const SizedBox(width: 5),
