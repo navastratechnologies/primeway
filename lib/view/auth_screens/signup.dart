@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:primewayskills_app/controllers/notification_controller.dart';
 import 'package:primewayskills_app/view/auth_screens/address.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
@@ -76,6 +77,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       log("reg error is ${e.toString()}");
     }
   }
+
+  var formatter = DateFormat('MM/dd/yyyy hh:mm a');
 
   Future<void> createUserCollection() async {
     const availableChars =
@@ -178,6 +181,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
           log('total refferal is $totalRefferalEarnings $totalRefferalEarningInc');
         },
       );
+      double refferalUserWalletbalance = 0.0;
+      FirebaseFirestore.instance
+          .collection('wallet')
+          .doc(refferalUserIdController.text)
+          .get()
+          .then(
+        (value) {
+          setState(() {
+            refferalUserWalletbalance = double.parse(
+              value.get('wallet_balance').toString(),
+            );
+            refferalUserWalletbalance = refferalUserWalletbalance +
+                double.parse(
+                  referralCharges,
+                );
+            FirebaseFirestore.instance
+                .collection('wallet')
+                .doc(refferalUserIdController.text)
+                .update(
+              {
+                'wallet_balance': refferalUserWalletbalance.toString(),
+              },
+            );
+          });
+        },
+      );
       sendPushMessage(
         reffererToken,
         "${firstNameController.text} joined Primeway Plus from your link. You have received $referralCharges PrimeCoins in your wallet",
@@ -218,6 +247,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'withdrawal_req': '0',
       'account_type': '',
     });
+    if (referrelController.text.isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection('wallet')
+          .doc(widget.phone)
+          .collection('transactions')
+          .add(
+        {
+          'status': 'true',
+          'date_time': formatter.format(DateTime.now()).toString(),
+          'type': 'added',
+          'coins': referralCharges,
+          'reason': 'received p coins by using referral code',
+        },
+      );
+    }
   }
 
   String referralCharges = '';
@@ -468,12 +512,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(
                   width: 5,
                 ),
-                const Text(
-                  "Change",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                    color: Colors.red,
+                InkWell(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: const Text(
+                    "Change",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                      color: Colors.red,
+                    ),
                   ),
                 ),
               ],
