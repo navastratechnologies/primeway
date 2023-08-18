@@ -241,7 +241,7 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
                               fieldHeight: 45,
                               fieldWidth: 40,
                               activeFillColor: Colors.white,
-                              inactiveFillColor: Colors.grey,
+                              inactiveFillColor: Colors.grey.withOpacity(0.3),
                               borderWidth: 0,
                               selectedFillColor: Colors.grey.withOpacity(0.3),
                             ),

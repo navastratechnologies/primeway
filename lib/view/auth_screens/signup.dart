@@ -121,6 +121,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'referrel_id': "PWCT$randomString",
       'account_number': "0",
       'bank_name': "",
+      'bank_document': '',
       'ifsc': "",
       "categories": "",
       'account_holder_name': "",
@@ -134,6 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       "insta_reels_price": "0",
       "youtube_video_price": "0",
       "youtube_short_price": "0",
+      "refferer_id": '',
     });
     storage.delete(key: 'referralUserId');
     storage.delete(key: 'referralId');
@@ -149,11 +151,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
           var totalRefferalEarnings = value.get('earning_by_refferals');
           int totalRefferalEarningInc =
               int.parse(totalRefferalEarnings) + int.parse(referralCharges);
+          var totalRefferalsCounts = value.get('earning_by_refferals');
           FirebaseFirestore.instance
               .collection('users')
               .doc(refferalUserIdController.text)
               .update({
             "earning_by_refferals": totalRefferalEarningInc.toString(),
+            'refferer_id': refferalUserIdController.text.toString(),
+            'total_refferals': "{$totalRefferalsCounts+1}",
           });
           FirebaseFirestore.instance
               .collection('users')

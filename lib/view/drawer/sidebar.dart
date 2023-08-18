@@ -362,6 +362,18 @@ class _NavigationsDrawerState extends State<NavigationsDrawer> {
                                                                 '0',
                                                             'user_Id': widget
                                                                 .userNumber,
+                                                            'annualy_earning':
+                                                                '0',
+                                                            'monthly_earning':
+                                                                '0',
+                                                            'quaterly_earning':
+                                                                '0',
+                                                            'weekly_earning':
+                                                                '0',
+                                                            'courseShared': '0',
+                                                            'status': 'pending',
+                                                            'totalRefferals':
+                                                                '0',
                                                           },
                                                         ).then(
                                                           (value) {

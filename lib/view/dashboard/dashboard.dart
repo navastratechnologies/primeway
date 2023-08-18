@@ -9,6 +9,7 @@ import 'package:primewayskills_app/controllers/notification_controller.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
 import 'package:primewayskills_app/view/appbar_screens/notification_screen.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
+import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
 import 'package:primewayskills_app/view/dashboard/collaboration_screen.dart';
 import 'package:primewayskills_app/view/dashboard/course_screen.dart';
 import 'package:primewayskills_app/view/dashboard/home_screen.dart';
@@ -124,6 +125,35 @@ class _DashboardState extends State<Dashboard> {
         );
       },
     );
+  }
+
+  Future<void> checkUserStatus(id) async {
+    try {
+      // Replace 'users' with the actual collection name in Firestore
+      final DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(id) // Replace with the actual user document ID
+          .get();
+
+      if (userSnapshot.exists) {
+        getUserProfileData();
+        getUserDataCompletionPercentage();
+        log('check id $id');
+      } else {
+        log('check id not exist');
+        setState(() {
+          storage.delete(key: 'token');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LoginHomeScreen(),
+            ),
+          );
+        });
+      }
+    } catch (e) {
+      log('check Error: $e');
+    }
   }
 
   @override
@@ -446,8 +476,7 @@ class _DashboardState extends State<Dashboard> {
     if (token != null) {
       setState(() {
         userNumber = token;
-        getUserProfileData();
-        getUserDataCompletionPercentage();
+        checkUserStatus(userNumber);
       });
     }
   }
