@@ -168,7 +168,7 @@ class _WalletScreenState extends State<WalletScreen> {
                               CircleAvatar(
                                 maxRadius: 14,
                                 backgroundColor: whiteColor,
-                                backgroundImage: AssetImage(
+                                backgroundImage: const AssetImage(
                                   'assets/playstore.png',
                                 ),
                               ),
@@ -251,8 +251,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                 children: [
                                   StreamBuilder(
                                     stream: FirebaseFirestore.instance
-                                        .collection('wallet')
-                                        .where('user_id',
+                                        .collection('users')
+                                        .where('user_Id',
                                             isEqualTo: widget.userNumber)
                                         .snapshots(),
                                     builder: (context,
@@ -267,7 +267,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                           DocumentSnapshot documentSnapshot =
                                               streamSnapshot.data!.docs[i];
                                           return headingWidgetMethod(
-                                            documentSnapshot['earned_pcoins'],
+                                            documentSnapshot[
+                                                'earning_by_refferals'],
                                           );
                                         }
                                       }

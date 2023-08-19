@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:primewayskills_app/controllers/phone_controller.dart';
-import 'package:primewayskills_app/view/auth_screens/loginHomeScreen.dart';
 import 'package:primewayskills_app/view/dashboard/dashboard.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
@@ -142,7 +141,7 @@ class _AffiliateCourseDetailScreenState
           setState(() {
             alreadyPurchased = false;
           });
-          getAffiliateDataOfTheUser();
+          // getAffiliateDataOfTheUser();
         }
       },
     );
@@ -211,13 +210,14 @@ class _AffiliateCourseDetailScreenState
         .get()
         .then(
       (value) {
-        gst = value.get("gst_rate");
+        gst = value.get("gst_rate").toString().replaceAll('%', '');
         courseAuthor = value.get('author_name');
         courseImage = value.get('image');
         courseName = value.get('name');
         baseAmount = value.get("base_ammount");
-        var total = double.parse(gst) + double.parse(baseAmount);
-        totalAmount = total.toString();
+        var baseTotal = double.parse(baseAmount) * double.parse(gst) / 100;
+        var total = double.parse(baseAmount) + baseTotal;
+        totalAmount = total.floorToDouble().toString();
 
         log('total amount is $totalAmount $gst $baseAmount');
 
@@ -238,6 +238,7 @@ class _AffiliateCourseDetailScreenState
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handlePaymentWallet);
     getCoursePrice();
+
     super.initState();
   }
 
@@ -259,11 +260,7 @@ class _AffiliateCourseDetailScreenState
         backgroundColor: whiteColor,
         leading: IconButton(
           onPressed: () {
-            if (userNumber.isNotEmpty) {
-              context.go('/homeScreen/');
-            } else {
-              context.go('/loginScreen/');
-            }
+            context.pop();
           },
           icon: const Icon(Icons.arrow_back_rounded),
         ),
@@ -565,7 +562,7 @@ class _AffiliateCourseDetailScreenState
                                                                 ),
                                                               ),
                                                               Text(
-                                                                gst,
+                                                                "$gst%",
                                                                 style:
                                                                     const TextStyle(
                                                                   fontWeight:
@@ -607,76 +604,109 @@ class _AffiliateCourseDetailScreenState
                                                     ),
                                                   ),
                                                   const SizedBox(height: 20),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            exactTotalToPay
-                                                                .toString(),
-                                                            style:
-                                                                const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 16,
-                                                            ),
+                                                  userNumber.isEmpty
+                                                      ? MaterialButton(
+                                                          color: primeColor2,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
                                                           ),
-                                                          Text(
-                                                            'You have to pay',
+                                                          onPressed: () {
+                                                            context.pop();
+                                                            context.pop();
+                                                          },
+                                                          child: Text(
+                                                            'Please Login To Continue',
                                                             style: TextStyle(
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .w500,
-                                                              fontSize: 10,
-                                                              color:
-                                                                  primeColor2,
+                                                                      .bold,
+                                                              color: whiteColor,
+                                                              fontSize: 16,
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                      MaterialButton(
-                                                        color: primeColor2,
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
+                                                        )
+                                                      : Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  exactTotalToPay
+                                                                      .toString(),
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        16,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  'You have to pay',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontSize:
+                                                                        10,
+                                                                    color:
+                                                                        primeColor2,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            MaterialButton(
+                                                              color:
+                                                                  primeColor2,
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              onPressed: () {
+                                                                if (double.parse(
+                                                                        walletBalance) >=
+                                                                    double.parse(
+                                                                        totalAmount)) {
+                                                                  updateUserWalletbalance(
+                                                                    exactWalletBalanceAfterDeduction
+                                                                        .toString(),
+                                                                  );
+                                                                } else {
+                                                                  openCheckout(
+                                                                    exactTotalToPay *
+                                                                        100,
+                                                                  );
+                                                                }
+                                                              },
+                                                              child: Text(
+                                                                'Buy Now',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color:
+                                                                      whiteColor,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                        onPressed: () {
-                                                          if (double.parse(
-                                                                  walletBalance) >=
-                                                              double.parse(
-                                                                  totalAmount)) {
-                                                            updateUserWalletbalance(
-                                                              exactWalletBalanceAfterDeduction
-                                                                  .toString(),
-                                                            );
-                                                          } else {
-                                                            openCheckout(
-                                                              exactTotalToPay *
-                                                                  100,
-                                                            );
-                                                          }
-                                                        },
-                                                        child: Text(
-                                                          'Buy Now',
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: whiteColor,
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
                                                 ],
                                               ),
                                             );
@@ -784,7 +814,8 @@ class _AffiliateCourseDetailScreenState
                                 ),
                               ),
                               Text(
-                                "${documentSnapshot['modules']} Modules",
+                                // "${documentSnapshot['modules']} Modules",
+                                "",
                                 style: TextStyle(
                                   fontSize: minSize,
                                   color: whiteColor,

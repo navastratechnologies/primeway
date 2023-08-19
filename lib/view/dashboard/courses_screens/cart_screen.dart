@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -49,34 +47,35 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Future getCoursePrice() async {
-    FirebaseFirestore.instance
-        .collection("courses")
-        .doc(widget.courseId)
-        .get()
-        .then(
-      (value) {
-        gst = value.get("gst_rate");
-        baseAmount = value.get("base_ammount");
-        var total = double.parse(gst) + double.parse(baseAmount);
-        totalAmount = total.toString();
+  // Future getCoursePrice() async {
+  //   FirebaseFirestore.instance
+  //       .collection("courses")
+  //       .doc(widget.courseId)
+  //       .get()
+  //       .then(
+  //     (value) {
+  //       gst = value.get("gst_rate").toString().replaceAll('%', '');
+  //       baseAmount = value.get("base_ammount");
+  //       var baseTotal = double.parse(gst) * double.parse(baseAmount) / 100;
+  //       var total = baseTotal + double.parse(baseAmount);
+  //       totalAmount = total.toString();
 
-        log('total amount is $totalAmount');
+  //       log('total amount is $totalAmount');
 
-        if (double.parse(walletBalance) < total) {
-          var amount = total - double.parse(walletBalance);
-          finalAmountForPayment = amount.toString();
-          log('total amount is $finalAmountForPayment');
-        }
-      },
-    );
-  }
+  //       if (double.parse(walletBalance) < total) {
+  //         var amount = total - double.parse(walletBalance);
+  //         finalAmountForPayment = amount.toString();
+  //         log('total amount is $finalAmountForPayment');
+  //       }
+  //     },
+  //   );
+  // }
 
-  String walletBalance = '';
-  String gst = '';
-  String baseAmount = '';
-  String totalAmount = '';
-  String finalAmountForPayment = '';
+  String walletBalance = '0.0';
+  String gst = '0.0';
+  String baseAmount = '0.0';
+  String totalAmount = '0.0';
+  String finalAmountForPayment = '0.0';
 
   void openCheckout(price) async {
     var options = {
@@ -166,7 +165,6 @@ class _CartScreenState extends State<CartScreen> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handlePaymentWallet);
     getWalletBalance();
-    getCoursePrice();
     super.initState();
   }
 
@@ -211,6 +209,7 @@ class _CartScreenState extends State<CartScreen> {
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
           if (streamSnapshot.hasData && streamSnapshot.data!.docs.isNotEmpty) {
+            cartIsEmpty = false;
             return ListView.builder(
               itemCount: streamSnapshot.data!.docs.length,
               itemBuilder: (context, index) {
@@ -219,7 +218,7 @@ class _CartScreenState extends State<CartScreen> {
                 return Padding(
                   padding: const EdgeInsets.all(10),
                   child: Container(
-                    height: 100,
+                    height: 130,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       color: whiteColor,
@@ -337,7 +336,8 @@ class _CartScreenState extends State<CartScreen> {
                 );
               },
             );
-          } else if (streamSnapshot.data!.docs.isEmpty) {
+          } else {
+            cartIsEmpty = true;
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -379,14 +379,17 @@ class _CartScreenState extends State<CartScreen> {
               ],
             );
           }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
         },
       ),
-      bottomNavigationBar: cartIsEmpty
-          ? null
-          : Padding(
+      bottomNavigationBar: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.userNumber)
+            .collection('mycart')
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+            return Padding(
               padding: const EdgeInsets.all(20),
               child: MaterialButton(
                 color: purpleColor,
@@ -490,7 +493,7 @@ class _CartScreenState extends State<CartScreen> {
                                             ),
                                           ),
                                           Text(
-                                            gst,
+                                            "$gst%",
                                             style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -619,7 +622,11 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                 ),
               ),
-            ),
+            );
+          }
+          return const SizedBox(height: 10);
+        },
+      ),
     );
   }
 }

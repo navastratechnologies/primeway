@@ -182,6 +182,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               "user_id": widget.phone,
               "user_name":
                   "${firstNameController.text} ${lastNameController.text}",
+              "date":
+                  "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year} ${DateTime.now().hour}:${DateTime.now().minute}",
             },
           );
           FirebaseFirestore.instance
@@ -276,6 +278,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
           'type': 'added',
           'coins': referralCharges,
           'reason': 'received p coins by using referral code',
+        },
+      );
+      FirebaseFirestore.instance
+          .collection('wallet')
+          .doc(refferalUserIdController.text)
+          .collection('transactions')
+          .add(
+        {
+          'status': 'true',
+          'date_time': formatter.format(DateTime.now()).toString(),
+          'type': 'added',
+          'coins': referralCharges,
+          'reason':
+              'received p coins after your reffered user ${firstNameController.text} downloaded and registered on our app.',
         },
       );
     }

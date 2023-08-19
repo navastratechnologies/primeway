@@ -72,91 +72,201 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.blueGrey[50],
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SizedBox(
-                        width: width / 4,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              '$rupeeSign $pendingAffiliate',
-                              style: TextStyle(
-                                fontSize: maxSize + 2,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.amber,
-                              ),
-                              textAlign: TextAlign.center,
+                  child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('affilate_dashboard')
+                        .doc('NkcdMPSuI3SSIpJ2uLuv')
+                        .collection('affiliate_users')
+                        .where('user_Id', isEqualTo: widget.userNumber)
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot documentSnapshot =
+                                snapshot.data!.docs[index];
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                SizedBox(
+                                  width: width / 4,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '$rupeeSign ${documentSnapshot['pending_affiliate']}',
+                                        style: TextStyle(
+                                          fontSize: maxSize + 2,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.amber,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 10),
+                                      const Text(
+                                        'Pending',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.amber,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: width / 4,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '$rupeeSign ${documentSnapshot['complete_affiliate']}',
+                                        style: TextStyle(
+                                          fontSize: maxSize + 2,
+                                          fontWeight: FontWeight.bold,
+                                          color: primeColor2,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        'Completed',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: primeColor2,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: width / 4,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '$rupeeSign ${documentSnapshot['approved_affiliate']}',
+                                        style: TextStyle(
+                                          fontSize: maxSize + 2,
+                                          fontWeight: FontWeight.bold,
+                                          color: purpleColor,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        'Approved',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: purpleColor,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SizedBox(
+                            width: width / 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '$rupeeSign $pendingAffiliate',
+                                  style: TextStyle(
+                                    fontSize: maxSize + 2,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.amber,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 10),
+                                const Text(
+                                  'Pending',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.amber,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 10),
-                            const Text(
-                              'Pending',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.amber,
-                              ),
-                              textAlign: TextAlign.center,
+                          ),
+                          SizedBox(
+                            width: width / 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '$rupeeSign $completeAffiliate',
+                                  style: TextStyle(
+                                    fontSize: maxSize + 2,
+                                    fontWeight: FontWeight.bold,
+                                    color: primeColor2,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  'Completed',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: primeColor2,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: width / 4,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              '$rupeeSign $completeAffiliate',
-                              style: TextStyle(
-                                fontSize: maxSize + 2,
-                                fontWeight: FontWeight.bold,
-                                color: primeColor2,
-                              ),
-                              textAlign: TextAlign.center,
+                          ),
+                          SizedBox(
+                            width: width / 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '$rupeeSign $approvedAffiliate',
+                                  style: TextStyle(
+                                    fontSize: maxSize + 2,
+                                    fontWeight: FontWeight.bold,
+                                    color: purpleColor,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  'Approved',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: purpleColor,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Completed',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: primeColor2,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: width / 4,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              '$rupeeSign $approvedAffiliate',
-                              style: TextStyle(
-                                fontSize: maxSize + 2,
-                                fontWeight: FontWeight.bold,
-                                color: purpleColor,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Approved',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: purpleColor,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 20),

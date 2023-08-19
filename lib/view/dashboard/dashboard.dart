@@ -168,303 +168,308 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: NavigationsDrawer(
-        userAddress: userAddress,
-        userEmail: userEmail,
-        userName: userName,
-        userNumber: userNumber,
-        userPayment: userPayment,
-        userProfileImage: userProfileImage,
-        userWalletId: userWalletId,
-      ),
-      appBar: showProfile
-          ? null
-          : AppBar(
-              elevation: 0,
-              iconTheme: IconThemeData(
-                color: Colors.black.withOpacity(0.6),
-              ),
-              backgroundColor: whiteColor,
-              title: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'Hi, ',
-                      style: TextStyle(
-                        fontSize: maxSize,
-                        color: Colors.black.withOpacity(0.6),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    TextSpan(
-                      text: userName,
-                      style: TextStyle(
-                        fontSize: maxSize,
-                        color: Colors.black.withOpacity(0.6),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        drawer: NavigationsDrawer(
+          userAddress: userAddress,
+          userEmail: userEmail,
+          userName: userName,
+          userNumber: userNumber,
+          userPayment: userPayment,
+          userProfileImage: userProfileImage,
+          userWalletId: userWalletId,
+        ),
+        appBar: showProfile
+            ? null
+            : AppBar(
+                elevation: 0,
+                iconTheme: IconThemeData(
+                  color: Colors.black.withOpacity(0.6),
                 ),
-              ),
-              actions: <Widget>[
-                InkWell(
-                  child: Container(
-                    padding: const EdgeInsets.all(7),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: whiteColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: primeColor.withOpacity(0.4),
-                          blurRadius: 10,
-                          spreadRadius: 1,
+                backgroundColor: whiteColor,
+                title: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Hi, ',
+                        style: TextStyle(
+                          fontSize: maxSize,
+                          color: Colors.black.withOpacity(0.6),
+                          fontWeight: FontWeight.w500,
                         ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.black.withOpacity(0.6),
-                    ),
+                      ),
+                      TextSpan(
+                        text: userName,
+                        style: TextStyle(
+                          fontSize: maxSize,
+                          color: Colors.black.withOpacity(0.6),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfileEditScreen(
-                          userNumber: userNumber,
-                        ),
-                      ),
-                    );
-                  },
                 ),
-                const SizedBox(width: 10),
-                InkWell(
-                  child: Container(
-                    padding: const EdgeInsets.all(7),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: whiteColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: primeColor.withOpacity(0.4),
-                          blurRadius: 10,
-                          spreadRadius: 1,
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.notifications,
-                      color: Colors.black.withOpacity(0.6),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const NotificationScreen(),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(width: 10),
-              ],
-            ),
-      body: showHome
-          ? Homescreen(
-              userAddress: userAddress,
-              userEmail: userEmail,
-              userName: userName,
-              userNumber: userNumber,
-              userPayment: userPayment,
-              userProfileImage: userProfileImage,
-              userWalletId: userWalletId,
-              userLanguage: userLanguage,
-              userFollowers: userFollowers,
-              userProfileCompletionPercentage:
-                  profileCompletionPercentage.toString(),
-            )
-          : showCollab
-              ? CollaborationScreen(
-                  userNumber: userNumber,
-                )
-              : showCourses
-                  ? CoursesScreen(
-                      userAddress: userAddress,
-                      userEmail: userEmail,
-                      userName: userName,
-                      userNumber: userNumber,
-                      userPayment: userPayment,
-                      userProfileImage: userProfileImage,
-                      userWalletId: userWalletId)
-                  : ProfileScreen(
-                      userAddress: userAddress,
-                      userEmail: userEmail,
-                      userName: userName,
-                      userNumber: userNumber,
-                      userPayment: userPayment,
-                      userProfileImage: userProfileImage,
-                      userWalletId: userWalletId),
-      bottomNavigationBar: SizedBox(
-        height: 80,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 10,
-            horizontal: 4,
-          ),
-          child: Column(
-            children: [
-              Container(
-                height: 60,
-                decoration: BoxDecoration(
-                  color: primeColor,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    MaterialButton(
-                      onPressed: () {
-                        setState(() {
-                          showHome = true;
-                          showCollab = false;
-                          showCourses = false;
-                          showProfile = false;
-                        });
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.home_rounded,
-                            color: showHome
-                                ? whiteColor.withOpacity(0.4)
-                                : whiteColor,
-                            size: showHome ? 30 : 25,
+                actions: <Widget>[
+                  InkWell(
+                    child: Container(
+                      padding: const EdgeInsets.all(7),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: whiteColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: primeColor.withOpacity(0.4),
+                            blurRadius: 10,
+                            spreadRadius: 1,
                           ),
-                          const SizedBox(height: 3),
-                          Text(
-                            'HOME',
-                            style: TextStyle(
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.black.withOpacity(0.6),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileEditScreen(
+                            userNumber: userNumber,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  InkWell(
+                    child: Container(
+                      padding: const EdgeInsets.all(7),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: whiteColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: primeColor.withOpacity(0.4),
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.notifications,
+                        color: Colors.black.withOpacity(0.6),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NotificationScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                ],
+              ),
+        body: showHome
+            ? Homescreen(
+                userAddress: userAddress,
+                userEmail: userEmail,
+                userName: userName,
+                userNumber: userNumber,
+                userPayment: userPayment,
+                userProfileImage: userProfileImage,
+                userWalletId: userWalletId,
+                userLanguage: userLanguage,
+                userFollowers: userFollowers,
+                userProfileCompletionPercentage:
+                    profileCompletionPercentage.toString(),
+              )
+            : showCollab
+                ? CollaborationScreen(
+                    userNumber: userNumber,
+                  )
+                : showCourses
+                    ? CoursesScreen(
+                        userAddress: userAddress,
+                        userEmail: userEmail,
+                        userName: userName,
+                        userNumber: userNumber,
+                        userPayment: userPayment,
+                        userProfileImage: userProfileImage,
+                        userWalletId: userWalletId)
+                    : ProfileScreen(
+                        userAddress: userAddress,
+                        userEmail: userEmail,
+                        userName: userName,
+                        userNumber: userNumber,
+                        userPayment: userPayment,
+                        userProfileImage: userProfileImage,
+                        userWalletId: userWalletId),
+        bottomNavigationBar: SizedBox(
+          height: 80,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 4,
+            ),
+            child: Column(
+              children: [
+                Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: primeColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            showHome = true;
+                            showCollab = false;
+                            showCourses = false;
+                            showProfile = false;
+                          });
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.home_rounded,
                               color: showHome
                                   ? whiteColor.withOpacity(0.4)
                                   : whiteColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10,
+                              size: showHome ? 30 : 25,
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 3),
+                            Text(
+                              'HOME',
+                              style: TextStyle(
+                                color: showHome
+                                    ? whiteColor.withOpacity(0.4)
+                                    : whiteColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    MaterialButton(
-                      onPressed: () {
-                        setState(() {
-                          showHome = false;
-                          showCollab = true;
-                          showCourses = false;
-                          showProfile = false;
-                        });
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.workspaces_rounded,
-                            color: showCollab
-                                ? whiteColor.withOpacity(0.4)
-                                : whiteColor,
-                            size: showCollab ? 30 : 25,
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            'COLLABS',
-                            style: TextStyle(
+                      MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            showHome = false;
+                            showCollab = true;
+                            showCourses = false;
+                            showProfile = false;
+                          });
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.workspaces_rounded,
                               color: showCollab
                                   ? whiteColor.withOpacity(0.4)
                                   : whiteColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10,
+                              size: showCollab ? 30 : 25,
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 3),
+                            Text(
+                              'COLLABS',
+                              style: TextStyle(
+                                color: showCollab
+                                    ? whiteColor.withOpacity(0.4)
+                                    : whiteColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    MaterialButton(
-                      onPressed: () {
-                        setState(() {
-                          showHome = false;
-                          showCollab = false;
-                          showCourses = true;
-                          showProfile = false;
-                        });
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.library_books_rounded,
-                            color: showCourses
-                                ? whiteColor.withOpacity(0.4)
-                                : whiteColor,
-                            size: showCourses ? 30 : 25,
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            'LIBRARY',
-                            style: TextStyle(
+                      MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            showHome = false;
+                            showCollab = false;
+                            showCourses = true;
+                            showProfile = false;
+                          });
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.library_books_rounded,
                               color: showCourses
                                   ? whiteColor.withOpacity(0.4)
                                   : whiteColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10,
+                              size: showCourses ? 30 : 25,
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 3),
+                            Text(
+                              'LIBRARY',
+                              style: TextStyle(
+                                color: showCourses
+                                    ? whiteColor.withOpacity(0.4)
+                                    : whiteColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    MaterialButton(
-                      onPressed: () {
-                        setState(() {
-                          showHome = false;
-                          showCollab = false;
-                          showCourses = false;
-                          showProfile = true;
-                        });
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.person_rounded,
-                            color: showProfile
-                                ? whiteColor.withOpacity(0.4)
-                                : whiteColor,
-                            size: showProfile ? 30 : 25,
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            'PROFILE',
-                            style: TextStyle(
+                      MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            showHome = false;
+                            showCollab = false;
+                            showCourses = false;
+                            showProfile = true;
+                          });
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.person_rounded,
                               color: showProfile
                                   ? whiteColor.withOpacity(0.4)
                                   : whiteColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10,
+                              size: showProfile ? 30 : 25,
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 3),
+                            Text(
+                              'PROFILE',
+                              style: TextStyle(
+                                color: showProfile
+                                    ? whiteColor.withOpacity(0.4)
+                                    : whiteColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

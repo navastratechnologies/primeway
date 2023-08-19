@@ -393,7 +393,6 @@ class AuthClass {
   //   // not match the nonce in `appleCredential.identityToken`, sign in will fail.
   //   return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
   // }
-
 }
 
 void storeTokenAndData(username) async {

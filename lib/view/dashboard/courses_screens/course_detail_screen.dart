@@ -63,6 +63,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         "image": widget.courseImage,
         "name": widget.courseName,
         "base_ammount": widget.courseAmount,
+        "date_time": DateTime.now().toString(),
       },
     );
     FirebaseFirestore.instance
@@ -142,11 +143,11 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   }
 
   String isLive = '';
-  String walletBalance = '';
-  String gst = '';
-  String baseAmount = '';
-  String totalAmount = '';
-  String finalAmountForPayment = '';
+  String walletBalance = '0.0';
+  String gst = '0.0';
+  String baseAmount = '0.0';
+  String totalAmount = '0.0';
+  String finalAmountForPayment = '0.0';
   double exactTotalToPay = 0.0;
   double exactWalletBalanceAfterDeduction = 0.0;
 
