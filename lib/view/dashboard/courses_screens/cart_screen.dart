@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/profile_screen/congrats_screen.dart';
@@ -35,41 +38,49 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   late Razorpay _razorpay;
 
-  Future getWalletBalance() async {
+  var formatter = DateFormat('MM/dd/yyyy hh:mm a');
+
+  Future getCoursePrice() async {
     FirebaseFirestore.instance
         .collection("wallet")
         .doc(widget.userNumber)
         .get()
         .then(
       (value) {
-        walletBalance = value.get("wallet_balance");
+        setState(() {
+          walletBalance = value.get("wallet_balance");
+        });
       },
     );
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference users = firestore
+        .collection('users')
+        .doc(widget.userNumber)
+        .collection('mycart');
+
+    try {
+      QuerySnapshot querySnapshot = await users.get();
+
+      double totalBase = 0.0;
+
+      for (var doc in querySnapshot.docs) {
+        totalBase += double.parse(doc['base_ammount']);
+      }
+      setState(() {
+        baseAmount = totalBase.toString();
+        gst = '18';
+        var baseTotal = double.parse(gst) * double.parse(baseAmount) / 100;
+        var total = baseTotal + double.parse(baseAmount);
+        totalAmount = total.toString();
+
+        log('total base amount is $totalAmount');
+      });
+
+      log('Total of the field: $totalBase');
+    } catch (e) {
+      print('Error getting total: $e');
+    }
   }
-
-  // Future getCoursePrice() async {
-  //   FirebaseFirestore.instance
-  //       .collection("courses")
-  //       .doc(widget.courseId)
-  //       .get()
-  //       .then(
-  //     (value) {
-  //       gst = value.get("gst_rate").toString().replaceAll('%', '');
-  //       baseAmount = value.get("base_ammount");
-  //       var baseTotal = double.parse(gst) * double.parse(baseAmount) / 100;
-  //       var total = baseTotal + double.parse(baseAmount);
-  //       totalAmount = total.toString();
-
-  //       log('total amount is $totalAmount');
-
-  //       if (double.parse(walletBalance) < total) {
-  //         var amount = total - double.parse(walletBalance);
-  //         finalAmountForPayment = amount.toString();
-  //         log('total amount is $finalAmountForPayment');
-  //       }
-  //     },
-  //   );
-  // }
 
   String walletBalance = '0.0';
   String gst = '0.0';
@@ -104,7 +115,7 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    getAndUpdateCartDataIntoMyCourses();
+    getAndUpdateCartDataIntoMyCourses(false);
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {}
@@ -117,7 +128,54 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Future getAndUpdateCartDataIntoMyCourses() async {
+  Future getAndUpdateCartDataIntoMyCourses(walletGreater) async {
+    if (walletGreater) {
+      FirebaseFirestore.instance
+          .collection('wallet')
+          .doc(widget.userNumber)
+          .update(
+        {
+          'wallet_balance':
+              "${double.parse(walletBalance) - double.parse(totalAmount)}",
+        },
+      );
+      FirebaseFirestore.instance
+          .collection('wallet')
+          .doc(widget.userNumber)
+          .collection('transactions')
+          .add(
+        {
+          'status': 'true',
+          'date_time': formatter.format(DateTime.now()).toString(),
+          'type': 'withdrawal',
+          'coins': totalAmount,
+          'reason': '$totalAmount p coins is used for purchasing courses',
+        },
+      );
+    } else if (double.parse(walletBalance) > 1) {
+      FirebaseFirestore.instance
+          .collection('wallet')
+          .doc(widget.userNumber)
+          .update(
+        {
+          'wallet_balance':
+              "${double.parse(totalAmount) - double.parse(walletBalance)}",
+        },
+      );
+      FirebaseFirestore.instance
+          .collection('wallet')
+          .doc(widget.userNumber)
+          .collection('transactions')
+          .add(
+        {
+          'status': 'true',
+          'date_time': formatter.format(DateTime.now()).toString(),
+          'type': 'withdrawal',
+          'coins': "${double.parse(totalAmount) - double.parse(walletBalance)}",
+          'reason': 'Your purchased course',
+        },
+      );
+    }
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection("users")
         .doc(widget.userNumber)
@@ -145,6 +203,7 @@ class _CartScreenState extends State<CartScreen> {
           .doc(a.id)
           .delete();
     }
+
     // ignore: use_build_context_synchronously
     Navigator.push(
       context,
@@ -164,7 +223,8 @@ class _CartScreenState extends State<CartScreen> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handlePaymentWallet);
-    getWalletBalance();
+
+    getCoursePrice();
     super.initState();
   }
 
@@ -210,6 +270,7 @@ class _CartScreenState extends State<CartScreen> {
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
           if (streamSnapshot.hasData && streamSnapshot.data!.docs.isNotEmpty) {
             cartIsEmpty = false;
+
             return ListView.builder(
               itemCount: streamSnapshot.data!.docs.length,
               itemBuilder: (context, index) {
@@ -306,6 +367,9 @@ class _CartScreenState extends State<CartScreen> {
                                   .collection('mycart')
                                   .doc(documentSnapshot.id)
                                   .delete();
+                              setState(() {
+                                getCoursePrice();
+                              });
                             },
                             child: Container(
                               padding: const EdgeInsets.all(5),
@@ -534,30 +598,23 @@ class _CartScreenState extends State<CartScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       double.parse(walletBalance) >
-                                              double.parse(totalAmount)
-                                          ? Text(
-                                              totalAmount,
-                                              style: const TextStyle(
+                                                  double.parse(totalAmount) ||
+                                              double.parse(walletBalance) ==
+                                                  double.parse(totalAmount)
+                                          ? const Text(
+                                              "0.0",
+                                              style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16,
                                               ),
                                             )
-                                          : double.parse(walletBalance) ==
-                                                  double.parse(totalAmount)
-                                              ? const Text(
-                                                  '0.00',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
-                                                  ),
-                                                )
-                                              : Text(
-                                                  finalAmountForPayment,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
-                                                  ),
-                                                ),
+                                          : Text(
+                                              "${double.parse(totalAmount) - double.parse(walletBalance)}",
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
                                       Text(
                                         'You have to pay',
                                         style: TextStyle(
@@ -575,26 +632,20 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                     onPressed: () {
                                       if (double.parse(walletBalance) >
-                                          double.parse(totalAmount)) {
-                                        openCheckout(
-                                          double.parse(totalAmount) * 100,
-                                        );
-                                      } else if (double.parse(walletBalance) ==
-                                          double.parse(totalAmount)) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const CongratsScreen(
-                                              msg:
-                                                  'Congrats, Your have purchased this course successfully.',
-                                            ),
-                                          ),
-                                        );
+                                              double.parse(totalAmount) ||
+                                          double.parse(walletBalance) ==
+                                              double.parse(totalAmount)) {
+                                        getAndUpdateCartDataIntoMyCourses(true);
                                       } else {
-                                        openCheckout(
-                                          double.parse(finalAmountForPayment) *
-                                              100,
+                                        setState(
+                                          () {
+                                            double finalTA =
+                                                double.parse(totalAmount) -
+                                                    double.parse(walletBalance);
+                                            openCheckout(
+                                              finalTA * 100,
+                                            );
+                                          },
                                         );
                                       }
                                     },

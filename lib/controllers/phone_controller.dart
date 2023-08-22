@@ -406,6 +406,31 @@ void storeReffererData(userId, referralId) async {
   log("refferal token stored ${userId.toString()} ${referralId.toString()}");
 }
 
+void storeAffiliateTodayDate(date) async {
+  print("storing token and data");
+  await storage.write(key: "today_date", value: date.toString());
+}
+
+void storeAffiliateWeekDate(date) async {
+  print("storing token and data");
+  await storage.write(key: "weekly_date", value: date.toString());
+}
+
+void storeAffiliateMonthDate(date) async {
+  print("storing token and data");
+  await storage.write(key: "monthly_date", value: date.toString());
+}
+
+void storeAffiliateQuaterDate(date) async {
+  print("storing token and data");
+  await storage.write(key: "quaterly_date", value: date.toString());
+}
+
+void storeAffiliateAnnualDate(date) async {
+  print("storing token and data");
+  await storage.write(key: "annualy_date", value: date.toString());
+}
+
 Future<String?> getToken() async {
   return await storage.read(key: "token");
 }
@@ -416,4 +441,24 @@ Future<String?> getReferralUserId() async {
 
 Future<String?> getReferralId() async {
   return await storage.read(key: "referralId");
+}
+
+Future<String?> getAffiliateTodayDate() async {
+  return await storage.read(key: "today_date");
+}
+
+Future<String?> getAffiliateWeekDate() async {
+  return await storage.read(key: "weekly_date");
+}
+
+Future<String?> getAffiliateMonthDate() async {
+  return await storage.read(key: "monthly_date");
+}
+
+Future<String?> getAffiliateQuaterDate() async {
+  return await storage.read(key: "quaterly_date");
+}
+
+Future<String?> getAffiliateAnnualDate() async {
+  return await storage.read(key: "annualy_date");
 }

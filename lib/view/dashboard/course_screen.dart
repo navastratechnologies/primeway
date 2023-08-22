@@ -43,6 +43,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     final List<DocumentSnapshot> documents = querySnapshot.docs;
 
     if (documents.isNotEmpty) {
+      // ignore: use_build_context_synchronously
       Navigator.push(
         context,
         MaterialPageRoute(

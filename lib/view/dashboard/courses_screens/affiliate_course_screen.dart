@@ -175,6 +175,7 @@ class _AffiliateCourseDetailScreenState
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     // ignore: use_build_context_synchronously
+    
     Navigator.push(
       context,
       MaterialPageRoute(

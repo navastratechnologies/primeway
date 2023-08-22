@@ -8,6 +8,7 @@ import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/profile_screen/congrats_screen.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:intl/intl.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   final String userNumber;
@@ -45,12 +46,15 @@ class CourseDetailScreen extends StatefulWidget {
 }
 
 class _CourseDetailScreenState extends State<CourseDetailScreen> {
+
+var formatter = DateFormat('MM/dd/yyyy hh:mm a');
+
   final CollectionReference chapters = FirebaseFirestore.instance
       .collection('courses')
       .doc()
       .collection('chapters');
 
-  Future updateUserWalletbalance(String walletBalance) async {
+  Future updateUserWalletbalance(String walletBalance,) async {
     FirebaseFirestore.instance
         .collection("users")
         .doc(widget.userNumber)
@@ -66,6 +70,21 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         "date_time": DateTime.now().toString(),
       },
     );
+    if (double.parse(walletBalance)>1) {
+      FirebaseFirestore.instance
+          .collection('wallet')
+          .doc(widget.userNumber)
+          .collection('transactions')
+          .add(
+        {
+          'status': 'true',
+          'date_time': formatter.format(DateTime.now()).toString(),
+          'type': 'withdrawal',
+          'coins': totalAmount,
+          'reason': '$totalAmount p coins is used for purchasing courses',
+        },
+      );
+    }
     FirebaseFirestore.instance
         .collection('wallet')
         .doc(widget.userNumber)

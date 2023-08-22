@@ -482,7 +482,151 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         userNumber = token;
         checkUserStatus(userNumber);
+        checkAffiliateData(userNumber);
       });
+    }
+  }
+
+  checkAffiliateData(userNumber) async {
+    DocumentSnapshot value = await FirebaseFirestore.instance
+        .collection('affilate_dashboard')
+        .doc('NkcdMPSuI3SSIpJ2uLuv')
+        .collection('affiliate_users')
+        .doc(userNumber)
+        .get();
+
+    if (value.exists) {
+      String? today = await getAffiliateTodayDate();
+      String? week = await getAffiliateWeekDate();
+      String? month = await getAffiliateMonthDate();
+      String? quater = await getAffiliateQuaterDate();
+      String? annual = await getAffiliateAnnualDate();
+
+      if (today != null) {
+        if (DateTime.now().day.toString() == today) {
+          log('today date is same $today');
+        } else {
+          setState(() {
+            storage.delete(key: 'today_date');
+            storeAffiliateTodayDate(DateTime.now().day.toString());
+            log('today date is not same $today');
+            FirebaseFirestore.instance
+                .collection('affilate_dashboard')
+                .doc('NkcdMPSuI3SSIpJ2uLuv')
+                .collection('affiliate_users')
+                .doc(userNumber)
+                .update(
+              {
+                'today_earning': '0.0',
+              },
+            );
+          });
+        }
+      } else {
+        storeAffiliateTodayDate(DateTime.now().day.toString());
+      }
+
+      if (week != null) {
+        if ((DateTime.now().day / 7).ceil().toString() == week) {
+          log('week is same $week');
+        } else {
+          setState(() {
+            storage.delete(key: 'weekly_date');
+            storeAffiliateWeekDate((DateTime.now().day / 7).ceil().toString());
+            log('week is not same $week');
+            FirebaseFirestore.instance
+                .collection('affilate_dashboard')
+                .doc('NkcdMPSuI3SSIpJ2uLuv')
+                .collection('affiliate_users')
+                .doc(userNumber)
+                .update(
+              {
+                'weekly_earning': '0.0',
+              },
+            );
+          });
+        }
+      } else {
+        storeAffiliateWeekDate((DateTime.now().day / 7).ceil().toString());
+      }
+
+      if (month != null) {
+        if (DateTime.now().month.toString() == month) {
+          log('month is same $month');
+        } else {
+          setState(() {
+            storage.delete(key: 'monthly_date');
+            storeAffiliateMonthDate(DateTime.now().month.toString());
+            log('month is not same $month');
+            FirebaseFirestore.instance
+                .collection('affilate_dashboard')
+                .doc('NkcdMPSuI3SSIpJ2uLuv')
+                .collection('affiliate_users')
+                .doc(userNumber)
+                .update(
+              {
+                'monthly_earning': '0.0',
+              },
+            );
+          });
+        }
+      } else {
+        storeAffiliateMonthDate(DateTime.now().month.toString());
+      }
+
+      if (quater != null) {
+        if ((((DateTime.now().month - 1) / 3).ceil() + 1).toString() ==
+            quater) {
+          log('quater is same $quater');
+        } else {
+          setState(() {
+            storage.delete(key: 'quaterly_date');
+            storeAffiliateQuaterDate(
+                (((DateTime.now().month - 1) / 3).ceil() + 1).toString());
+            log('quater is not same $quater');
+            FirebaseFirestore.instance
+                .collection('affilate_dashboard')
+                .doc('NkcdMPSuI3SSIpJ2uLuv')
+                .collection('affiliate_users')
+                .doc(userNumber)
+                .update(
+              {
+                'quaterly_earning': '0.0',
+              },
+            );
+          });
+        }
+      } else {
+        storeAffiliateQuaterDate(
+          (((DateTime.now().month - 1) / 3).ceil() + 1).toString(),
+        );
+      }
+
+      if (annual != null) {
+        if (DateTime.now().year.toString() == annual) {
+          log('annual is same $annual');
+        } else {
+          setState(() {
+            storage.delete(key: 'annualy_date');
+            storeAffiliateAnnualDate(DateTime.now().year.toString());
+            log('annual is not same $annual');
+            FirebaseFirestore.instance
+                .collection('affilate_dashboard')
+                .doc('NkcdMPSuI3SSIpJ2uLuv')
+                .collection('affiliate_users')
+                .doc(userNumber)
+                .update(
+              {
+                'annualy_earning': '0.0',
+              },
+            );
+          });
+        }
+      } else {
+        storeAffiliateAnnualDate(DateTime.now().year.toString());
+      }
+    } else {
+      log('not exist in affiliate collection');
     }
   }
 }

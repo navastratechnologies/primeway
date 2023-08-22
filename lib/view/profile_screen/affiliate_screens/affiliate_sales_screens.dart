@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
 import 'package:primewayskills_app/view/profile_screen/affiliate_screens/affilieate_sales_history_screen.dart';
@@ -270,126 +269,16 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: width / 2.2,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: whiteColor,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: primeColor.withOpacity(0.1),
-                            blurRadius: 10,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          headingWidgetMethodForResources('Total Transactions'),
-                          const SizedBox(height: 10),
-                          Text(
-                            totalAffiliate,
-                            style: TextStyle(
-                              fontSize: maxSize,
-                              fontWeight: FontWeight.bold,
-                              color: primeColor,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: width / 2.2,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: whiteColor,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: primeColor.withOpacity(0.1),
-                            blurRadius: 10,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          headingWidgetMethodForResources(
-                            'Successful Transactions',
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            successlAffiliate,
-                            style: TextStyle(
-                              fontSize: maxSize,
-                              fontWeight: FontWeight.bold,
-                              color: primeColor2,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                salesCards("Today's Earning"),
                 const SizedBox(height: 20),
-                SizedBox(
-                  width: width,
-                  height: height / 3,
-                  child: Stack(
-                    children: [
-                      Lottie.asset(
-                        'assets/json/spiral.json',
-                        width: width,
-                        height: height / 3,
-                        fit: BoxFit.cover,
-                        repeat: true,
-                        reverse: true,
-                        animate: true,
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 60),
-                            Text(
-                              '$rupeeSign $todayEarning',
-                              style: TextStyle(
-                                fontSize: 40,
-                                color: primeColor,
-                                fontWeight: FontWeight.bold,
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.black.withOpacity(0.4),
-                                    blurRadius: 100,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text(
-                              "Earning's",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: primeColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 80),
+                salesCards("Weekly Earning"),
+                const SizedBox(height: 20),
+                salesCards("Monthly Earning"),
+                const SizedBox(height: 20),
+                salesCards("Quaterly Earning"),
+                const SizedBox(height: 20),
+                salesCards("Yearly Earning"),
+                const SizedBox(height: 20),
                 InkWell(
                   onTap: () {
                     Navigator.push(
@@ -472,6 +361,82 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Container salesCards(heading) {
+    var width = MediaQuery.of(context).size.width;
+    return Container(
+      width: width,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: whiteColor,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: primeColor.withOpacity(0.1),
+            blurRadius: 10,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          headingWidgetMethodForResources(
+            heading,
+          ),
+          const SizedBox(height: 20),
+          StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('affilate_dashboard')
+                .doc('NkcdMPSuI3SSIpJ2uLuv')
+                .collection('affiliate_users')
+                .where('user_Id', isEqualTo: widget.userNumber)
+                .snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                return SizedBox(
+                  height: 70,
+                  child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot documentSnapshot =
+                          snapshot.data!.docs[index];
+                      return Text(
+                        heading.toString().contains('Today')
+                            ? "$rupeeSign ${documentSnapshot['today_earning']}"
+                            : heading.toString().contains('Weekly')
+                                ? "$rupeeSign ${documentSnapshot['weekly_earning']}"
+                                : heading.toString().contains('Monthly')
+                                    ? "$rupeeSign ${documentSnapshot['monthly_earning']}"
+                                    : heading.toString().contains('Quaterly')
+                                        ? "$rupeeSign ${documentSnapshot['quaterly_earning']}"
+                                        : "$rupeeSign ${documentSnapshot['annualy_earning']}",
+                        style: TextStyle(
+                          fontSize: 60,
+                          fontWeight: FontWeight.bold,
+                          color: primeColor2,
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }
+              return Text(
+                "$rupeeSign 00",
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: primeColor2,
+                ),
+                textAlign: TextAlign.center,
+              );
+            },
+          ),
+        ],
       ),
     );
   }
