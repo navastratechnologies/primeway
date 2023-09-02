@@ -490,7 +490,7 @@ class _NavigationsDrawerState extends State<NavigationsDrawer> {
                           ListTile(
                             leading: sidebarIconWidget(Icons.quiz_rounded),
                             title: Text(
-                              "FAQs",
+                              "Feedbacks",
                               style: TextStyle(
                                 color: whiteColor,
                               ),

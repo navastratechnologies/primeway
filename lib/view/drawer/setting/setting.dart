@@ -233,7 +233,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                       title: const Text('Delete Account'),
-                      content: Text(
+                      content: const Text(
                         'Do you really want to delete your account?',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,

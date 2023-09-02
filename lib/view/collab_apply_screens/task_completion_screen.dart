@@ -113,6 +113,32 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            actions: [
+              MaterialButton(
+                onPressed: () {
+                  FirebaseFirestore.instance
+                      .collection('collaboration')
+                      .doc(widget.collabId)
+                      .collection('users')
+                      .doc(widget.userNumber)
+                      .collection('tasks')
+                      .add(
+                    {
+                      "status": 'pending',
+                      "task": '',
+                      "title": 'Extra Task',
+                    },
+                  );
+                },
+                child: Text(
+                  '+ Upload Extra Tasks',
+                  style: TextStyle(
+                    color: purpleColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
           body: Column(
             children: [

@@ -41,6 +41,18 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       'user_Id': widget.userNumber,
       'action': '',
     });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: primeColor,
+        content: Text(
+          'Thanks for your valuable feedback!',
+          style: TextStyle(
+            color: whiteColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
   }
 
   @override

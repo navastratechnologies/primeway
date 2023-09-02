@@ -81,7 +81,7 @@ class AboutUsScreen extends StatelessWidget {
                     if (snapshot.hasData) {
                       return ListView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
                           DocumentSnapshot documentSnapshot = snapshot.data!.docs[index];

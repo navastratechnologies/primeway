@@ -67,13 +67,13 @@ class _VersionScreenState extends State<VersionScreen> {
                 const SizedBox(
                   height: 70,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(50),
+                const Padding(
+                  padding: EdgeInsets.all(50),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Row(
-                        children: const [
+                        children: [
                           Icon(
                             Icons.apple,
                             color: Colors.white,
@@ -86,7 +86,7 @@ class _VersionScreenState extends State<VersionScreen> {
                         ],
                       ),
                       Row(
-                        children: const [
+                        children: [
                           SizedBox(
                             height: 35,
                             width: 35,
