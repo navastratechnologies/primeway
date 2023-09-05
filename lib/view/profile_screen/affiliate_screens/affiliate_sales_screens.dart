@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 import 'package:primewayskills_app/view/profile_screen/affiliate_screens/affilieate_sales_history_screen.dart';
 
 class AffiliateSalesScreen extends StatefulWidget {
@@ -269,7 +271,77 @@ class _AffiliateSalesScreenState extends State<AffiliateSalesScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                salesCards("Today's Earning"),
+                SizedBox(
+                  height: displayHeight(context) / 2,
+                  width: displayWidth(context),
+                  child: Stack(
+                    children: [
+                      Lottie.asset(
+                        'assets/json/spiral.json',
+                        reverse: true,
+                        height: displayHeight(context) / 2,
+                        width: displayWidth(context),
+                        fit: BoxFit.contain,
+                      ),
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection('affilate_dashboard')
+                                  .doc('NkcdMPSuI3SSIpJ2uLuv')
+                                  .collection('affiliate_users')
+                                  .where('user_Id',
+                                      isEqualTo: widget.userNumber)
+                                  .snapshots(),
+                              builder: (context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasData) {
+                                  return SizedBox(
+                                    height: 60,
+                                    child: ListView.builder(
+                                      itemCount: snapshot.data!.docs.length,
+                                      itemBuilder: (context, index) {
+                                        return Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            '$rupeeSign ${snapshot.data!.docs[index]['today_earning']}',
+                                            style: TextStyle(
+                                              fontSize: 60,
+                                              fontWeight: FontWeight.bold,
+                                              color: primeColor,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
+                                return Text(
+                                  '$rupeeSign 00',
+                                  style: TextStyle(
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.bold,
+                                    color: primeColor,
+                                  ),
+                                );
+                              },
+                            ),
+                            Text(
+                              "Today's Earning",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: primeColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 20),
                 salesCards("Weekly Earning"),
                 const SizedBox(height: 20),

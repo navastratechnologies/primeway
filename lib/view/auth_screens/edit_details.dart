@@ -34,7 +34,7 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
   List languageType = [];
   List categoryType = [];
 
-  DateTime dateOfBirth = DateTime.now();
+  DateTime dateOfBirth = DateTime(1970);
 
   Future<void> updateDetails() async {
     FirebaseFirestore.instance
@@ -72,7 +72,10 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
           emailController.text = value.get('email');
           fullNameController.text = value.get('name');
           dobController.text = value.get('date_of_brith');
-          dateOfBirth = DateTime.parse(dobController.text);
+          log('dob is ${dobController.text}');
+          if (dobController.text.isNotEmpty) {
+            dateOfBirth = DateTime.parse(dobController.text);
+          }
           if (value.get('language').toString().isNotEmpty) {
             languageType =
                 value.get('language').toString().replaceAll(' ', '').split(",");
@@ -106,7 +109,7 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
       lastDate: DateTime.now(),
       builder: (context, picker) {
         return Theme(
-          data: ThemeData.dark().copyWith(
+          data: ThemeData.light().copyWith(
             colorScheme: ColorScheme.dark(
               primary: primeColor2,
               onPrimary: Colors.white,
@@ -456,7 +459,7 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
                     const SizedBox(height: 30),
                     StreamBuilder(
                       stream: FirebaseFirestore.instance
-                          .collection('creator_program_category')
+                          .collection('content_category')
                           .snapshots(),
                       builder: (context,
                           AsyncSnapshot<QuerySnapshot> streamSnapshot) {

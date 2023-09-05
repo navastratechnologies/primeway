@@ -196,6 +196,8 @@ class _CollaborationInternalScreenState
           'task': '',
           'title': a['title'],
           'status': 'pending',
+          'task_url': '',
+          'task_text': '',
         },
       ).whenComplete(
         () => Navigator.push(

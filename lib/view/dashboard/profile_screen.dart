@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:primewayskills_app/view/appbar_screens/profile_edit_screen.dart';
 import 'package:primewayskills_app/view/drawer/sidebar.dart';
@@ -626,25 +627,122 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                     showAffiliate
                                         ? InkWell(
-                                            onTap: () => Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AffiliateScreen(
-                                                  userAddress:
-                                                      widget.userAddress,
-                                                  userEmail: widget.userEmail,
-                                                  userName: widget.userName,
-                                                  userNumber: widget.userNumber,
-                                                  userPayment:
-                                                      widget.userPayment,
-                                                  userProfileImage:
-                                                      widget.userProfileImage,
-                                                  userWalletId:
-                                                      widget.userWalletId,
-                                                ),
-                                              ),
-                                            ),
+                                            onTap: () {
+                                              FirebaseFirestore.instance
+                                                  .collection(
+                                                      'affilate_dashboard')
+                                                  .doc('NkcdMPSuI3SSIpJ2uLuv')
+                                                  .collection('affiliate_users')
+                                                  .doc(widget.userNumber)
+                                                  .get()
+                                                  .then(
+                                                (value) {
+                                                  if (value.get('status') ==
+                                                      'pause') {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          content: SizedBox(
+                                                            height: displayHeight(
+                                                                    context) /
+                                                                3,
+                                                            child: Column(
+                                                              children: [
+                                                                Icon(
+                                                                  Icons
+                                                                      .block_rounded,
+                                                                  color:
+                                                                      primeColor,
+                                                                  size: 100,
+                                                                ),
+                                                                const SizedBox(
+                                                                    height: 10),
+                                                                Text(
+                                                                  'Your Account is blocked for affiliate program due to some suspecious reasons. Contact Support',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .black
+                                                                        .withOpacity(
+                                                                            0.4),
+                                                                  ),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
+                                                                const SizedBox(
+                                                                    height: 10),
+                                                                MaterialButton(
+                                                                  color:
+                                                                      purpleColor,
+                                                                  onPressed:
+                                                                      () async {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    await FlutterEmailSender
+                                                                        .send(
+                                                                      Email(
+                                                                        body:
+                                                                            'body of email',
+                                                                        subject:
+                                                                            'subject of email',
+                                                                        recipients: [
+                                                                          companyMail
+                                                                        ],
+                                                                        isHTML:
+                                                                            false,
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                  child: Text(
+                                                                    'Contact Support',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color:
+                                                                          whiteColor,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  } else {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AffiliateScreen(
+                                                          userAddress: widget
+                                                              .userAddress,
+                                                          userEmail:
+                                                              widget.userEmail,
+                                                          userName:
+                                                              widget.userName,
+                                                          userNumber:
+                                                              widget.userNumber,
+                                                          userPayment: widget
+                                                              .userPayment,
+                                                          userProfileImage: widget
+                                                              .userProfileImage,
+                                                          userWalletId: widget
+                                                              .userWalletId,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              );
+                                            },
                                             child: const ProfileTileWidget(
                                               heading: 'Affiliate Dashboard',
                                               icons: FontAwesomeIcons

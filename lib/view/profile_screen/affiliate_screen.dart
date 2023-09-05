@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/profile_screen/affiliate_screens/affiliate_links_screen.dart';
+import 'package:primewayskills_app/view/profile_screen/affiliate_screens/affiliate_refer_screen.dart';
 import 'package:primewayskills_app/view/profile_screen/affiliate_screens/affiliate_sales_screens.dart';
 
 class AffiliateScreen extends StatefulWidget {
@@ -33,7 +34,7 @@ class _AffiliateScreenState extends State<AffiliateScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       initialIndex: 0,
       child: Scaffold(
         backgroundColor: whiteColor,
@@ -67,6 +68,9 @@ class _AffiliateScreenState extends State<AffiliateScreen> {
               Tab(
                 text: 'Links',
               ),
+              Tab(
+                text: 'Team',
+              ),
             ],
           ),
         ),
@@ -78,9 +82,9 @@ class _AffiliateScreenState extends State<AffiliateScreen> {
             AffiliateLinksScreen(
               userId: widget.userNumber,
             ),
-            // AffiliateReferScreen(
-            //   userNumber: widget.userNumber,
-            // ),
+            AffiliateReferScreen(
+              userNumber: widget.userNumber,
+            ),
           ],
         ),
       ),

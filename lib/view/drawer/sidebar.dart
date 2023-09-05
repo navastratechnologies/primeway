@@ -19,6 +19,7 @@ import 'package:primewayskills_app/view/drawer/setting/setting.dart';
 import 'package:primewayskills_app/view/helpers/alert_deialogs.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 import 'package:primewayskills_app/view/helpers/helping_widgets.dart';
+import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -289,135 +290,192 @@ class _NavigationsDrawerState extends State<NavigationsDrawer> {
                                     ),
                                   ),
                                   onTap: () {
-                                    Navigator.pop(context);
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          title: Text(
-                                            'Become Partner',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: primeColor2,
-                                              letterSpacing: 1,
-                                            ),
-                                          ),
-                                          content: Container(
-                                            height: 120,
-                                            decoration: BoxDecoration(
-                                              color: whiteColor,
-                                            ),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  'Do you really want to become our affiliate partner and earn from our programs?',
+                                    FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(widget.userNumber)
+                                        .collection('courses')
+                                        .get()
+                                        .then(
+                                      (value) {
+                                        if (value.docs.isEmpty) {
+                                          Navigator.pop(context);
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                content: SizedBox(
+                                                  height:
+                                                      displayHeight(context) /
+                                                          4,
+                                                  child: Column(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.error_rounded,
+                                                        color: primeColor,
+                                                        size: 100,
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 10),
+                                                      Text(
+                                                        "Please purchase any course before to become eligible for affiliate program",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black
+                                                              .withOpacity(0.4),
+                                                        ),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          Navigator.pop(context);
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                title: Text(
+                                                  'Become Partner',
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    color: Colors.black
-                                                        .withOpacity(0.4),
-                                                    fontSize: 12,
+                                                    color: primeColor2,
                                                     letterSpacing: 1,
                                                   ),
                                                 ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    MaterialButton(
-                                                      color: primeColor2,
-                                                      onPressed: () {
-                                                        FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                'affilate_dashboard')
-                                                            .doc(
-                                                                'NkcdMPSuI3SSIpJ2uLuv')
-                                                            .collection(
-                                                                'affiliate_users')
-                                                            .doc(widget
-                                                                .userNumber)
-                                                            .set(
-                                                          {
-                                                            'approved_affiliate':
-                                                                '0',
-                                                            'complete_affiliate':
-                                                                '0',
-                                                            'pending_affiliate':
-                                                                '0',
-                                                            'successful_affiliate':
-                                                                '0',
-                                                            'today_earning':
-                                                                '0',
-                                                            'total_affiliate':
-                                                                '0',
-                                                            'user_Id': widget
-                                                                .userNumber,
-                                                            'annualy_earning':
-                                                                '0',
-                                                            'monthly_earning':
-                                                                '0',
-                                                            'quaterly_earning':
-                                                                '0',
-                                                            'weekly_earning':
-                                                                '0',
-                                                            'courseShared': '0',
-                                                            'status': 'pending',
-                                                            'totalRefferals':
-                                                                '0',
-                                                          },
-                                                        ).then(
-                                                          (value) {
-                                                            alertDialogWidget(
-                                                              context,
-                                                              primeColor2,
-                                                              'Affiliate registration successful',
-                                                            );
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                        );
-                                                      },
-                                                      child: Text(
-                                                        'Yes',
+                                                content: Container(
+                                                  height: 120,
+                                                  decoration: BoxDecoration(
+                                                    color: whiteColor,
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        'Do you really want to become our affiliate partner and earn from our programs?',
                                                         style: TextStyle(
-                                                          color: whiteColor,
                                                           fontWeight:
                                                               FontWeight.bold,
+                                                          color: Colors.black
+                                                              .withOpacity(0.4),
+                                                          fontSize: 12,
                                                           letterSpacing: 1,
                                                         ),
                                                       ),
-                                                    ),
-                                                    MaterialButton(
-                                                      color: primeColor,
-                                                      onPressed: () =>
-                                                          Navigator.pop(
-                                                              context),
-                                                      child: Text(
-                                                        'No',
-                                                        style: TextStyle(
-                                                          color: whiteColor,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          letterSpacing: 1,
-                                                        ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
+                                                        children: [
+                                                          MaterialButton(
+                                                            color: primeColor2,
+                                                            onPressed: () {
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      'affilate_dashboard')
+                                                                  .doc(
+                                                                      'NkcdMPSuI3SSIpJ2uLuv')
+                                                                  .collection(
+                                                                      'affiliate_users')
+                                                                  .doc(widget
+                                                                      .userNumber)
+                                                                  .set(
+                                                                {
+                                                                  'approved_affiliate':
+                                                                      '0',
+                                                                  'complete_affiliate':
+                                                                      '0',
+                                                                  'pending_affiliate':
+                                                                      '0',
+                                                                  'successful_affiliate':
+                                                                      '0',
+                                                                  'today_earning':
+                                                                      '0',
+                                                                  'total_affiliate':
+                                                                      '0',
+                                                                  'user_Id': widget
+                                                                      .userNumber,
+                                                                  'annualy_earning':
+                                                                      '0',
+                                                                  'monthly_earning':
+                                                                      '0',
+                                                                  'quaterly_earning':
+                                                                      '0',
+                                                                  'weekly_earning':
+                                                                      '0',
+                                                                  'courseShared':
+                                                                      '0',
+                                                                  'status':
+                                                                      'pending',
+                                                                  'totalRefferals':
+                                                                      '0',
+                                                                },
+                                                              ).then(
+                                                                (value) {
+                                                                  alertDialogWidget(
+                                                                    context,
+                                                                    primeColor2,
+                                                                    'Affiliate registration successful',
+                                                                  );
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                              );
+                                                            },
+                                                            child: Text(
+                                                              'Yes',
+                                                              style: TextStyle(
+                                                                color:
+                                                                    whiteColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                letterSpacing:
+                                                                    1,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          MaterialButton(
+                                                            color: primeColor,
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    context),
+                                                            child: Text(
+                                                              'No',
+                                                              style: TextStyle(
+                                                                color:
+                                                                    whiteColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                letterSpacing:
+                                                                    1,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
+                                              );
+                                            },
+                                          );
+                                        }
                                       },
                                     );
                                   },

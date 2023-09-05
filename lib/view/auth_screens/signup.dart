@@ -158,6 +158,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
             "earning_by_refferals": totalRefferalEarningInc.toString(),
           });
           FirebaseFirestore.instance
+              .collection('affilate_dashboard')
+              .doc('NkcdMPSuI3SSIpJ2uLuv')
+              .collection('affiliate_users')
+              .doc(refferalUserIdController.text)
+              .get()
+              .then(
+            (value) {
+              double todayEarning = double.parse(value.get('today_earning'));
+              double weeklyEarning = double.parse(value.get('weekly_earning'));
+              double monthlyEarning =
+                  double.parse(value.get('monthly_earning'));
+              double quaterlyEarning =
+                  double.parse(value.get('quaterly_earning'));
+              double annualyEarning =
+                  double.parse(value.get('annualy_earning'));
+              double totalEarningToday =
+                  todayEarning + double.parse(referralCharges);
+              double totalEarningWeekly =
+                  weeklyEarning + double.parse(referralCharges);
+              double totalEarningMonthly =
+                  monthlyEarning + double.parse(referralCharges);
+              double totalEarningQuaterly =
+                  quaterlyEarning + double.parse(referralCharges);
+              double totalEarningAnnualy =
+                  annualyEarning + double.parse(referralCharges);
+              FirebaseFirestore.instance
+                  .collection('affilate_dashboard')
+                  .doc('NkcdMPSuI3SSIpJ2uLuv')
+                  .collection('affiliate_users')
+                  .doc(refferalUserIdController.text)
+                  .update(
+                {
+                  'today_earning': totalEarningToday.toString(),
+                  'weekly_earning': totalEarningWeekly.toString(),
+                  'monthly_earning': totalEarningMonthly.toString(),
+                  'quaterly_earning': totalEarningQuaterly.toString(),
+                  'annualy_earning': totalEarningAnnualy.toString(),
+                },
+              );
+            },
+          );
+          FirebaseFirestore.instance
               .collection('users')
               .doc(widget.phone)
               .update({

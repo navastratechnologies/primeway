@@ -27,6 +27,9 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
   bool showLoader = false;
   String tileIndex = '';
 
+  TextEditingController taskUrlController = TextEditingController();
+  TextEditingController taskTextController = TextEditingController();
+
   File? image;
   UploadTask? uploadTask;
 
@@ -86,6 +89,8 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
       {
         'task': urlDownload.toString(),
         'status': 'uploaded',
+        'task_text': taskTextController.text,
+        'task_url': taskUrlController.text,
       },
     ).then((value) {
       setState(() {
@@ -113,32 +118,6 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            actions: [
-              MaterialButton(
-                onPressed: () {
-                  FirebaseFirestore.instance
-                      .collection('collaboration')
-                      .doc(widget.collabId)
-                      .collection('users')
-                      .doc(widget.userNumber)
-                      .collection('tasks')
-                      .add(
-                    {
-                      "status": 'pending',
-                      "task": '',
-                      "title": 'Extra Task',
-                    },
-                  );
-                },
-                child: Text(
-                  '+ Upload Extra Tasks',
-                  style: TextStyle(
-                    color: purpleColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
           ),
           body: Column(
             children: [
@@ -238,6 +217,9 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                         itemBuilder: (context, index) {
                           DocumentSnapshot documentSnapshot =
                               streamSnapshot.data!.docs[index];
+                          taskTextController.text =
+                              documentSnapshot['task_text'];
+                          taskUrlController.text = documentSnapshot['task_url'];
                           return Theme(
                             data: ThemeData()
                                 .copyWith(dividerColor: Colors.transparent),
@@ -311,6 +293,111 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                     ),
                                   ),
                                 ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Container(
+                                    width: displayWidth(context) / 1.2,
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: whiteColor,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: primeColor.withOpacity(0.1),
+                                          blurRadius: 10,
+                                          spreadRadius: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    child: TextFormField(
+                                      controller: taskUrlController,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'Enter Task URL here if any',
+                                        hintStyle: TextStyle(
+                                          color: Colors.black.withOpacity(0.2),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Container(
+                                    width: displayWidth(context) / 1.2,
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: whiteColor,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: primeColor.withOpacity(0.1),
+                                          blurRadius: 10,
+                                          spreadRadius: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    child: TextFormField(
+                                      controller: taskTextController,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText:
+                                            'Enter additional text here if any',
+                                        hintStyle: TextStyle(
+                                          color: Colors.black.withOpacity(0.2),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                MaterialButton(
+                                  color: purpleColor,
+                                  onPressed: () {
+                                    FirebaseFirestore.instance
+                                        .collection('collaboration')
+                                        .doc(widget.collabId)
+                                        .collection('users')
+                                        .doc(widget.userNumber)
+                                        .collection('tasks')
+                                        .doc(documentSnapshot.id)
+                                        .update(
+                                      {
+                                        'status': 'uploaded',
+                                        'task_text': taskTextController.text,
+                                        'task_url': taskUrlController.text,
+                                      },
+                                    ).then((value) {
+                                      setState(() {
+                                        showLoader = false;
+                                        taskTextController.clear();
+                                        taskUrlController.clear();
+                                      });
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        backgroundColor: primeColor2,
+                                        content: Text(
+                                          'Task Uploaded Successfully',
+                                          style: TextStyle(
+                                            color: whiteColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Text(
+                                    'Submit This Task',
+                                    style: TextStyle(
+                                      color: whiteColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
                               ],
                               onExpansionChanged: (value) {
                                 setState(
@@ -318,8 +405,12 @@ class _TaskCompletionScreenState extends State<TaskCompletionScreen> {
                                     tileExpanded = value;
                                     if (tileIndex == index.toString()) {
                                       tileIndex = '';
+                                      taskUrlController.clear();
+                                      taskTextController.clear();
                                     } else {
                                       tileIndex = index.toString();
+                                      taskUrlController.clear();
+                                      taskTextController.clear();
                                     }
                                   },
                                 );
