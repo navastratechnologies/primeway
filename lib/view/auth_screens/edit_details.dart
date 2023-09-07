@@ -393,13 +393,11 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
                                   languageType.remove(languageModel[index]);
                                 });
                               } else {
-                                if (languageType.length < 3) {
-                                  setState(() {
-                                    languageType.add(languageModel[index]
-                                        .toString()
-                                        .replaceAll(',', ''));
-                                  });
-                                }
+                                setState(() {
+                                  languageType.add(languageModel[index]
+                                      .toString()
+                                      .replaceAll(',', ''));
+                                });
                               }
                               log('language is : $languageType');
                             },
@@ -486,12 +484,10 @@ class _EditDetailsPageState extends State<EditDetailsPage> {
                                               documentSnapshot['category']);
                                         });
                                       } else {
-                                        if (categoryType.length < 3) {
-                                          setState(() {
-                                            categoryType.add(
-                                                documentSnapshot['category']);
-                                          });
-                                        }
+                                        setState(() {
+                                          categoryType.add(
+                                              documentSnapshot['category']);
+                                        });
                                       }
                                       log('category is : $categoryType');
                                     },
