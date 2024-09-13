@@ -18,7 +18,7 @@ import 'package:primewayskills_app/view/drawer/sidebar.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+  const Dashboard({super.key});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -363,40 +363,41 @@ class _DashboardState extends State<Dashboard> {
                           ],
                         ),
                       ),
-                      MaterialButton(
-                        onPressed: () {
-                          setState(() {
-                            showHome = false;
-                            showCollab = true;
-                            showCourses = false;
-                            showProfile = false;
-                          });
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.workspaces_rounded,
-                              color: showCollab
-                                  ? whiteColor.withOpacity(0.4)
-                                  : whiteColor,
-                              size: showCollab ? 30 : 25,
-                            ),
-                            const SizedBox(height: 3),
-                            Text(
-                              'COLLABS',
-                              style: TextStyle(
-                                color: showCollab
-                                    ? whiteColor.withOpacity(0.4)
-                                    : whiteColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // MaterialButton(
+                      //   onPressed: () {
+                      //     setState(() {
+                      //       showHome = false;
+                      //       showCollab = true;
+                      //       showCourses = false;
+                      //       showProfile = false;
+                      //     });
+                      //   },
+                      //   child: Column(
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     crossAxisAlignment: CrossAxisAlignment.center,
+                      //     children: [
+                      //       Icon(
+                      //         Icons.workspaces_rounded,
+                      //         color: showCollab
+                      //             ? whiteColor.withOpacity(0.4)
+                      //             : whiteColor,
+                      //         size: showCollab ? 30 : 25,
+                      //       ),
+                      //       const SizedBox(height: 3),
+                      //       Text(
+                      //         'COLLABS',
+                      //         style: TextStyle(
+                      //           color: showCollab
+                      //               ? whiteColor.withOpacity(0.4)
+                      //               : whiteColor,
+                      //           fontWeight: FontWeight.bold,
+                      //           fontSize: 10,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+
                       MaterialButton(
                         onPressed: () {
                           setState(() {

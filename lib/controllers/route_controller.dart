@@ -29,8 +29,8 @@ final GoRouter router = GoRouter(
           path: 'affiliateCourseScreen/:courseId/:userId',
           builder: (BuildContext context, GoRouterState state) {
             return AffiliateCourseDetailScreen(
-              courseId: state.params["courseId"]!,
-              userNumber: state.params["userId"]!,
+              courseId: state.pathParameters['courseId']!,
+              userNumber: state.pathParameters["userId"]!,
             );
           },
         ),

@@ -54,7 +54,7 @@ class _HomescreenState extends State<Homescreen> {
       FirebaseFirestore.instance.collection('creator_program_category');
 
   int _current = 0;
-  final CarouselController _controller = CarouselController();
+  // final CarouselController _controller = CarouselController();
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;

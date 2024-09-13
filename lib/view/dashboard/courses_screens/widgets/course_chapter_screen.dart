@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:primewayskills_app/view/dashboard/courses_screens/widgets/course_video_screen.dart';
 import 'package:primewayskills_app/view/helpers/alert_deialogs.dart';
 import 'package:primewayskills_app/view/helpers/colors.dart';
+import 'package:primewayskills_app/view/helpers/responsive_size_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CourseChapterScreen extends StatefulWidget {
@@ -311,13 +312,18 @@ class _CourseChapterScreenState extends State<CourseChapterScreen> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                  documentSnapshot1['title'],
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 14,
-                                                    color: Colors.black
-                                                        .withOpacity(0.5),
+                                                SizedBox(
+                                                  width: displayWidth(context) /
+                                                      1.4,
+                                                  child: Text(
+                                                    documentSnapshot1['title'],
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14,
+                                                      color: Colors.black
+                                                          .withOpacity(0.5),
+                                                    ),
                                                   ),
                                                 ),
                                                 const SizedBox(height: 3),

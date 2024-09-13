@@ -28,6 +28,8 @@ class WebViewClass extends StatefulWidget {
 class _WebViewClassState extends State<WebViewClass> {
   FlutterInsta flutterInsta = FlutterInsta();
 
+  late final WebViewController controller;
+
   Future instagramDetails() async {
     String profileId =
         widget.url.split("com/").elementAt(1).replaceAll(" ", "");
@@ -87,6 +89,31 @@ class _WebViewClassState extends State<WebViewClass> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
+          },
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {},
+          onHttpError: (HttpResponseError error) {},
+          onWebResourceError: (WebResourceError error) {},
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith(widget.url)) {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -106,9 +133,8 @@ class _WebViewClassState extends State<WebViewClass> {
           ),
         ),
       ),
-      body: WebView(
-        initialUrl: widget.url,
-        javascriptMode: JavascriptMode.unrestricted,
+      body: WebViewWidget(
+        controller: controller,
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
